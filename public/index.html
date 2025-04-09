@@ -1,0 +1,31 @@
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>RevGen Redirect</title>
+	</head>
+	<body>
+		Hold tight! We are redirecting you!
+	</body>
+</html>
+
+<script>
+	const productId = getQueryParam('product');
+	const variant = getQueryParam('variant') || 'default';
+
+	fetch(
+		`/.netlify/functions/getZohoUrl?product=${productId}&variant=${variant}`
+	)
+		.then((res) => res.json())
+		.then((data) => {
+			if (!data.url) throw new Error('Invalid response');
+			const referrer = document.referrer || 'unknown';
+			const finalUrl = `${data.url}?source_url=${encodeURIComponent(
+				referrer
+			)}&variant=${encodeURIComponent(variant)}`;
+			window.location.href = finalUrl;
+		})
+		.catch((err) => {
+			document.body.innerHTML = '<p>There was an issue redirecting you.</p>';
+		});
+</script>
