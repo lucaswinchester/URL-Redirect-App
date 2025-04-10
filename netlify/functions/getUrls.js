@@ -12,14 +12,14 @@ exports.handler = async (event) => {
 
   const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_NAME = "Products";
+  const TABLE_NAME = "tblJTN70fil3fwcle";
 
   // Airtable filter using AND() on all criteria
   const formula = `AND(
-    {router}='${router}',
-    {plan}='${plan}',
-    {program}='${program}',
-    {protection_plan}='${protection_plan}'
+    {fldhZc2Bq0JYVLQ2b}='${router}',
+    {fldvK3fefCQS4IyZo}='${plan}',
+    {flddy9xyJ4VDqQPz2}='${program}',
+    {fldZBDNAO24X3QQnt}='${protection_plan}'
   )`;
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`;
