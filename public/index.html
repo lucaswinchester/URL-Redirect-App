@@ -103,7 +103,7 @@
 				});
 
 				try {
-					const res = await fetch(`/.netlify/functions/getZohoUrl?${query}`);
+					const res = await fetch(`/.app/functions/getUrls?${query}`);
 					const data = await res.json();
 					if (!data.url) throw new Error('No match');
 
