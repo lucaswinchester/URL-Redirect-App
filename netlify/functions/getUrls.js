@@ -1,23 +1,28 @@
 const fetch = require("node-fetch");
 
 exports.handler = async (event) => {
+  const { router, plan, program, protection_plan = "false" } = event.queryStringParameters;
+
+  if (!router || !plan || !program) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ error: "Missing required fields" })
+    };
+  }
+
   const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_NAME = "Products";
 
-  const params = event.queryStringParameters;
-  const product = params.product;
-  const variant = params.variant || "default";
+  // Airtable filter using AND() on all criteria
+  const formula = `AND(
+    {router}='${router}',
+    {plan}='${plan}',
+    {program}='${program}',
+    {protection_plan}='${protection_plan}'
+  )`;
 
-  if (!product) {
-    return {
-      statusCode: 400,
-      body: JSON.stringify({ error: "Missing product" })
-    };
-  }
-
-  const filterFormula = `AND({product_id}='${product}', OR({variant}='${variant}', {variant}='default'))`;
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=${encodeURIComponent(filterFormula)}&maxRecords=1`;
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`;
 
   try {
     const response = await fetch(url, {
@@ -32,7 +37,7 @@ exports.handler = async (event) => {
     if (!record) {
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: "Product or variant not found" })
+        body: JSON.stringify({ error: "No matching checkout URL found." })
       };
     }
 
@@ -42,10 +47,10 @@ exports.handler = async (event) => {
         url: record.fields.zoho_url
       })
     };
-  } catch (error) {
+  } catch (err) {
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: "Server error", details: error.message })
+      body: JSON.stringify({ error: "Internal error", detail: err.message })
     };
   }
 };
