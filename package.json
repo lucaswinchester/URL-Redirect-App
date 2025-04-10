@@ -2,7 +2,7 @@
     "name": "zoho-redirect",
     "version": "1.0.0",
     "dependencies": {
-      "node-fetch": "^2.6.7"
+        "dotenv": "^16.4.7",
+        "node-fetch": "^2.7.0"
     }
-  }
-  
+}
