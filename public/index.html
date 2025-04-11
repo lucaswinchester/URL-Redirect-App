@@ -103,31 +103,36 @@
 					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
 
-					// Attempt to extract the final URL even if the redirect failed
-					try {
-						const fallbackRes = await fetch(functionURL);
-						const { url: failedUrl } = await fallbackRes.json();
-
-						if (failedUrl) {
-							const debugInfo = document.getElementById('debug-url');
-							if (debugInfo) {
-								debugInfo.classList.remove('hidden');
-								debugInfo.innerHTML = `Generated URL: <a href="${failedUrl}" target="_blank" style="color: #c90917;">${failedUrl}</a>`;
-							}
-						}
-					} catch (fallbackErr) {
-						// If we can't get a response, skip this part silently or log it
-						console.warn(
-							'Could not fetch final URL for debugging:',
-							fallbackErr
-						);
-					}
-
+					const debugInfo = document.getElementById('debug-url');
 					const btn = document.getElementById('return-btn');
 					btn.classList.remove('hidden');
 					btn.onclick = () => {
 						window.location.href = sourcePage;
 					};
+
+					// Attempt to retrieve the generated URL from the API response
+					try {
+						const fallbackRes = await fetch(functionURL);
+
+						if (fallbackRes.ok) {
+							const json = await fallbackRes.json();
+							if (json.url) {
+								debugInfo.classList.remove('hidden');
+								debugInfo.innerHTML = `Generated URL: <a href="${json.url}" target="_blank" style="color: #c90917;">${json.url}</a>`;
+							} else {
+								debugInfo.classList.remove('hidden');
+								debugInfo.textContent = `Function returned no URL.`;
+							}
+						} else {
+							const text = await fallbackRes.text();
+							debugInfo.classList.remove('hidden');
+							debugInfo.textContent = `Function error: ${fallbackRes.status} – ${text}`;
+						}
+					} catch (parseErr) {
+						console.warn('Could not parse fallback response as JSON', parseErr);
+						debugInfo.classList.remove('hidden');
+						debugInfo.textContent = `Unable to fetch or parse final URL for debugging.`;
+					}
 				}
 			}
 
