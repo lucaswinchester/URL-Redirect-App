@@ -24,7 +24,7 @@ exports.handler = async (event) => {
   const formula = `AND(
     {Router SKU}='${router.toUpperCase()}',
     {Plan}='${plan.toUpperCase()}',
-    {Program}='${program.capitalizeFirstLetter()}',
+    {Program}='${capitalizeFirstLetter(program)}',
     {Router Protection}=${protection_plan === 'true' ? 'TRUE()' : 'FALSE()'}
   )`;
 
