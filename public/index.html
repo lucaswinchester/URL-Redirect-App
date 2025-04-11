@@ -103,10 +103,25 @@
 					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
 
-					// Show debug link
-					const debugInfo = document.getElementById('debug-url');
-					debugInfo.classList.remove('hidden');
-					debugInfo.innerHTML = `Troubleshoot URL: <a href="${functionURL}" target="_blank" style="color: #c90917;">${functionURL}</a>`;
+					// Attempt to extract the final URL even if the redirect failed
+					try {
+						const fallbackRes = await fetch(functionURL);
+						const { url: failedUrl } = await fallbackRes.json();
+
+						if (failedUrl) {
+							const debugInfo = document.getElementById('debug-url');
+							if (debugInfo) {
+								debugInfo.classList.remove('hidden');
+								debugInfo.innerHTML = `Generated URL: <a href="${failedUrl}" target="_blank" style="color: #c90917;">${failedUrl}</a>`;
+							}
+						}
+					} catch (fallbackErr) {
+						// If we can't get a response, skip this part silently or log it
+						console.warn(
+							'Could not fetch final URL for debugging:',
+							fallbackErr
+						);
+					}
 
 					const btn = document.getElementById('return-btn');
 					btn.classList.remove('hidden');
