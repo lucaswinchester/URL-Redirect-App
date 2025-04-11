@@ -2,7 +2,12 @@ const fetch = require("node-fetch");
 require('dotenv').config();
 
 exports.handler = async (event) => {
-  const { router, plan, program, protection_plan = "false"} = event.queryStringParameters;
+  const { 
+    router,
+    plan,
+    program,
+    protection_plan = "false"
+  } = event.queryStringParameters;
 
   if (!router || !plan || !program) {
     return {
@@ -15,8 +20,6 @@ exports.handler = async (event) => {
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
   const TABLE_ID = "tblJTN70fil3fwcle";
 
-  console.log(BASE_ID, TABLE_ID);
-
   // Airtable filter using AND() on all criteria
   const formula = `AND(
     {Router SKU}='${router}',
@@ -26,8 +29,6 @@ exports.handler = async (event) => {
   )`;
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`;
-
-  console.log(url);
 
   try {
     const response = await fetch(url, {

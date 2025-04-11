@@ -79,7 +79,7 @@
 				const sourcePage = document.referrer || '/';
 
 				// Save full fetch URL for debugging
-				const functionURL = `/netlify/functions/getUrls?${query}`;
+				const functionURL = `/.netlify/functions/getUrls?${query}`;
 
 				try {
 					const res = await fetch(functionURL);
