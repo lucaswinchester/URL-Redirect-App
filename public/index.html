@@ -77,28 +77,36 @@
 				const query = params.toString();
 				const sourcePage = document.referrer || '/';
 
+				// Save full fetch URL for debugging
+				const functionURL = `/.netlify/functions/getUrls?${query}`;
+
 				try {
-					const res = await fetch(`/netlify/functions/getUrls?${query}`);
+					const res = await fetch(functionURL);
 					if (!res.ok) throw new Error('Function request failed');
 
 					const { url } = await res.json();
 
 					if (url) {
-						// Add the source URL as a param to the redirect target
+						// Add source_url param to final checkout link
 						const redirectUrl = new URL(url);
 						redirectUrl.searchParams.set(
 							'source_url',
 							encodeURIComponent(sourcePage)
 						);
-
 						window.location.href = redirectUrl.toString();
 					} else {
 						throw new Error('No URL returned');
 					}
 				} catch (err) {
 					document.getElementById('loader').classList.add('hidden');
-					document.getElementById('message').textContent = url;
+					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
+
+					// Show debug link
+					const debugInfo = document.getElementById('debug-url');
+					debugInfo.classList.remove('hidden');
+					debugInfo.innerHTML = `Troubleshoot URL: <a href="${functionURL}" target="_blank" style="color: #c90917;">${functionURL}</a>`;
+
 					const btn = document.getElementById('return-btn');
 					btn.classList.remove('hidden');
 					btn.onclick = () => {
