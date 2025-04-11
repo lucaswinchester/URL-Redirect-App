@@ -6,123 +6,101 @@
 		<title>Redirecting...</title>
 		<style>
 			body {
-				font-family: 'Arial', sans-serif;
-				background-color: #f4f4f9;
 				margin: 0;
+				font-family: 'Segoe UI', sans-serif;
+				background: #0f172a;
+				color: #fff;
 				display: flex;
-				justify-content: center;
+				flex-direction: column;
 				align-items: center;
+				justify-content: center;
 				height: 100vh;
-				color: #333;
-			}
-
-			.container {
 				text-align: center;
-				max-width: 400px;
-				width: 100%;
 			}
 
-			.loading-spinner {
-				margin: 20px auto;
-				border: 8px solid #f3f3f3; /* Light grey */
-				border-top: 8px solid #3498db; /* Blue */
-				border-radius: 50%;
-				width: 50px;
-				height: 50px;
-				animation: spin 2s linear infinite;
+			.hex-loader {
+				width: 60px;
+				height: 60px;
+				background-color: #c90917;
+				clip-path: polygon(
+					25% 0%,
+					75% 0%,
+					100% 50%,
+					75% 100%,
+					25% 100%,
+					0% 50%
+				);
+				animation: spin 1s linear infinite;
+				margin-bottom: 20px;
 			}
 
 			@keyframes spin {
-				0% {
-					transform: rotate(0deg);
-				}
-				100% {
+				to {
 					transform: rotate(360deg);
 				}
 			}
 
-			.message {
-				font-size: 18px;
-				color: #555;
+			.hidden {
+				display: none;
+			}
+
+			button {
+				margin-top: 1rem;
+				padding: 0.6rem 1.2rem;
+				background-color: #c90917;
+				border: none;
+				border-radius: 8px;
+				color: white;
+				cursor: pointer;
+			}
+
+			button:hover {
+				background-color: #a80510;
 			}
 
 			.error {
-				color: #e74c3c;
-				font-weight: bold;
-			}
-
-			.success {
-				color: #2ecc71;
-				font-weight: bold;
-			}
-
-			.link {
-				display: block;
-				margin-top: 20px;
-				font-size: 14px;
-				color: #3498db;
-				text-decoration: none;
-			}
-
-			.link:hover {
-				text-decoration: underline;
+				color: #f87171;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
-			<div class="loading-spinner"></div>
-			<p class="message">Redirecting you to the secure checkout page...</p>
-			<p class="error" id="error-message" style="display: none">
-				Sorry, we couldn’t find your checkout page. Please try again later.
-			</p>
-			<p class="success" id="success-message" style="display: none">
-				You are being redirected... Hold tight!
-			</p>
-			<a class="link" href="#" id="fallback-link" style="display: none"
-				>Go back to the homepage</a
-			>
-		</div>
+		<div class="hex-loader" id="loader"></div>
+		<h2 id="message">Redirecting you to your checkout...</h2>
+		<p class="error hidden" id="error-msg">
+			Something went wrong. No matching checkout page found.
+		</p>
+		<button class="hidden" id="return-btn">Return to Previous Page</button>
 
 		<script>
-			const getQueryParam = (key) =>
-				new URLSearchParams(window.location.search).get(key);
-
-			async function redirectUser() {
-				const router = getQueryParam('router');
-				const plan = getQueryParam('plan');
-				const program = getQueryParam('program');
-				const protection_plan = getQueryParam('protection_plan') || 'false';
-				const referrer = document.referrer || 'unknown';
-
-				const query = new URLSearchParams({
-					router,
-					plan,
-					program,
-					protection_plan,
-				});
+			async function init() {
+				const params = new URLSearchParams(window.location.search);
+				const query = params.toString();
+				const sourcePage = document.referrer || '/';
 
 				try {
 					const res = await fetch(`/.netlify/functions/getUrls?${query}`);
-					const data = await res.json();
-					if (!data.url) throw new Error('No match');
+					if (!res.ok) throw new Error('Function request failed');
 
-					// If found, redirect
-					const finalUrl = `${data.url}?source_url=${encodeURIComponent(
-						referrer
-					)}`;
-					window.location.href = finalUrl;
-				} catch (e) {
-					// Show error message if no valid URL found
-					document.querySelector('.loading-spinner').style.display = 'none';
-					document.querySelector('.message').style.display = 'none';
-					document.querySelector('#error-message').style.display = 'block';
-					document.querySelector('#fallback-link').style.display =
-						'inline-block';
+					const { url } = await res.json();
+
+					if (url) {
+						window.location.href = url;
+					} else {
+						throw new Error('No URL returned');
+					}
+				} catch (err) {
+					document.getElementById('loader').classList.add('hidden');
+					document.getElementById('message').textContent = 'Oops!';
+					document.getElementById('error-msg').classList.remove('hidden');
+					const btn = document.getElementById('return-btn');
+					btn.classList.remove('hidden');
+					btn.onclick = () => {
+						window.location.href = sourcePage;
+					};
 				}
 			}
 
-			window.onload = redirectUser;
+			init();
 		</script>
 	</body>
 </html>
