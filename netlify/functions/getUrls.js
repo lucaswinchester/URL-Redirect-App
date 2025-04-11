@@ -22,11 +22,15 @@ exports.handler = async (event) => {
 
   // Airtable filter using AND() on all criteria
   const formula = `AND(
-    {Router SKU}='${router}',
-    {Plan}='${plan}',
-    {Program}='${program}',
+    {Router SKU}='${router.toUpperCase()}',
+    {Plan}='${plan.toUpperCase()}',
+    {Program}='${program.capitalizeFirstLetter()}',
     {Router Protection}=${protection_plan === 'true' ? 'TRUE()' : 'FALSE()'}
   )`;
+
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`;
 
