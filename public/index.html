@@ -90,10 +90,7 @@
 					if (url) {
 						// Add source_url param to final checkout link
 						const redirectUrl = new URL(url);
-						redirectUrl.searchParams.set(
-							'cf_source_url',
-							encodeURIComponent(sourcePage)
-						);
+						redirectUrl.searchParams.set('cf_source_url', sourcePage);
 						window.location.href = redirectUrl.toString();
 					} else {
 						throw new Error('No URL returned');
