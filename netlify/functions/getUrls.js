@@ -34,6 +34,8 @@ exports.handler = async (event) => {
 
   const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}&maxRecords=1`;
 
+  console.log(url);
+
   try {
     const response = await fetch(url, {
       headers: {
