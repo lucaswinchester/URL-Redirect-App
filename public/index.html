@@ -55,7 +55,7 @@
 			}
 
 			button:hover {
-				background-color: #a80510;
+				background-color: #a30713;
 			}
 
 			.error {
@@ -78,13 +78,20 @@
 				const sourcePage = document.referrer || '/';
 
 				try {
-					const res = await fetch(`/.netlify/functions/getUrls?${query}`);
+					const res = await fetch(`/netlify/functions/getUrls?${query}`);
 					if (!res.ok) throw new Error('Function request failed');
 
 					const { url } = await res.json();
 
 					if (url) {
-						window.location.href = url;
+						// Add the source URL as a param to the redirect target
+						const redirectUrl = new URL(url);
+						redirectUrl.searchParams.set(
+							'source_url',
+							encodeURIComponent(sourcePage)
+						);
+
+						window.location.href = redirectUrl.toString();
 					} else {
 						throw new Error('No URL returned');
 					}
