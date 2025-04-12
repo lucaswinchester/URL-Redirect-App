@@ -18,12 +18,35 @@
 				text-align: center;
 			}
 
-			.hex-loader {
+			.hex {
+				position: relative;
+				margin: 1em auto;
 				width: 100px;
 				height: 115px;
-				background-color: #c90917;
-				clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+				border-radius: 1em/0.5em;
+				background: #c90917;
+				transition: opacity 0.5s;
 				animation: elastic-spin 1s ease infinite;
+			}
+
+			.hex:before,
+			.hex:after {
+				position: absolute;
+				width: inherit;
+				height: inherit;
+				border-radius: inherit;
+				background: inherit;
+				content: '';
+			}
+
+			.hex:before {
+				-webkit-transform: rotate(60deg);
+				transform: rotate(60deg);
+			}
+
+			.hex:after {
+				-webkit-transform: rotate(-60deg);
+				transform: rotate(-60deg);
 			}
 
 			@keyframes elastic-spin {
@@ -59,7 +82,7 @@
 		</style>
 	</head>
 	<body>
-		<div id="loader" class="hex-loader"></div>
+		<div id="loader" class="hex"></div>
 
 		<h2 id="message">Redirecting you to your checkout...</h2>
 		<p class="error hidden" id="error-msg">
