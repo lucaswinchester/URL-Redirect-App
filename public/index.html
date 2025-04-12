@@ -18,15 +18,14 @@
 				text-align: center;
 			}
 
-			.logo-wrapper img {
+			.hex-loader {
 				width: 100px;
-				height: 100px;
-				display: block;
+				height: 115px;
+				background-color: #c90917;
+				clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+				animation: elastic-spin 1s ease infinite;
 			}
 
-			.logo-wrapper {
-				animation: elastic-spin 1s infinite ease;
-			}
 			@keyframes elastic-spin {
 				from {
 					transform: rotate(0deg);
@@ -60,11 +59,8 @@
 		</style>
 	</head>
 	<body>
-		<div class="logo-wrapper">
-			<img src="/assets/rg-logo.svg" alt="Loading..." />
-		</div>
+		<div id="loader" class="hex-loader"></div>
 
-		<div class="hex-loader" id="loader"></div>
 		<h2 id="message">Redirecting you to your checkout...</h2>
 		<p class="error hidden" id="error-msg">
 			Something went wrong. No matching checkout page found.
