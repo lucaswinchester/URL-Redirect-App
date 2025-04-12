@@ -18,25 +18,39 @@
 				text-align: center;
 			}
 
-			.hex-loader {
-				width: 60px;
-				height: 60px;
-				background-color: #c90917;
-				clip-path: polygon(
-					25% 0%,
-					75% 0%,
-					100% 50%,
-					75% 100%,
-					25% 100%,
-					0% 50%
-				);
-				animation: spin 1s linear infinite;
-				margin-bottom: 20px;
+			.logo-wrapper {
+				animation: jumpSpin 2s ease-in-out infinite;
+				transform-origin: center bottom;
+				display: inline-block;
 			}
 
-			@keyframes spin {
-				to {
-					transform: rotate(360deg);
+			.logo-wrapper img {
+				width: 100px;
+				height: 100px;
+				display: block;
+			}
+
+			@keyframes jumpSpin {
+				0% {
+					transform: translateY(0) scale(1, 1) rotate(0deg);
+				}
+				10% {
+					transform: translateY(-10px) scale(1.1, 0.9) rotate(45deg);
+				}
+				25% {
+					transform: translateY(-50px) scale(0.95, 1.05) rotate(135deg);
+				}
+				50% {
+					transform: translateY(-80px) scale(1, 1) rotate(180deg);
+				}
+				75% {
+					transform: translateY(-30px) scale(1.05, 0.95) rotate(270deg);
+				}
+				90% {
+					transform: translateY(0px) scale(1.2, 0.8) rotate(355deg);
+				}
+				100% {
+					transform: translateY(0px) scale(1, 1) rotate(360deg);
 				}
 			}
 
@@ -64,6 +78,8 @@
 		</style>
 	</head>
 	<body>
+		<img src="/assets/rg-logo.svg" alt="Loading..." class="logo-loader" />
+
 		<div class="hex-loader" id="loader"></div>
 		<h2 id="message">Redirecting you to your checkout...</h2>
 		<p class="error hidden" id="error-msg">
