@@ -18,27 +18,21 @@
 				text-align: center;
 			}
 
-			.logo-wrapper {
-				animation: jumpSpin 2s ease-in-out infinite;
-				transform-origin: center bottom;
-				display: inline-block;
-			}
-
 			.logo-wrapper img {
 				width: 100px;
 				height: 100px;
 				display: block;
 			}
 
-			@keyframes jumpSpin {
-				0% {
-					transform: rotate(0deg), translateY(0), scale(1, 1);
+			.logo-wrapper {
+				animation: elastic-spin 1s infinite ease;
+			}
+			@keyframes elastic-spin {
+				from {
+					transform: rotate(0deg);
 				}
-				50% {
-					transform: rotate(180deg), translateY(-10px), scale(1.1, 0.9);
-				}
-				100% {
-					transform: rotate(360deg), translateY(0), scale(0.95, 1.05);
+				to {
+					transform: rotate(720deg);
 				}
 			}
 
