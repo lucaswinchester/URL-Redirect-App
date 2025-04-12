@@ -18,30 +18,27 @@
 				text-align: center;
 			}
 
+			/* HTML: <div class="hexagon"></div> */
 			.hex {
-				position: relative;
-				margin: 1em auto;
-				width: 100px;
-				height: 115px;
-				border-radius: 1em/0.5em;
-				background: #c90917;
-				transition: opacity 0.5s;
-				animation: elastic-spin 1s ease infinite;
-			}
-
-			.hex:before {
-				content: '';
-				display: block;
-				background: currentColor;
-				padding-top: 115%; /* 100%/cos(30)  */
+				--b: 15px; /* adjust to control the border  */
+				height: 100px; /* adjust to control the size  */
+				aspect-ratio: cos(30deg);
 				clip-path: polygon(
-					0% 25%,
-					0% 75%,
+					50% 0,
+					-50% 50%,
 					50% 100%,
-					100% 75%,
-					100% 25%,
-					50% 0%
+					150% 50%,
+					50% 0,
+					50% var(--b),
+					calc(100% - var(--b) * sin(60deg)) calc(25% + var(--b) * cos(60deg)),
+					calc(100% - var(--b) * sin(60deg)) calc(75% - var(--b) * cos(60deg)),
+					50% calc(100% - var(--b)),
+					calc(var(--b) * sin(60deg)) calc(75% - var(--b) * cos(60deg)),
+					calc(var(--b) * sin(60deg)) calc(25% + var(--b) * cos(60deg)),
+					50% var(--b)
 				);
+				background: #c90917;
+				animation: elastic-spin 1s ease infinite;
 			}
 
 			@keyframes elastic-spin {
