@@ -141,7 +141,17 @@
 					};
 
 					// Attempt to retrieve the generated URL from the API response
-					try {
+					fetch(functionURL)
+						.then((res) => res.json())
+						.then((data) => {
+							if (data.url) {
+								window.location.href = data.url; // ✅ direct redirect
+							} else {
+								showError('No matching checkout page');
+							}
+						});
+
+					/*try {
 						const fallbackRes = await fetch(functionURL);
 
 						if (fallbackRes.ok) {
@@ -162,7 +172,7 @@
 						console.warn('Could not parse fallback response as JSON', parseErr);
 						debugInfo.classList.remove('hidden');
 						debugInfo.textContent = `Unable to fetch or parse final URL for debugging.`;
-					}
+					}*/
 				}
 			}
 
