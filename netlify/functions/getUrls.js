@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     if (!planID || !cf_dealer_id || !cf_agent_id) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: "Missing required parameters: planID or cf_dealer_id" }),
+        body: JSON.stringify({ error: "Missing required parameters: Plan ID, Dealer ID, or Agent ID" }),
       };
     }
 
