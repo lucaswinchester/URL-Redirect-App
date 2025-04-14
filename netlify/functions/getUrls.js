@@ -14,6 +14,9 @@ exports.handler = async (event) => {
     const checkoutUrl = await getCheckoutUrlByPlanID(planID);
     const agentInfo = await getAgentDetails(cf_dealer_id);
 
+    console.log(checkoutUrl);
+    console.log(cf_dealer_id);
+
     if (!checkoutUrl || !agentInfo) {
       return {
         statusCode: 404,
