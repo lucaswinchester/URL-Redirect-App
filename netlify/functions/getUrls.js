@@ -2,9 +2,9 @@ const { getCheckoutUrlByPlanID, getAgentDetails } = require("./airtableHelpers")
 
 exports.handler = async (event) => {
   try {
-    const { planID, cf_dealer_id, source } = event.queryStringParameters;
+    const { planID, cf_dealer_id, cf_agent_id, source } = event.queryStringParameters;
 
-    if (!planID || !cf_dealer_id) {
+    if (!planID || !cf_dealer_id || !cf_agent_id) {
       return {
         statusCode: 400,
         body: JSON.stringify({ error: "Missing required parameters: planID or cf_dealer_id" }),
@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     }
 
     const checkoutUrl = await getCheckoutUrlByPlanID(planID);
-    const agentInfo = await getAgentDetails(cf_dealer_id);
+    const agentInfo = await getAgentDetails(cf_dealer_id, cf_agent_id);
 
     console.log(planID);
     console.log(checkoutUrl);
@@ -30,7 +30,7 @@ exports.handler = async (event) => {
 
     fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
     if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
-    if (agentInfo["Dealer Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Dealer Name"]);
+    if (agentInfo["Company Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Company Name"]);
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);

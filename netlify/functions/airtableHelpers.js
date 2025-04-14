@@ -19,8 +19,8 @@ async function getCheckoutUrlByPlanID(planID) {
   return json.fields?.URL || null;
 }
 
-async function getAgentDetails(dealerId) {
-  const formula = `{RGID}='${dealerId}'`;
+async function getAgentDetails(dealerId, agentId) {
+  const formula = `AND({Agent ID}='${agentId}',{RGID}='${dealerId}')`;
   const url = `https://api.airtable.com/v0/${BASE_ID}/${USER_TABLE_ID}?filterByFormula=${encodeURIComponent(
     formula
   )}&maxRecords=1`;
