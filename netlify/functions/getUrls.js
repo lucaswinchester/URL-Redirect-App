@@ -6,7 +6,8 @@ exports.handler = async (event) => {
     router,
     plan,
     program,
-    protection_plan = "false"
+    protection_plan = "false",
+    planID
   } = event.queryStringParameters;
 
   if (!router || !plan || !program) {
@@ -21,16 +22,20 @@ exports.handler = async (event) => {
 
   //SIMPLE PRODUCT LINKS TABLE
   //const TABLE_ID = "tblJTN70fil3fwcle";
-  
+
   //DIRECT RETAILER PRICING TABLE
   const TABLE_ID = "tblfeCLmlirVWtaA4";
 
   // Airtable filter using AND() on all criteria
-  const formula = `AND(
+  /*const formula = `AND(
     {Router SKU}='${router.toUpperCase()}',
     {Plan}='${plan.toUpperCase()}',
     {Program}='${capitalizeFirstLetter(program)}',
     {Router Protection}=${protection_plan === 'true' ? 'TRUE()' : 'FALSE()'}
+  )`;*/
+
+  const formula = `AND(
+    {planID} = '${planID}'
   )`;
 
   function capitalizeFirstLetter(str) {
