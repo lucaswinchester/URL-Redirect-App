@@ -20,7 +20,7 @@ async function getCheckoutUrlByPlanID(planID) {
 }
 
 async function getAgentDetails(dealerId) {
-  const formula = `{Dealer ID}='${dealerId}'`;
+  const formula = `{RGID}='${dealerId}'`;
   const url = `https://api.airtable.com/v0/${BASE_ID}/${USER_TABLE_ID}?filterByFormula=${encodeURIComponent(
     formula
   )}&maxRecords=1`;
