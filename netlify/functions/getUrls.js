@@ -10,7 +10,7 @@ exports.handler = async (event) => {
     planID
   } = event.queryStringParameters;
 
-  if (!router || !plan || !program) {
+  if (!planID) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Missing required fields" })
