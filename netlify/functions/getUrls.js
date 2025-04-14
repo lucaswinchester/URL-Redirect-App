@@ -18,7 +18,12 @@ exports.handler = async (event) => {
 
   const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY;
   const BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const TABLE_ID = "tblJTN70fil3fwcle";
+
+  //SIMPLE PRODUCT LINKS TABLE
+  //const TABLE_ID = "tblJTN70fil3fwcle";
+  
+  //DIRECT RETAILER PRICING TABLE
+  const TABLE_ID = "tblfeCLmlirVWtaA4";
 
   // Airtable filter using AND() on all criteria
   const formula = `AND(
