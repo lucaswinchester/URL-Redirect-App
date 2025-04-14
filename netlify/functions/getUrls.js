@@ -39,11 +39,8 @@ exports.handler = async (event) => {
     console.log(fullUrl.toString());
 
     return {
-      statusCode: 302,
-      headers: {
-        Location: fullUrl.toString(),
-      },
-      body: "",
+      statusCode: 200,
+      body: JSON.stringify({ url: fullUrl.toString() }),
     };
   } catch (error) {
     console.error("Function error:", error);
