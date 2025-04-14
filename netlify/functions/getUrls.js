@@ -34,6 +34,8 @@ exports.handler = async (event) => {
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
     if (source) fullUrl.searchParams.set("source", source);
 
+    console.log(fullUrl.toString());
+
     return {
       statusCode: 302,
       headers: {
