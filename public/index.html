@@ -123,7 +123,7 @@
 						// Add source_url param to final checkout link
 						const redirectUrl = new URL(url);
 						redirectUrl.searchParams.set('cf_source_url', sourcePage);
-						//window.location.href = redirectUrl.toString();
+						window.location.href = redirectUrl.toString();
 						console.log(redirectUrl.toString());
 					} else {
 						throw new Error('No URL returned');
@@ -141,6 +141,7 @@
 					};
 
 					// Attempt to retrieve the generated URL from the API response
+					console.log(functionURL);
 					fetch(functionURL)
 						.then((res) => res.json())
 						.then((data) => {
