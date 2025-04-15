@@ -5,6 +5,7 @@ const BASE_ID = process.env.AIRTABLE_BASE_ID;
 
 const USER_TABLE_ID = "tblPMOglEbuYnwxyd";
 const PRODUCT_TABLE_ID = "tblfeCLmlirVWtaA4";
+const SALES_TABLE_ID = "tblUpMyEqXM0buXI8";
 
 async function getCheckoutUrlByPlanID(planID) {
   const url = `https://api.airtable.com/v0/${BASE_ID}/${PRODUCT_TABLE_ID}/${planID}`;
