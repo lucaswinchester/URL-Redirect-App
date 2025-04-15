@@ -30,7 +30,6 @@ exports.handler = async (event) => {
 
     console.log('Playload= ', payload);
     console.log('Payload.Records= ',payload.records);
-    console.log('Payload.Records[0].Fields= ', object.keys(payload.records[0].fields));
 
     const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
       method: "POST",
