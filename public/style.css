@@ -81,6 +81,7 @@ button:hover {
     --b: 14px; /* adjust to control the border  */
     height: 100px; /* adjust to control the size  */
     aspect-ratio: cos(30deg);
+    margin-bottom: 1rem;
     clip-path: polygon(
         50% 0,
         -50% 50%,
