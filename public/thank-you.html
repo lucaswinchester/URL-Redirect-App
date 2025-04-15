@@ -3,45 +3,35 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Thank You</title>
+		<title>Thank You!</title>
 		<link rel="stylesheet" href="styles.css" />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<script
+			src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"
+			defer
+		></script>
+		<script src="/js/thank-you.js" defer></script>
+		<script src="/js/logSubscriptionClient.js" defer></script>
 	</head>
 	<body>
-		<div class="container">
-			<h1>🎉 Thank You for Your Purchase!</h1>
-			<p>We’ve received your subscription and are preparing everything.</p>
-			<p>
-				<small>You’ll receive an email shortly with your next steps.</small>
+		<div class="thank-you-wrapper">
+			<div class="thank-you-icon">🎉</div>
+			<h1 class="thank-you-heading">Thank You for Your Purchase!</h1>
+			<p class="thank-you-subtext">
+				Your subscription has been confirmed and your info has been logged
+				successfully.
 			</p>
+
+			<div class="confirmation-card">
+				<p>
+					We’ve emailed you the details of your subscription. You’ll hear from
+					us shortly.
+				</p>
+				<button onclick="window.location.href='/'">Back to Home</button>
+			</div>
 		</div>
-
-		<script>
-			// Helper to extract query params
-			function getParams() {
-				const params = new URLSearchParams(window.location.search);
-				const obj = {};
-				for (const [key, value] of params) {
-					obj[key] = decodeURIComponent(value);
-				}
-				return obj;
-			}
-
-			async function logToAirtable() {
-				const data = getParams();
-
-				try {
-					const res = await fetch('/.netlify/functions/logSubscription', {
-						method: 'POST',
-						body: JSON.stringify(data),
-					});
-					const result = await res.json();
-					console.log('Logged to Airtable:', result);
-				} catch (err) {
-					console.error('Failed to log subscription', err);
-				}
-			}
-
-			logToAirtable();
-		</script>
 	</body>
 </html>

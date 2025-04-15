@@ -122,3 +122,76 @@ button:hover {
     word-break: break-word;
   }
   
+  /* ========== THANK YOU PAGE ========== */
+.thank-you-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 1rem;
+    animation: fadeInUp 0.6s ease-out both;
+  }
+  
+  .thank-you-icon {
+    font-size: 4rem;
+    animation: bounce 1.5s ease infinite;
+    margin-bottom: 1rem;
+  }
+  
+  .thank-you-heading {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-red);
+    margin-bottom: 1rem;
+  }
+  
+  .thank-you-subtext {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .confirmation-card {
+    background-color: #1e293b;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(201, 9, 23, 0.2);
+    animation: popIn 0.5s ease-out both;
+  }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  
+  @keyframes popIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
