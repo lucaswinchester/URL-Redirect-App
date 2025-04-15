@@ -28,6 +28,8 @@ exports.handler = async (event) => {
       ],
     };
 
+    console.log(payload);
+
     const response = await fetch(`https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}`, {
       method: "POST",
       headers: {
