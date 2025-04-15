@@ -2,80 +2,17 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<meta
+			http-equiv="refresh"
+			content="0; URL='https://www.revgennetworks.com'"
+		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Redirecting...</title>
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
-		<div id="loader" class="hex"></div>
-
-		<svg
-			style="visibility: hidden; position: absolute"
-			width="0"
-			height="0"
-			xmlns="http://www.w3.org/2000/svg"
-			version="1.1"
-		>
-			<defs>
-				<filter id="goo">
-					<feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
-					<feColorMatrix
-						in="blur"
-						mode="matrix"
-						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
-						result="goo"
-					/>
-					<feComposite in="SourceGraphic" in2="goo" operator="atop" />
-				</filter>
-			</defs>
-		</svg>
-
-		<h2 id="message">Redirecting you to your checkout...</h2>
-		<p class="error hidden" id="error-msg">
-			Something went wrong. No matching checkout page found.
-		</p>
-		<p class="error hidden" id="debug-url" style="font-size: 0.9rem"></p>
-		<button class="hidden" id="return-btn">Return to Previous Page</button>
-
-		<script>
-			async function init() {
-				const params = new URLSearchParams(window.location.search);
-				const query = params.toString();
-				const sourcePage = document.referrer || '/';
-
-				// Save full fetch URL for debugging
-				const functionURL = `/.netlify/functions/getUrls?${query}`;
-
-				try {
-					const res = await fetch(functionURL);
-					if (!res.ok) throw new Error('Function request failed');
-
-					const { url } = await res.json();
-
-					if (url) {
-						// Add source_url param to final checkout link
-						const redirectUrl = new URL(url);
-						redirectUrl.searchParams.set('cf_source_url', sourcePage);
-						window.location.href = redirectUrl.toString();
-						console.log(redirectUrl.toString());
-					} else {
-						throw new Error('No URL returned');
-					}
-				} catch (err) {
-					document.getElementById('loader').classList.add('hidden');
-					document.getElementById('message').textContent = 'Oops!';
-					document.getElementById('error-msg').classList.remove('hidden');
-
-					const debugInfo = document.getElementById('debug-url');
-					const btn = document.getElementById('return-btn');
-					btn.classList.remove('hidden');
-					btn.onclick = () => {
-						window.location.href = sourcePage;
-					};
-				}
-			}
-
-			init();
-		</script>
+		<div class="container">
+			<p class="debug">Redirecting to our main site...</p>
+		</div>
 	</body>
 </html>
