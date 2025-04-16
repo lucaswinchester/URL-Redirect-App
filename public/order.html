@@ -24,38 +24,50 @@
 				const params = new URLSearchParams(window.location.search);
 				const query = params.toString();
 				const sourcePage = document.referrer || '/';
-
 				const functionURL = `/.netlify/functions/getUrls?${query}`;
+
+				const loader = document.getElementById('loader');
+				const message = document.getElementById('message');
+				const errorMsg = document.getElementById('error-msg');
 				const debugInfo = document.getElementById('debug-url');
+				const returnBtn = document.getElementById('return-btn');
 
 				try {
 					const res = await fetch(functionURL);
-					if (!res.ok) {
-						throw new Error(`Netlify function request failed: ${res.status}`);
-					}
 
-					const { url } = await res.json();
+					const contentType = res.headers.get('content-type') || '';
 
-					if (url) {
-						const redirectUrl = new URL(url);
-						redirectUrl.searchParams.set('cf_source_url', sourcePage);
-						window.location.replace = redirectUrl.toString();
-						return;
+					// Only attempt to parse JSON if we got the expected response
+					if (res.ok && contentType.includes('application/json')) {
+						const data = await res.json();
+
+						if (data.url) {
+							const redirectUrl = new URL(data.url);
+							redirectUrl.searchParams.set('cf_source_url', sourcePage);
+
+							// Immediately redirect
+							window.location.replace(redirectUrl.toString());
+							return;
+						} else {
+							throw new Error('No URL found in response');
+						}
 					} else {
-						throw new Error('No URL returned');
+						const text = await res.text(); // read body anyway for debugging
+						throw new Error(
+							`Unexpected response: ${res.status} ${res.statusText} — ${text}`
+						);
 					}
 				} catch (err) {
-					console.error('Redirect error:', err.message);
-					document.getElementById('loader').classList.add('hidden');
-					document.getElementById('message').textContent = 'Oops!';
-					document.getElementById('error-msg').classList.remove('hidden');
+					console.error('Redirect failed:', err);
 
-					debugInfo.textContent = `Looks like you moved too quickly! Your link wasn't properly generated. Please try again.`;
+					loader.classList.add('hidden');
+					message.textContent = 'Oops!';
+					errorMsg.classList.remove('hidden');
+					debugInfo.textContent = `Fetch failed: ${err.message}`;
 					debugInfo.classList.remove('hidden');
 
-					const btn = document.getElementById('return-btn');
-					btn.classList.remove('hidden');
-					btn.onclick = () => {
+					returnBtn.classList.remove('hidden');
+					returnBtn.onclick = () => {
 						window.location.href = sourcePage;
 					};
 				}
