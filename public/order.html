@@ -34,38 +34,31 @@
 
 				try {
 					const res = await fetch(functionURL);
+					const text = await res.text();
 
-					const contentType = res.headers.get('content-type') || '';
+					// Try to parse JSON manually
+					let data;
+					try {
+						data = JSON.parse(text);
+					} catch (jsonErr) {
+						throw new Error(`Invalid JSON: ${text}`);
+					}
 
-					// Only attempt to parse JSON if we got the expected response
-					if (res.ok && contentType.includes('application/json')) {
-						const data = await res.json();
-
-						if (data.url) {
-							const redirectUrl = new URL(data.url);
-							redirectUrl.searchParams.set('cf_source_url', sourcePage);
-
-							// Immediately redirect
-							window.location.replace(redirectUrl.toString());
-							return;
-						} else {
-							throw new Error('No URL found in response');
-						}
+					if (res.ok && data.url) {
+						const redirectUrl = new URL(data.url);
+						redirectUrl.searchParams.set('cf_source_url', sourcePage);
+						window.location.replace(redirectUrl.toString());
+						return;
 					} else {
-						const text = await res.text(); // read body anyway for debugging
-						throw new Error(
-							`Unexpected response: ${res.status} ${res.statusText} — ${text}`
-						);
+						throw new Error(`No valid URL in response: ${text}`);
 					}
 				} catch (err) {
 					console.error('Redirect failed:', err);
-
 					loader.classList.add('hidden');
 					message.textContent = 'Oops!';
 					errorMsg.classList.remove('hidden');
 					debugInfo.textContent = `Fetch failed: ${err.message}`;
 					debugInfo.classList.remove('hidden');
-
 					returnBtn.classList.remove('hidden');
 					returnBtn.onclick = () => {
 						window.location.href = sourcePage;
