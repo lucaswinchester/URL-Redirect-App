@@ -31,7 +31,8 @@
 
 				try {
 					const res = await fetch(functionURL);
-					if (!res.ok) throw new Error('Function request failed');
+					if (!res.ok)
+						throw new Error(`Netlify function request failed: ${res.status}`);
 
 					const { url } = await res.json();
 
@@ -53,7 +54,7 @@
 					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
 
-					debugInfo.textContent = `Tried: ${functionURL}`;
+					debugInfo.textContent = `Looks like you moved too quickly! Your link wasn't properly generated. Please try again.`;
 					debugInfo.classList.remove('hidden');
 
 					const btn = document.getElementById('return-btn');
