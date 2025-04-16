@@ -27,28 +27,23 @@
 
 				const functionURL = `/.netlify/functions/getUrls?${query}`;
 				const debugInfo = document.getElementById('debug-url');
-				let isRedirecting = false;
 
 				try {
 					const res = await fetch(functionURL);
 					if (!res.ok)
 						throw new Error(`Netlify function request failed: ${res.status}`);
 
-					const { url } = await res.json();
+					const json = await res.json();
 
-					if (url) {
-						const redirectUrl = new URL(url);
+					if (json && json.url) {
+						const redirectUrl = new URL(json.url);
 						redirectUrl.searchParams.set('cf_source_url', sourcePage);
-						isRedirecting = true;
-						window.location.href = redirectUrl.toString();
-						console.log(redirectUrl.toString());
+						window.location.replace = redirectUrl.toString();
 						return;
 					} else {
 						throw new Error('No URL returned');
 					}
 				} catch (err) {
-					if (isRedirecting) return;
-
 					console.error('Redirect error:', err.message);
 					document.getElementById('loader').classList.add('hidden');
 					document.getElementById('message').textContent = 'Oops!';
