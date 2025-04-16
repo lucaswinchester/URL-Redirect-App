@@ -34,10 +34,10 @@
 						throw new Error(`Netlify function request failed: ${res.status}`);
 					}
 
-					const json = await res.json();
+					const { url } = await res.json();
 
-					if (json && json.url) {
-						const redirectUrl = new URL(json.url);
+					if (url) {
+						const redirectUrl = new URL(url);
 						redirectUrl.searchParams.set('cf_source_url', sourcePage);
 						window.location.replace = redirectUrl.toString();
 						return;
