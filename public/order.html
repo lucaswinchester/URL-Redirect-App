@@ -30,8 +30,9 @@
 
 				try {
 					const res = await fetch(functionURL);
-					if (!res.ok)
+					if (!res.ok) {
 						throw new Error(`Netlify function request failed: ${res.status}`);
+					}
 
 					const json = await res.json();
 
