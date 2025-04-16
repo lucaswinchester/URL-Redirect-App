@@ -26,12 +26,6 @@
 				const sourcePage = document.referrer || '/';
 				const functionURL = `/.netlify/functions/getUrls?${query}`;
 
-				const loader = document.getElementById('loader');
-				const message = document.getElementById('message');
-				const errorMsg = document.getElementById('error-msg');
-				const debugInfo = document.getElementById('debug-url');
-				const returnBtn = document.getElementById('return-btn');
-
 				try {
 					const res = await fetch(functionURL);
 					const text = await res.text();
@@ -54,11 +48,16 @@
 					}
 				} catch (err) {
 					console.error('Redirect failed:', err);
-					loader.classList.add('hidden');
-					message.textContent = 'Oops!';
-					errorMsg.classList.remove('hidden');
+
+					document.getElementById('loader').classList.add('hidden');
+					document.getElementById('message').textContent = 'Oops!';
+					document.getElementById('error-msg').classList.remove('hidden');
+
+					const debugInfo = document.getElementById('debug-url');
 					debugInfo.textContent = `Fetch failed: ${err.message}`;
 					debugInfo.classList.remove('hidden');
+
+					const returnBtn = document.getElementById('return-btn');
 					returnBtn.classList.remove('hidden');
 					returnBtn.onclick = () => {
 						window.location.href = sourcePage;
