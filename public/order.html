@@ -11,7 +11,7 @@
 
 		<h2 id="message">Redirecting you to your checkout...</h2>
 
-		<div class="confirmation-card hidden">
+		<div class="confirmation-card hidden" id="confirmation-card">
 			<p class="error hidden" id="error-msg">
 				Something went wrong. No matching checkout page found.
 			</p>
@@ -52,6 +52,9 @@
 					document.getElementById('loader').classList.add('hidden');
 					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
+					document
+						.getElementById('confirmation-card')
+						.classList.remove('hidden');
 
 					const debugInfo = document.getElementById('debug-url');
 					debugInfo.textContent = `Fetch failed: ${err.message}`;
