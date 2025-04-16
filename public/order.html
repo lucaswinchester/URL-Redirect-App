@@ -25,8 +25,9 @@
 				const query = params.toString();
 				const sourcePage = document.referrer || '/';
 
-				// Save full fetch URL for debugging
 				const functionURL = `/.netlify/functions/getUrls?${query}`;
+				const debugInfo = document.getElementById('debug-url');
+				let isRedirecting = false;
 
 				try {
 					const res = await fetch(functionURL);
@@ -35,9 +36,9 @@
 					const { url } = await res.json();
 
 					if (url) {
-						// Add source_url param to final checkout link
 						const redirectUrl = new URL(url);
 						redirectUrl.searchParams.set('cf_source_url', sourcePage);
+						isRedirecting = true;
 						window.location.href = redirectUrl.toString();
 						console.log(redirectUrl.toString());
 						return;
@@ -45,11 +46,16 @@
 						throw new Error('No URL returned');
 					}
 				} catch (err) {
+					if (isRedirecting) return;
+
+					console.error('Redirect error:', err.message);
 					document.getElementById('loader').classList.add('hidden');
 					document.getElementById('message').textContent = 'Oops!';
 					document.getElementById('error-msg').classList.remove('hidden');
 
-					const debugInfo = document.getElementById('debug-url');
+					debugInfo.textContent = `Tried: ${functionURL}`;
+					debugInfo.classList.remove('hidden');
+
 					const btn = document.getElementById('return-btn');
 					btn.classList.remove('hidden');
 					btn.onclick = () => {
