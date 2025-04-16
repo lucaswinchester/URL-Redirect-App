@@ -10,6 +10,10 @@
     --radius: 12px;
     --font-main: 'Inter', sans-serif;
   }
+
+  .hidden {
+    display: none !important;
+  }  
   
   /* ========== RESET ========== */
   * {
