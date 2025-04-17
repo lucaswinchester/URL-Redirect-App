@@ -1,6 +1,6 @@
 // netlify/functions/syncPlans.js
 const fetch = require('node-fetch');
-const supabase = require('../../supabaseClient');
+const supabase = require('./supabaseClient');
 const { getZohoAccessToken } = require('./zohoAuth');
 
 exports.handler = async () => {
