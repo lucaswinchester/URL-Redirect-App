@@ -27,6 +27,8 @@ exports.handler = async () => {
       description: plan.description || '',
     }));
 
+    console.log(insertData);
+
     const { error } = await supabase.from('plans').upsert(insertData);
 
     if (error) {
