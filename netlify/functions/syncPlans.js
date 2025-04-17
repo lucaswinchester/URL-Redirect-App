@@ -22,8 +22,7 @@ exports.handler = async () => {
 
     console.log(response);
 
-    const json = await response.json();
-    const plans = json.plans || [];
+    const plans = await response.plans || [];
 
     console.log(plans);
 
