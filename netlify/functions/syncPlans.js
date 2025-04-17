@@ -26,7 +26,7 @@ exports.handler = async () => {
     }));
 
     const { error } = await supabase.from('plans').upsert(insertData, {
-      onConflict: ['zoho_plan_id'],
+      onConflict: ['zoho_id'],
     });
 
     if (error) {
