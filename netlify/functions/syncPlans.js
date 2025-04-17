@@ -20,11 +20,13 @@ exports.handler = async () => {
       .then(response => console.log(response))
       .catch(err => console.error(err));
 
-    console.log(response);
+    console.log('Response: ', response);
 
-    const plans = await response.plans || [];
+    const json = JSON.parse(response);
+    console.log("JSON: ", json);
 
-    console.log(plans);
+    const plans = json.plans;
+    console.log('Plans: ', plans);
 
     const insertData = plans.map((plan) => ({
       zoho_id: plan.plan_code,
