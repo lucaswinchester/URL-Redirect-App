@@ -2,6 +2,7 @@
     "name": "zoho-redirect",
     "version": "1.0.0",
     "dependencies": {
+        "@supabase/supabase-js": "^2.49.4",
         "dotenv": "^16.4.7",
         "node-fetch": "^2.7.0"
     }
