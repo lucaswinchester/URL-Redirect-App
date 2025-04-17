@@ -7,13 +7,18 @@ exports.handler = async () => {
   try {
     const accessToken = await getZohoAccessToken();
 
-    const response = await fetch('https://www.zohoapis.com/billing/v1/plans?product_id=1826627000213811140', {
+    const options = {
+      method: 'GET',
       headers: {
+        'X-com-zoho-subscriptions-organizationid': '10234695',
         Authorization: `Zoho-oauthtoken ${accessToken}`,
-        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORGANIZATION_ID,
-        'Content-Type': 'application/json',
-      },
-    });
+      }
+    };
+    
+    const response = await fetch('https://www.zohoapis.com/billing/v1/products?product_id=1826627000213811140', options)
+      .then(response => response.json())
+      .then(response => console.log(response))
+      .catch(err => console.error(err));
 
     console.log(response);
 
