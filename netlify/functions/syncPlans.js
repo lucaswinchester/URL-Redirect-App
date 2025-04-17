@@ -25,6 +25,8 @@ exports.handler = async () => {
     const json = await response.json();
     const plans = json.plans || [];
 
+    console.log(plans);
+
     const insertData = plans.map((plan) => ({
       zoho_id: plan.plan_code,
       name: plan.name,
