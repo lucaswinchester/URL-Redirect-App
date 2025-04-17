@@ -14,15 +14,18 @@ exports.handler = async () => {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
       }
     };
+
+    let planResponse;
     
     const response = await fetch('https://www.zohoapis.com/billing/v1/plans?product_id=1826627000213811140', options)
       .then(response => response.json())
+      .then(response => planResponse = response)
       .then(response => console.log(response))
       .catch(err => console.error(err));
 
-    console.log('Response: ', response);
+    console.log('Response: ', planResponse);
 
-    const json = JSON.parse(response);
+    const json = JSON.parse(planResponse);
     console.log("JSON: ", json);
 
     const plans = json.plans;
