@@ -10,7 +10,7 @@ exports.handler = async () => {
     const options = {
       method: 'GET',
       headers: {
-        'X-com-zoho-subscriptions-organizationid': '10234695',
+        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORGANIZATION_ID,
         Authorization: `Zoho-oauthtoken ${accessToken}`,
       }
     };
