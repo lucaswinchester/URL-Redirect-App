@@ -7,7 +7,7 @@ exports.handler = async () => {
   try {
     const accessToken = await getZohoAccessToken();
 
-    const response = await fetch('https://subscriptions.zoho.com/api/v1/plans', {
+    const response = await fetch('https://www.zohoapis.com/billing/v1/plans?product_id=1826627000213811140', {
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
         'Content-Type': 'application/json',
