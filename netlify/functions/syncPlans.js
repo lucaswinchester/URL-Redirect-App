@@ -10,6 +10,7 @@ exports.handler = async () => {
     const response = await fetch('https://www.zohoapis.com/billing/v1/plans?product_id=1826627000213811140', {
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
+        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORGANIZATION_ID,
         'Content-Type': 'application/json',
       },
     });
