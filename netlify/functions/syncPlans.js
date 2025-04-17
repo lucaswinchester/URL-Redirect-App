@@ -34,7 +34,6 @@ exports.handler = async () => {
       interval_frequency: plan.interval,
       interval_unit: plan.interval_unit,
       description: plan.description || '',
-      is_active: plan.status,
       created_at: plan.created_at,
       updated_at: plan.updated_at
     }));
