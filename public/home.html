@@ -5,29 +5,95 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>RevGen Networks | 5G LTE Cloud</title>
 		<link rel="stylesheet" href="style.css" />
+		<style>
+			.glow {
+				box-shadow: 0 0 20px #c90917;
+				transition: transform 0.3s ease;
+			}
+
+			.glow:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 0 25px #ff1e2d;
+			}
+
+			.header {
+				background-color: #0f172a;
+				padding: 2rem 4rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				border-bottom: 1px solid var(--border-color);
+				position: relative;
+			}
+
+			.logo-hex {
+				width: 40px;
+				height: 40px;
+				background: #c90917;
+				clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%);
+				animation: pulse 2s infinite;
+			}
+
+			@keyframes pulse {
+				0%,
+				100% {
+					box-shadow: 0 0 10px #c90917;
+				}
+				50% {
+					box-shadow: 0 0 20px #ff1e2d;
+				}
+			}
+
+			.router-img {
+				position: absolute;
+				right: 2rem;
+				top: -20px;
+				width: 160px;
+				animation: float 5s ease-in-out infinite;
+				z-index: 0;
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+			}
+
+			.features-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 2rem;
+				margin-top: 2rem;
+			}
+
+			.testimonial {
+				font-style: italic;
+				color: var(--text-muted);
+			}
+		</style>
 	</head>
 	<body>
 		<!-- Header -->
-		<header class="container">
-			<div
-				class="card"
-				style="
-					display: flex;
-					justify-content: space-between;
-					align-items: center;
-				"
-			>
-				<h1 style="margin: 0">RevGen Networks</h1>
-				<a href="https://partners.revgennetworks.com" class="button"
-					>Partner Portal</a
-				>
+		<header class="header">
+			<div style="display: flex; align-items: center; gap: 1rem">
+				<div class="logo-hex"></div>
+				<h1>RevGen Networks</h1>
 			</div>
+			<a href="https://partners.revgennetworks.com" class="button"
+				>Partner Portal</a
+			>
+			<img src="router.png" alt="RevGen LTE Router" class="router-img" />
 		</header>
 
 		<!-- Hero -->
 		<section class="container">
-			<div class="card">
-				<h1>Welcome to the Cloud of 5G</h1>
+			<div class="card glow">
+				<h1>Introducing the 5G LTE Cloud</h1>
 				<p
 					style="
 						margin-top: 1rem;
@@ -36,43 +102,49 @@
 						margin-inline: auto;
 					"
 				>
-					RevGen is redefining connectivity with our 5G LTE Cloud — an
-					intelligent network architecture that puts speed, control, and
-					flexibility in your hands. Experience enterprise-grade performance
-					with the simplicity of plug-and-play.
+					A future-proof, carrier-agnostic LTE platform built for scale.
+					Instantly activate high-speed connectivity nationwide, with full cloud
+					control.
 				</p>
 				<button
 					onclick="window.location.href='https://rvgn.link'"
 					style="margin-top: 2rem"
 				>
-					Explore Devices
+					Get Started
 				</button>
 			</div>
 		</section>
 
 		<!-- Features -->
 		<section class="container">
-			<h2>Why Choose RevGen 5G LTE Cloud?</h2>
-			<div class="card" style="display: grid; gap: 2rem">
-				<div>
-					<h3>📡 Instant Connectivity</h3>
+			<h2>What Makes RevGen Different?</h2>
+			<div class="features-grid">
+				<div class="card glow">
+					<h3>⚡ Plug & Play Devices</h3>
 					<p>
-						Boot up in seconds. Our cloud SIM tech auto-connects to the
-						strongest network nationwide.
+						No technician required. Devices ship ready to go, and connect
+						out-of-the-box.
 					</p>
 				</div>
-				<div>
-					<h3>🧠 Smart Cloud Control</h3>
+				<div class="card glow">
+					<h3>📊 Live Analytics</h3>
 					<p>
-						Manage devices, plans, and usage in real-time with our cloud-native
-						dashboard.
+						Track usage, SIM performance, and device health in real time with
+						our cloud dashboard.
 					</p>
 				</div>
-				<div>
-					<h3>🔒 Secure & Scalable</h3>
+				<div class="card glow">
+					<h3>🔐 Built-In Security</h3>
 					<p>
-						Enterprise-grade encryption and a scalable API for all your
-						connected hardware.
+						We encrypt traffic from SIM to cloud to ensure data privacy and
+						customer protection.
+					</p>
+				</div>
+				<div class="card glow">
+					<h3>📦 API + Automation</h3>
+					<p>
+						Programmatic provisioning, ticketing, and webhook support for
+						advanced users.
 					</p>
 				</div>
 			</div>
@@ -80,29 +152,25 @@
 
 		<!-- Testimonials -->
 		<section class="container">
-			<h2>Trusted by Partners Nationwide</h2>
-			<div class="card" style="display: grid; gap: 2rem">
-				<blockquote>
-					“RevGen's LTE Cloud helped us roll out hundreds of devices with zero
-					downtime. It's a game-changer.”
-					<br />
-					<span style="color: var(--text-muted)">— Amber R., MSP Partner</span>
-				</blockquote>
-				<blockquote>
-					“From link tracking to SIM provisioning, everything just works.
-					Support is top notch too.”
-					<br />
-					<span style="color: var(--text-muted)"
-						>— Kyle M., National Retailer</span
-					>
-				</blockquote>
+			<h2>Real Partners. Real Results.</h2>
+			<div class="card glow" style="margin-top: 1rem">
+				<p class="testimonial">
+					“RevGen made it easy to onboard hundreds of clients without worrying
+					about coverage or contracts.”<br /><strong>– Jordan T., VAR</strong>
+				</p>
+			</div>
+			<div class="card glow" style="margin-top: 1rem">
+				<p class="testimonial">
+					“Finally, LTE with actual control. We integrated with their API in
+					less than a day.”<br /><strong>– Dana M., Systems Engineer</strong>
+				</p>
 			</div>
 		</section>
 
 		<!-- Footer -->
-		<footer class="container">
-			<div class="card">
-				<p>&copy; 2025 RevGen Networks. All rights reserved.</p>
+		<footer class="container" style="margin-top: 4rem">
+			<div class="card glow">
+				<p>&copy; 2025 RevGen Networks</p>
 				<p
 					style="
 						font-size: 0.85rem;
@@ -110,7 +178,7 @@
 						margin-top: 0.5rem;
 					"
 				>
-					Built for modern connectivity. Powered by 5G.
+					Built for modern connectivity. Powered by 5G LTE Cloud.
 				</p>
 			</div>
 		</footer>
