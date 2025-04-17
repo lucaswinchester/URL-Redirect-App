@@ -18,16 +18,14 @@ exports.handler = async () => {
     const plans = json.plans || [];
 
     const insertData = plans.map((plan) => ({
-      zoho_plan_id: plan.plan_code,
+      zoho_id: plan.plan_code,
       name: plan.name,
       price: plan.recurring.price,
       interval: plan.recurring.interval,
       description: plan.description || '',
     }));
 
-    const { error } = await supabase.from('plans').upsert(insertData, {
-      onConflict: ['zoho_id'],
-    });
+    const { error } = await supabase.from('plans').upsert(insertData);
 
     if (error) {
       console.error('Supabase insert error:', error);
