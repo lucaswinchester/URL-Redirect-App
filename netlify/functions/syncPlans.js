@@ -15,7 +15,7 @@ exports.handler = async () => {
       }
     };
     
-    const response = await fetch('https://www.zohoapis.com/billing/v1/products?product_id=1826627000213811140', options)
+    const response = await fetch('https://www.zohoapis.com/billing/v1/plans?product_id=1826627000213811140', options)
       .then(response => response.json())
       .then(response => console.log(response))
       .catch(err => console.error(err));
