@@ -14,6 +14,8 @@ exports.handler = async () => {
       },
     });
 
+    console.log(response);
+
     const json = await response.json();
     const plans = json.plans || [];
 
