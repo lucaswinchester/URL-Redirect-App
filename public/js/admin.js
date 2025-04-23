@@ -3,6 +3,7 @@
 
 const planSelect = document.getElementById('planSelect');
 const addonsList = document.getElementById('addonsList');
+const addonSelect = document.getElementById('addonSelect');
 const packageForm = document.getElementById('packageForm');
 const packagesUl = document.getElementById('packagesUl');
 
@@ -45,23 +46,26 @@ function renderPlans() {
 }
 
 function renderAddons() {
-  addonsList.innerHTML = '';
+  // Populate the multi-select dropdown for addons
+  if (!addonSelect) return;
+  addonSelect.innerHTML = '';
+  addonSelect.multiple = true;
   addons.forEach(addon => {
-    const label = document.createElement('label');
-    label.style.display = 'block';
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.value = addon.id;
-    label.appendChild(checkbox);
-    label.appendChild(document.createTextNode(` ${addon.name} ($${addon.price})`));
-    addonsList.appendChild(label);
+    const opt = document.createElement('option');
+    opt.value = addon.id;
+    opt.textContent = `${addon.name} ($${addon.price})`;
+    addonSelect.appendChild(opt);
   });
+  // Optionally hide the old checkbox area
+  if (addonsList) addonsList.style.display = 'none';
 }
+
 
 packageForm.addEventListener('submit', (e) => {
   e.preventDefault();
   const planId = planSelect.value;
-  const selectedAddonIds = Array.from(addonsList.querySelectorAll('input:checked')).map(cb => cb.value);
+  // Get selected addon IDs from the multi-select dropdown
+  const selectedAddonIds = Array.from(addonSelect.selectedOptions).map(opt => opt.value);
   const plan = plans.find(p => p.id === planId);
   const selectedAddons = addons.filter(a => selectedAddonIds.includes(a.id));
   const pkg = { plan, addons: selectedAddons };
