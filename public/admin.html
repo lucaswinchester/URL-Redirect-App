@@ -1,41 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Build Packages</title>
-  <link rel="stylesheet" href="/public/style.css">
-  <style>
-    .admin-section { max-width: 700px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px #0001; }
-    .admin-section h2 { margin-top: 0; }
-    .flex-row { display: flex; gap: 1rem; }
-    .plans, .addons { flex: 1; }
-    .package-list { margin-top: 2rem; }
-    .package-list ul { list-style: disc; margin-left: 2rem; }
-    .btn { margin-top: 1rem; }
-  </style>
-</head>
-<body>
-  <div class="admin-section">
-    <h2>Build a Package</h2>
-    <form id="packageForm">
-      <div class="flex-row">
-        <div class="plans">
-          <label for="planSelect"><strong>Plan:</strong></label>
-          <select id="planSelect" name="plan" required></select>
-        </div>
-        <div class="addons">
-          <label><strong>Addons:</strong></label>
-          <div id="addonsList"></div>
-        </div>
-      </div>
-      <button type="submit" class="btn">Create Package</button>
-    </form>
-    <div class="package-list">
-      <h3>Created Packages</h3>
-      <ul id="packagesUl"></ul>
-    </div>
-  </div>
-  <script src="/public/js/admin.js"></script>
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Admin - Build Packages</title>
+		<link rel="stylesheet" href="/public/style.css" />
+		<style>
+			.admin-section {
+				max-width: 700px;
+				margin: 2rem auto;
+				background: #fff;
+				padding: 2rem;
+				border-radius: 8px;
+				box-shadow: 0 2px 10px #0001;
+			}
+			.admin-section h2 {
+				margin-top: 0;
+			}
+			.flex-row {
+				display: flex;
+				gap: 1rem;
+			}
+			.plans,
+			.addons {
+				flex: 1;
+			}
+			.package-list {
+				margin-top: 2rem;
+			}
+			.package-list ul {
+				list-style: disc;
+				margin-left: 2rem;
+			}
+			.btn {
+				margin-top: 1rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="admin-section">
+			<h2>Build a Package</h2>
+			<form id="packageForm">
+				<div class="flex-row">
+					<div class="plans">
+						<label for="planSelect"><strong>Plan:</strong></label>
+						<select id="planSelect" name="plan" required></select>
+					</div>
+					<div class="addons">
+						<label><strong>Addons:</strong></label>
+						<select id="addonSelect" name="addon" required></select>
+						<div id="addonsList"></div>
+					</div>
+				</div>
+				<button type="submit" class="btn">Create Package</button>
+			</form>
+			<div class="package-list">
+				<h3>Created Packages</h3>
+				<ul id="packagesUl"></ul>
+			</div>
+		</div>
+		<script src="/public/js/admin.js"></script>
+	</body>
 </html>
