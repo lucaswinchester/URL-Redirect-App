@@ -9,7 +9,7 @@ exports.handler = async () => {
     const sparqFiApiKey = process.env.SPARQFI_API_KEY;
     const response = await fetch(sparqFiUrl, {
       headers: {
-        'Authorization': `Bearer ${sparqFiApiKey}`
+        'X-API-KEY': sparqFiApiKey
       }
     });
     const partnersResponse = await response.json();
@@ -49,7 +49,7 @@ exports.handler = async () => {
         const usersUrl = `https://api.partner.sparqfi.com/api/v1/reseller/${partner.uuid}/users`;
         const usersResponse = await fetch(usersUrl, {
           headers: {
-            'Authorization': `Bearer ${sparqFiApiKey}`
+            'X-API-KEY': sparqFiApiKey
           }
         });
         const usersData = await usersResponse.json();
