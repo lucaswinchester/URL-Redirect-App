@@ -12,10 +12,11 @@ exports.handler = async () => {
         'Authorization': `Bearer ${sparqFiApiKey}`
       }
     });
-    const partners = await response.json();
+    const partnersResponse = await response.json();
+    const partnerList = Array.isArray(partnersResponse) ? partnersResponse : partnersResponse.items || [];
 
     // Map SparqFi API fields to Supabase partners table schema
-    const insertData = partners.map((partner) => ({
+    const insertData = partnerList.map((partner) => ({
       uuid: partner.uuid,
       name: partner.name,
       created_at: partner.created_at,
@@ -41,7 +42,7 @@ exports.handler = async () => {
 
     // Now fetch and sync users for each partner
     let totalAgents = 0;
-    for (const partner of partners) {
+    for (const partner of partnerList) {
       try {
         const usersUrl = `https://api.partner.sparqfi.com/api/v1/reseller/${partner.uuid}/users`;
         const usersResponse = await fetch(usersUrl, {
