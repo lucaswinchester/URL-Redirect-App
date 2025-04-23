@@ -10,19 +10,27 @@ let plans = [];
 let addons = [];
 let packages = [];
 
+import { supabase } from './supabaseClient.js';
+
 async function fetchPlans() {
-  // Replace with your API endpoint or fetch directly from Supabase if exposed
-  const res = await fetch('/.netlify/functions/getPlans');
-  const data = await res.json();
-  plans = data.plans || [];
+  const { data, error } = await supabase.from('plans').select('*');
+  if (error) {
+    alert('Failed to fetch plans: ' + error.message);
+    plans = [];
+  } else {
+    plans = data || [];
+  }
   renderPlans();
 }
 
 async function fetchAddons() {
-  // Replace with your API endpoint or fetch directly from Supabase if exposed
-  const res = await fetch('/.netlify/functions/getAddons');
-  const data = await res.json();
-  addons = data.addons || [];
+  const { data, error } = await supabase.from('addons').select('*');
+  if (error) {
+    alert('Failed to fetch addons: ' + error.message);
+    addons = [];
+  } else {
+    addons = data || [];
+  }
   renderAddons();
 }
 
