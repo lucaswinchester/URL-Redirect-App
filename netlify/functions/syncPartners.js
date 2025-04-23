@@ -15,6 +15,8 @@ exports.handler = async () => {
     const partnersResponse = await response.json();
     const partnerList = Array.isArray(partnersResponse) ? partnersResponse : partnersResponse.items || [];
 
+    console.log(partnersResponse)
+
     // Map SparqFi API fields to Supabase partners table schema
     const insertData = partnerList.map((partner) => ({
       uuid: partner.uuid,
@@ -51,6 +53,9 @@ exports.handler = async () => {
           }
         });
         const usersData = await usersResponse.json();
+
+        console.log(usersData);
+        
         if (Array.isArray(usersData.items) && usersData.items.length > 0) {
           const agentInsertData = usersData.items.map((user) => ({
             uuid: user.uuid,
