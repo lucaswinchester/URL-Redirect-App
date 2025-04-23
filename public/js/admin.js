@@ -1,6 +1,3 @@
-// /public/js/admin.js
-// Fetch plans and addons, allow admin to build packages (plan + addons)
-
 const planSelect = document.getElementById('planSelect');
 const addonsList = document.getElementById('addonsList');
 const addonSelect = document.getElementById('addonSelect');
