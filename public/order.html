@@ -20,15 +20,21 @@
 		</div>
 
 		<script>
+			window.addEventListener('load', function () {
+				const referrer = document.referrer;
+				const sourceUrl = new URL(referrer);
+				// Store the full referrer URL in localStorage
+				localStorage.setItem('referrerUrl', referrer);
+			});
+
 			async function init() {
 				const params = new URLSearchParams(window.location.search);
 				const query = params.toString();
-				const sourcePage = document.referrer || '/';
-				console.log('Source page:', sourcePage);
+				// Get the stored referrer URL from localStorage
+				const sourcePage =
+					localStorage.getItem('referrerUrl') || window.location.href;
 				params.set('cf_source_url', sourcePage);
-				console.log('Params with source:', params.toString());
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
-				console.log('Function URL:', functionURL);
 
 				try {
 					const res = await fetch(functionURL);
