@@ -42,9 +42,17 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (source) fullUrl.searchParams.set("source", source);
+    if (source) fullUrl.searchParams.set("cf_source_url", source);
 
-    console.log(fullUrl.toString());
+    console.log("Full URL: ", fullUrl.toString());
+
+    // Helper function to sanitize text fields
+    const sanitizeText = (value) => {
+      if (typeof value === "string") {
+        return value.replace(/[\[\]"]/g, "").trim(); // Remove square brackets and quotes
+      }
+      return value; // Return the value as-is if it's not a string
+    };
 
     // Prepare data for Supabase
     const supabaseData = {
@@ -53,10 +61,10 @@ exports.handler = async (event) => {
       full_url: fullUrl.toString(),
       cf_dealer_id,
       cf_agent_id,
-      cf_dealer_name: agentInfo["Company Name"] || null,
-      cf_distributor_name: agentInfo["Distributor Name"] || null,
-      cf_distributor_id: agentInfo["Distributor ID"] || null,
-      cf_dealer_email: agentInfo["Email"] || null,
+      cf_dealer_name: sanitizeText(agentInfo["Company Name"]) || null,
+      cf_distributor_name: sanitizeText(agentInfo["Distributor Name"]) || null,
+      cf_distributor_id: sanitizeText(agentInfo["Distributor ID"]) || null,
+      cf_dealer_email: sanitizeText(agentInfo["Email"]) || null,
       source: source || null,
     };
 
