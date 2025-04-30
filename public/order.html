@@ -21,13 +21,13 @@
 
 		<script>
 			window.addEventListener('load', function () {
-				const referrer = window.location.href;
-				localStorage.setItem('referrerUrl', referrer);
+				const referrer = new URL(window.location.href);
+				referrer.search = '';
+				localStorage.setItem('referrerUrl', referrer.toString());
 			});
 
 			async function init() {
 				const params = new URLSearchParams(window.location.search);
-				const query = params.toString();
 				const sourcePage = localStorage.getItem('referrerUrl');
 				params.set('cf_source_url', sourcePage);
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
