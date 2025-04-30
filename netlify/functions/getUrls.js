@@ -58,6 +58,9 @@ exports.handler = async (event) => {
       return value; // Return the value as-is if it's not a string
     };
 
+    // Get the source URL from URL parameters
+    const sourceUrl = fullUrl.searchParams.get("cf_source_url") || null;
+
     // Prepare data for Supabase
     const supabaseData = {
       plan_id: planID,
@@ -69,7 +72,7 @@ exports.handler = async (event) => {
       cf_distributor_name: sanitizeText(agentInfo["Distributor Name"]) || null,
       cf_distributor_id: sanitizeText(agentInfo["Distributor ID"]) || null,
       cf_dealer_email: sanitizeText(agentInfo["Email"]) || null,
-      source: source || null,
+      source: sourceUrl || null,
     };
 
     // Insert data into Supabase table
