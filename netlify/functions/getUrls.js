@@ -42,7 +42,7 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (event.queryStringParameters?.source) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.source);
+    if (event.queryStringParameters?.cf_source_url) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.cf_source_url);
 
     console.log("Full URL: ", fullUrl.toString());
 
@@ -59,7 +59,7 @@ exports.handler = async (event) => {
     };
 
     // Get the source URL from URL parameters
-    const sourceUrl = fullUrl.searchParams.get("cf_source_url") || null;
+    const sourceUrl = event.queryStringParameters?.cf_source_url || null;
 
     // Prepare data for Supabase
     const supabaseData = {
