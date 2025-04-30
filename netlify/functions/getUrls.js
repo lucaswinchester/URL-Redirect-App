@@ -10,7 +10,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 exports.handler = async (event) => {
   try {
-    const { planID, cf_dealer_id, cf_agent_id, source } = event.queryStringParameters;
+    const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url } = event.queryStringParameters;
 
     if (!planID || !cf_dealer_id || !cf_agent_id) {
       return {
@@ -22,11 +22,6 @@ exports.handler = async (event) => {
     const checkoutUrl = await getCheckoutUrlByPlanID(planID);
     const agentInfo = await getAgentDetails(cf_dealer_id, cf_agent_id);
 
-    console.log(planID);
-    console.log(checkoutUrl);
-    console.log(cf_dealer_id);
-    console.log(agentInfo);
-
     if (!checkoutUrl || !agentInfo) {
       return {
         statusCode: 404,
@@ -34,52 +29,33 @@ exports.handler = async (event) => {
       };
     }
 
-    const sourceUrl = event.queryStringParameters?.cf_source_url || null;
-
-    const fullUrl = new URL(checkoutUrl);
-    // Set URL parameters
-    fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
-    if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
-    if (agentInfo["Company Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Company Name"]);
-    if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
-    if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
-    if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (sourceUrl) fullUrl.searchParams.set("cf_source_url", sourceUrl);
-
-    console.log("Full URL: ", fullUrl.toString());
-
     // Helper function to sanitize text fields
     const sanitizeText = (value) => {
-      if (Array.isArray(value)) {
-        // If it's an array, take the first element
-        value = value[0];
-      }
-      if (typeof value === "string") {
-        return value.trim(); // Just trim strings, no need to remove brackets anymore
-      }
-      return value; // Return the value as-is if it's not a string
+      if (Array.isArray(value)) value = value[0];
+      if (typeof value === "string") return value.trim();
+      return value;
     };
 
     // Prepare data for Supabase
     const supabaseData = {
       plan_id: planID,
       checkout_url: checkoutUrl,
-      full_url: fullUrl.toString(),
       cf_dealer_id,
       cf_agent_id,
       cf_dealer_name: sanitizeText(agentInfo["Company Name"]) || null,
       cf_distributor_name: sanitizeText(agentInfo["Distributor Name"]) || null,
       cf_distributor_id: sanitizeText(agentInfo["Distributor ID"]) || null,
       cf_dealer_email: sanitizeText(agentInfo["Email"]) || null,
-      source: sourceUrl || null,
+      source: cf_source_url || null,
     };
 
-    console.log("Storing source URL in Supabase:", sourceUrl);
+    // Insert data into Supabase and get the inserted row
+    const { data, error } = await supabase
+      .from("checkout_data")
+      .insert([supabaseData])
+      .select();
 
-    // Insert data into Supabase table
-    const { data, error } = await supabase.from("checkout_data").insert([supabaseData]);
-
-    if (error) {
+    if (error || !data || !data[0]) {
       console.error("Supabase insert error:", error);
       return {
         statusCode: 500,
@@ -87,7 +63,20 @@ exports.handler = async (event) => {
       };
     }
 
-    console.log("Supabase insert success:", data);
+    const checkoutDataId = data[0].id;
+
+    // Build the full checkout URL with all params
+    const fullUrl = new URL(checkoutUrl);
+    fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
+    if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
+    if (agentInfo["Company Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Company Name"]);
+    if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
+    if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
+    if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
+    if (source) fullUrl.searchParams.set("source", source);
+    if (cf_source_url) fullUrl.searchParams.set("cf_source_url", cf_source_url);
+    // Add the checkout_data_id for tracking
+    fullUrl.searchParams.set("checkout_data_id", checkoutDataId);
 
     return {
       statusCode: 200,

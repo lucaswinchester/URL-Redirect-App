@@ -5,6 +5,39 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Thank You!</title>
 		<link rel="stylesheet" href="style.css" />
+		<style>
+			/* Simple modal styles */
+			#invoice-modal {
+				display: none;
+				position: fixed;
+				z-index: 1000;
+				left: 0;
+				top: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(0, 0, 0, 0.5);
+				justify-content: center;
+				align-items: center;
+			}
+			#invoice-modal-content {
+				background: #fff;
+				padding: 2rem;
+				border-radius: 8px;
+				max-width: 90vw;
+				max-height: 90vh;
+				overflow: auto;
+				position: relative;
+			}
+			#close-modal {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				background: none;
+				border: none;
+				font-size: 1.5rem;
+				cursor: pointer;
+			}
+		</style>
 		<link
 			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
 			rel="stylesheet"
@@ -13,8 +46,9 @@
 			src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"
 			defer
 		></script>
-		<script src="/js/thankYou.js" defer></script>
+		<script src="/js/thankYou-style.js" defer></script>
 		<script src="/js/logSubscriptionClient.js" defer></script>
+		<script src="/thank-you.js" type="module"></script>
 	</head>
 	<body>
 		<div class="thank-you-wrapper">
@@ -27,7 +61,19 @@
 					We’ve emailed you the details of your subscription. You’ll hear from
 					us shortly.
 				</p>
-				<button onclick="window.location.href='/'">View Invoice</button>
+				<button id="view-invoice-btn" style="display: none">
+					View Invoice
+				</button>
+			</div>
+			<div id="invoice-modal">
+				<div id="invoice-modal-content">
+					<button id="close-modal">&times;</button>
+					<iframe
+						id="invoice-frame"
+						src=""
+						style="width: 100%; height: 70vh; border: none"
+					></iframe>
+				</div>
 			</div>
 		</div>
 	</body>
