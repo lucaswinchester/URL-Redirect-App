@@ -5,7 +5,7 @@
  */
 export async function fetchInvoice(invoiceId) {
     if (!invoiceId) throw new Error("Missing invoice ID");
-    const res = await fetch(`/api/get-invoice?invoice_id=${encodeURIComponent(invoiceId)}`);
+    const res = await fetch(`/api/getInvoice?invoice_id=${encodeURIComponent(invoiceId)}`);
     if (!res.ok) throw new Error("Failed to fetch invoice");
     return await res.json();
   }
