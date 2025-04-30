@@ -42,7 +42,6 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (source) fullUrl.searchParams.set("cf_source_url", source);
 
     console.log("Full URL: ", fullUrl.toString());
 
