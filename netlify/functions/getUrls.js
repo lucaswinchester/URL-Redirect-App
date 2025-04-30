@@ -74,6 +74,8 @@ exports.handler = async (event) => {
       source: sourceUrl || null,
     };
 
+    console.log("Storing source URL in Supabase:", sourceUrl);
+
     // Insert data into Supabase table
     const { data, error } = await supabase.from("checkout_data").insert([supabaseData]);
 
