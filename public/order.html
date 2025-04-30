@@ -21,19 +21,14 @@
 
 		<script>
 			window.addEventListener('load', function () {
-				const referrer = document.referrer;
-				// Split at '?' and take only the base URL
-				const baseReferrer = referrer.split('?')[0];
-				localStorage.setItem('referrerUrl', baseReferrer);
+				const referrer = window.location.href;
+				localStorage.setItem('referrerUrl', referrer);
 			});
 
 			async function init() {
 				const params = new URLSearchParams(window.location.search);
 				const query = params.toString();
-				// Get the stored referrer URL from localStorage
-				const sourcePage =
-					localStorage.getItem('referrerUrl') ||
-					window.location.href.split('?')[0];
+				const sourcePage = localStorage.getItem('referrerUrl');
 				params.set('cf_source_url', sourcePage);
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
 
@@ -41,7 +36,6 @@
 					const res = await fetch(functionURL);
 					const text = await res.text();
 
-					// Try to parse JSON manually
 					let data;
 					try {
 						data = JSON.parse(text);
