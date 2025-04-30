@@ -24,17 +24,13 @@
 				// Get the URL of the page that referred to this page
 				const referrer = document.referrer;
 				if (referrer) {
-					// Create a URL object and remove query parameters
-					const url = new URL(referrer);
-					url.search = '';
-					const hostname = url.hostname.replace(/\/$/, '');
-					const referrerUrl = `${hostname}${url.pathname}`;
 					localStorage.setItem('referrerUrl', referrer);
+					console.log(referrer);
 				}
 			});
 
 			async function init() {
-				let params;
+				let params = new URLSearchParams(window.location.search);
 				const sourcePage = localStorage.getItem('referrerUrl');
 				params.set('cf_source_url', sourcePage);
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
