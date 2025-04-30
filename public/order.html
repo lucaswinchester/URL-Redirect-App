@@ -29,7 +29,7 @@
 					url.search = '';
 					const hostname = url.hostname.replace(/\/$/, '');
 					const referrerUrl = `${hostname}${url.pathname}`;
-					localStorage.setItem('referrerUrl', referrerUrl);
+					localStorage.setItem('referrerUrl', referrer);
 				}
 			});
 
