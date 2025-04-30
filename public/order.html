@@ -21,9 +21,15 @@
 
 		<script>
 			window.addEventListener('load', function () {
-				const referrer = new URL(window.location.href);
-				referrer.search = '';
-				localStorage.setItem('referrerUrl', referrer.toString());
+				// Get the URL of the page that referred to this page
+				const referrer = document.referrer;
+				if (referrer) {
+					// Create a URL object and remove query parameters
+					const url = new URL(referrer);
+					url.search = '';
+					const referrerUrl = `${url.hostname}${url.pathname}`;
+					localStorage.setItem('referrerUrl', referrerUrl);
+				}
 			});
 
 			async function init() {

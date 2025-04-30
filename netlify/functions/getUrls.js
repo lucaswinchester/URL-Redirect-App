@@ -34,6 +34,8 @@ exports.handler = async (event) => {
       };
     }
 
+    const sourceUrl = event.queryStringParameters?.cf_source_url || null;
+
     const fullUrl = new URL(checkoutUrl);
     // Set URL parameters
     fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
@@ -42,7 +44,7 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (event.queryStringParameters?.cf_source_url) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.cf_source_url);
+    if (sourceUrl) fullUrl.searchParams.set("cf_source_url", sourceUrl);
 
     console.log("Full URL: ", fullUrl.toString());
 
@@ -57,9 +59,6 @@ exports.handler = async (event) => {
       }
       return value; // Return the value as-is if it's not a string
     };
-
-    // Get the source URL from URL parameters
-    const sourceUrl = event.queryStringParameters?.cf_source_url || null;
 
     // Prepare data for Supabase
     const supabaseData = {
