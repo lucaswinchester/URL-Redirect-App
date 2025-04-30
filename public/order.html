@@ -27,7 +27,8 @@
 					// Create a URL object and remove query parameters
 					const url = new URL(referrer);
 					url.search = '';
-					const referrerUrl = `${url.hostname}${url.pathname}`;
+					const hostname = url.hostname.replace(/\/$/, '');
+					const referrerUrl = `${hostname}${url.pathname}`;
 					localStorage.setItem('referrerUrl', referrerUrl);
 				}
 			});
