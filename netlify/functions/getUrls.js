@@ -35,13 +35,14 @@ exports.handler = async (event) => {
     }
 
     const fullUrl = new URL(checkoutUrl);
-
+    // Set URL parameters
     fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
     if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
     if (agentInfo["Company Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Company Name"]);
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
+    if (event.queryStringParameters?.source) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.source);
 
     console.log("Full URL: ", fullUrl.toString());
 

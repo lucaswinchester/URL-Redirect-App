@@ -24,7 +24,8 @@
 				const params = new URLSearchParams(window.location.search);
 				const query = params.toString();
 				const sourcePage = document.referrer || '/';
-				const functionURL = `/.netlify/functions/getUrls?${query}`;
+				params.set('cf_source_url', sourcePage);
+				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
 
 				try {
 					const res = await fetch(functionURL);
@@ -40,7 +41,6 @@
 
 					if (res.ok && data.url) {
 						const redirectUrl = new URL(data.url);
-						redirectUrl.searchParams.set('cf_source_url', sourcePage);
 						window.location.replace(redirectUrl.toString());
 						return;
 					} else {
