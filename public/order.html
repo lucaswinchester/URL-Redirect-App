@@ -34,7 +34,7 @@
 			});
 
 			async function init() {
-				const params = new URLSearchParams(window.location.search);
+				let params;
 				const sourcePage = localStorage.getItem('referrerUrl');
 				params.set('cf_source_url', sourcePage);
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
