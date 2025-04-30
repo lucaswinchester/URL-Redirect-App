@@ -48,8 +48,12 @@ exports.handler = async (event) => {
 
     // Helper function to sanitize text fields
     const sanitizeText = (value) => {
+      if (Array.isArray(value)) {
+        // If it's an array, take the first element
+        value = value[0];
+      }
       if (typeof value === "string") {
-        return value.replace(/[\[\]"]/g, "").trim(); // Remove square brackets and quotes
+        return value.trim(); // Just trim strings, no need to remove brackets anymore
       }
       return value; // Return the value as-is if it's not a string
     };
