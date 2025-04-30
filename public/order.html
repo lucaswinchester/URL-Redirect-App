@@ -24,8 +24,11 @@
 				const params = new URLSearchParams(window.location.search);
 				const query = params.toString();
 				const sourcePage = document.referrer || '/';
+				console.log('Source page:', sourcePage);
 				params.set('cf_source_url', sourcePage);
+				console.log('Params with source:', params.toString());
 				const functionURL = `/.netlify/functions/getUrls?${params.toString()}`;
+				console.log('Function URL:', functionURL);
 
 				try {
 					const res = await fetch(functionURL);

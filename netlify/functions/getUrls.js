@@ -35,6 +35,9 @@ exports.handler = async (event) => {
     }
 
     const fullUrl = new URL(checkoutUrl);
+    console.log('Event query parameters:', event.queryStringParameters);
+    console.log('Source from params:', event.queryStringParameters?.source);
+    
     // Set URL parameters
     fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
     if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
@@ -42,7 +45,7 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (event.queryStringParameters?.source) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.source);
+    if (event.queryStringParameters?.cf_source_url) fullUrl.searchParams.set("cf_source_url", event.queryStringParameters.cf_source_url);
 
     console.log("Full URL: ", fullUrl.toString());
 
