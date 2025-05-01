@@ -41,17 +41,3 @@ export async function fetchInvoice(invoiceId) {
     alert('An error occurred while fetching the invoice.');
   }
 }
-
-// Close modal when clicking the close button
-document.getElementById('close-modal').addEventListener('click', function() {
-  document.getElementById('invoice-modal').style.display = 'none';
-  document.getElementById('invoice-pdf-container').innerHTML = '';
-});
-
-// Close modal when clicking outside of modal content
-document.getElementById('invoice-modal').addEventListener('click', function(e) {
-  if (e.target === this) {
-    this.style.display = 'none';
-    document.getElementById('invoice-pdf-container').innerHTML = '';
-  }
-});

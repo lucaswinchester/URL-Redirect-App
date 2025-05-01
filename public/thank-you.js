@@ -67,40 +67,72 @@ async function recordSale() {
 
 // Show invoice in modal
 async function showInvoice(invoiceId) {
-  invoiceContent.innerHTML = "Loading invoice...";
   try {
     const invoiceData = await fetchInvoice(invoiceId);
-    // Render invoice details as HTML (customize as needed)
-    invoiceContent.innerHTML = `
-      <h3>Invoice #${invoiceData.invoice.invoice_number}</h3>
-      <p>Date: ${invoiceData.invoice.date}</p>
-      <p>Amount: ${invoiceData.invoice.total}</p>
-      <pre>${JSON.stringify(invoiceData, null, 2)}</pre>
-    `;
-  } catch (err) {
-    invoiceContent.innerHTML = "Failed to load invoice.";
-    console.error(err);
+    
+    if (invoiceData.code === 0) {
+      const invoice = invoiceData.invoice;
+      
+      // Update invoice details
+      document.getElementById('invoice-number').textContent = invoice.number;
+      document.getElementById('invoice-date').textContent = invoice.invoice_date;
+      document.getElementById('invoice-due-date').textContent = invoice.due_date;
+      document.getElementById('invoice-status').textContent = invoice.status;
+      document.getElementById('invoice-total').textContent = `${invoice.currency_symbol}${invoice.total}`;
+      document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
+
+      // Create PDF viewer
+      const pdfContainer = document.getElementById('invoice-pdf-container');
+      pdfContainer.innerHTML = `
+        <iframe 
+          src="${invoice.invoice_url}" 
+          style="width: 100%; height: 500px; border: none;"
+          title="Invoice PDF"
+        ></iframe>
+      `;
+
+      // Show modal
+      document.getElementById('invoice-modal').style.display = 'flex';
+    } else {
+      statusEl.textContent = "Failed to fetch invoice details. Please try again.";
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    statusEl.textContent = "Error fetching invoice. Please try again.";
   }
-  invoiceModal.style.display = 'flex';
 }
 
 // Button and modal logic
 if (invoiceId) {
   viewInvoiceBtn.style.display = 'inline-block';
   viewInvoiceBtn.addEventListener('click', () => showInvoice(invoiceId));
-}
 
-closeModalBtn.addEventListener('click', () => {
-  invoiceModal.style.display = 'none';
-  invoiceContent.innerHTML = '';
-});
-
-invoiceModal.addEventListener('click', (e) => {
-  if (e.target === invoiceModal) {
+  // Close modal when clicking the close button
+  closeModalBtn.addEventListener('click', () => {
     invoiceModal.style.display = 'none';
-    invoiceContent.innerHTML = '';
-  }
-});
+    document.getElementById('invoice-pdf-container').innerHTML = '';
+    document.getElementById('invoice-number').textContent = '-';
+    document.getElementById('invoice-date').textContent = '-';
+    document.getElementById('invoice-due-date').textContent = '-';
+    document.getElementById('invoice-status').textContent = '-';
+    document.getElementById('invoice-total').textContent = '-';
+    document.getElementById('payment-status').textContent = '-';
+  });
+
+  // Close modal when clicking outside of modal content
+  invoiceModal.addEventListener('click', (e) => {
+    if (e.target === invoiceModal) {
+      invoiceModal.style.display = 'none';
+      document.getElementById('invoice-pdf-container').innerHTML = '';
+      document.getElementById('invoice-number').textContent = '-';
+      document.getElementById('invoice-date').textContent = '-';
+      document.getElementById('invoice-due-date').textContent = '-';
+      document.getElementById('invoice-status').textContent = '-';
+      document.getElementById('invoice-total').textContent = '-';
+      document.getElementById('payment-status').textContent = '-';
+    }
+  });
+}
 
 // Run on page load
 recordSale();
