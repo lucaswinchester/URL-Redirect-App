@@ -168,46 +168,73 @@ async function showInvoice(invoiceId) {
   }
 }
 
-// Button and modal logic
-if (invoiceId) {
-  viewInvoiceBtn.style.display = 'inline-block';
-  viewInvoiceBtn.addEventListener('click', async () => {
-    await showInvoice(invoiceId);
-  });
-
-const customerPortalBtn = document.getElementById('customer-portal-btn');
-if (customerPortalBtn) {
-  customerPortalBtn.addEventListener('click', () => {
-    window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks/signup#/send-invite';
-  });
-}
-
-  // Close modal when clicking the close button
-  closeModalBtn.addEventListener('click', () => {
-    invoiceModal.style.display = 'none';
-    document.getElementById('invoice-pdf-container').innerHTML = '';
-    document.getElementById('invoice-number').textContent = '-';
-    document.getElementById('invoice-date').textContent = '-';
-    document.getElementById('invoice-due-date').textContent = '-';
-    document.getElementById('invoice-status').textContent = '-';
-    document.getElementById('invoice-total').textContent = '-';
-    document.getElementById('payment-status').textContent = '-';
-  });
-
-  // Close modal when clicking outside of modal content
-  invoiceModal.addEventListener('click', (e) => {
-    if (e.target === invoiceModal) {
-      invoiceModal.style.display = 'none';
-      document.getElementById('invoice-pdf-container').innerHTML = '';
-      document.getElementById('invoice-number').textContent = '-';
-      document.getElementById('invoice-date').textContent = '-';
-      document.getElementById('invoice-due-date').textContent = '-';
-      document.getElementById('invoice-status').textContent = '-';
-      document.getElementById('invoice-total').textContent = '-';
-      document.getElementById('payment-status').textContent = '-';
+document.addEventListener('DOMContentLoaded', () => {
+    // Get parameters from URL
+    const params = new URLSearchParams(window.location.search);
+    const invoiceId = params.get('invoice_id');
+    
+    if (!invoiceId) {
+      console.error('No invoice_id found in URL');
+      return;
     }
+  
+    // Elements
+    const viewInvoiceBtn = document.getElementById('view-invoice-btn');
+    const invoiceModal = document.getElementById('invoice-modal');
+    const invoiceContent = document.getElementById('invoice-content');
+    const closeModalBtn = document.getElementById('close-modal');
+    const statusEl = document.getElementById('status');
+  
+    if (!viewInvoiceBtn) {
+      console.error('View invoice button not found');
+      return;
+    }
+  
+    viewInvoiceBtn.style.display = 'inline-block';
+    viewInvoiceBtn.addEventListener('click', async () => {
+      try {
+        await showInvoice(invoiceId);
+      } catch (error) {
+        console.error('Error showing invoice:', error);
+        statusEl.textContent = "Error showing invoice. Please try again.";
+      }
+    });
+  
+    const customerPortalBtn = document.getElementById('customer-portal-btn');
+    if (customerPortalBtn) {
+      customerPortalBtn.addEventListener('click', () => {
+        window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks/signup#/send-invite';
+      });
+    }
+  
+    // Close modal when clicking the close button
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', () => {
+        invoiceModal.style.display = 'none';
+        document.getElementById('invoice-pdf-container').innerHTML = '';
+        document.getElementById('invoice-number').textContent = '-';
+        document.getElementById('invoice-date').textContent = '-';
+        document.getElementById('invoice-due-date').textContent = '-';
+        document.getElementById('invoice-status').textContent = '-';
+        document.getElementById('invoice-total').textContent = '-';
+        document.getElementById('payment-status').textContent = '-';
+      });
+    }
+  
+    // Close modal when clicking outside of modal content
+    invoiceModal.addEventListener('click', (e) => {
+      if (e.target === invoiceModal) {
+        invoiceModal.style.display = 'none';
+        document.getElementById('invoice-pdf-container').innerHTML = '';
+        document.getElementById('invoice-number').textContent = '-';
+        document.getElementById('invoice-date').textContent = '-';
+        document.getElementById('invoice-due-date').textContent = '-';
+        document.getElementById('invoice-status').textContent = '-';
+        document.getElementById('invoice-total').textContent = '-';
+        document.getElementById('payment-status').textContent = '-';
+      }
+    });
+  
+    // Run on page load
+    recordSale();
   });
-}
-
-// Run on page load
-recordSale();
