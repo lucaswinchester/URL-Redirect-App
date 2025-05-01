@@ -16,11 +16,12 @@ exports.handler = async (event) => {
     // Your Zoho organization ID (from env or config)
     const ZOHO_ORG_ID = process.env.ZOHO_ORG_ID;
 
-    const zohoUrl = `https://subscriptions.zoho.com/api/v1/invoices/${invoice_id}?organization_id=${ZOHO_ORG_ID}`;
+    const zohoUrl = `https://www.zohoapis.com/billing/v1/invoices/${invoice_id}?`;
 
     const response = await fetch(zohoUrl, {
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
+        'X-com-zoho-subscriptions-organizationid': ZOHO_ORG_ID,
       },
     });
 
