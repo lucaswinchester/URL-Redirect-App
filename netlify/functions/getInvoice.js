@@ -13,8 +13,6 @@ exports.handler = async (event) => {
       }
     };
 
-    let invoiceResponse;
-    
     const { invoice_id } = event.queryStringParameters;
     
     if (!invoice_id) {
@@ -27,24 +25,46 @@ exports.handler = async (event) => {
       };
     }
 
-    const response = await fetch(`https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`, options)
-      .then(response => response.json())
-      .then(response => invoiceResponse = response)
-      .catch(err => console.error(err));
+    try {
+      const response = await fetch(`https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`, options);
+      
+      if (!response.ok) {
+        const error = await response.json();
+        console.error('API Error:', error);
+        return {
+          statusCode: response.status,
+          body: JSON.stringify({
+            code: 'API_ERROR',
+            message: error.message || 'Failed to fetch invoice from Zoho',
+            details: error
+          })
+        };
+      }
 
-    console.log('Response: ', invoiceResponse);
+      const data = await response.json();
+      console.log('Invoice Response:', data);
 
-    const invoice = invoiceResponse.invoice;
-    console.log('Invoice: ', invoice);
+      if (data.code !== 0) {
+        console.error('API Error Response:', data);
+        return {
+          statusCode: 500,
+          body: JSON.stringify(data)
+        };
+      }
 
-    if (!invoiceResponse.code === 0) {
-      console.error('API Error Response:', {
-        status: 500,
-        data: invoiceResponse
-      });
+      return {
+        statusCode: 200,
+        body: JSON.stringify(data)
+      };
+    } catch (error) {
+      console.error('Error fetching invoice:', error);
       return {
         statusCode: 500,
-        body: JSON.stringify(invoiceResponse)
+        body: JSON.stringify({
+          code: 'INTERNAL_ERROR',
+          message: 'Failed to process invoice request',
+          details: error.message
+        })
       };
     }
 
