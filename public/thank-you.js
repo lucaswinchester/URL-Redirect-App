@@ -65,42 +65,67 @@ async function recordSale() {
   }
 }
 
-// Show invoice in modal
+// Update the showInvoice function
 async function showInvoice(invoiceId) {
-  try {
-    const invoiceData = await fetchInvoice(invoiceId);
-    
-    if (invoiceData.code === 0) {
-      const invoice = invoiceData.invoice;
+    try {
+      const invoiceData = await fetchInvoice(invoiceId);
       
-      // Update invoice details
-      document.getElementById('invoice-number').textContent = invoice.number;
-      document.getElementById('invoice-date').textContent = invoice.invoice_date;
-      document.getElementById('invoice-due-date').textContent = invoice.due_date;
-      document.getElementById('invoice-status').textContent = invoice.status;
-      document.getElementById('invoice-total').textContent = `${invoice.currency_symbol}${invoice.total}`;
-      document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
-
-      // Create PDF viewer
-      const pdfContainer = document.getElementById('invoice-pdf-container');
-      pdfContainer.innerHTML = `
-        <iframe 
-          src="${invoice.invoice_url}" 
-          style="width: 100%; height: 500px; border: none;"
-          title="Invoice PDF"
-        ></iframe>
-      `;
-
-      // Show modal
-      document.getElementById('invoice-modal').style.display = 'flex';
-    } else {
-      statusEl.textContent = "Failed to fetch invoice details. Please try again.";
+      if (invoiceData.code === 0) {
+        const invoice = invoiceData.invoice;
+        
+        // Update header information
+        document.getElementById('invoice-number').textContent = invoice.number;
+        document.getElementById('invoice-date').textContent = invoice.invoice_date;
+        document.getElementById('invoice-due-date').textContent = invoice.due_date;
+        document.getElementById('customer-name').textContent = invoice.customer_name;
+        document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
+        
+        // Format currency
+        const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
+        
+        // Clear existing items
+        const itemsBody = document.getElementById('invoice-items-body');
+        itemsBody.innerHTML = '';
+        
+        // Add invoice items
+        invoice.invoice_items.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${item.description}</td>
+            <td>${item.quantity}</td>
+            <td>${formatCurrency(item.price)}</td>
+            <td>${formatCurrency(item.discount_amount)}</td>
+            <td>${formatCurrency(item.item_total)}</td>
+          `;
+          itemsBody.appendChild(row);
+        });
+        
+        // Calculate and display totals
+        const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
+        const totalDiscounts = invoice.invoice_items.reduce((sum, item) => sum + item.discount_amount, 0);
+        const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
+        
+        document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+        document.getElementById('discounts').textContent = formatCurrency(totalDiscounts);
+        document.getElementById('tax').textContent = formatCurrency(totalTax);
+        document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
+        
+        // Update payment information
+        document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
+        if (invoice.payments && invoice.payments.length > 0) {
+          document.getElementById('payment-date').textContent = invoice.payments[0].date;
+        }
+        
+        // Show modal
+        document.getElementById('invoice-modal').style.display = 'flex';
+      } else {
+        statusEl.textContent = "Failed to fetch invoice details. Please try again.";
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      statusEl.textContent = "Error fetching invoice. Please try again.";
     }
-  } catch (error) {
-    console.error('Error:', error);
-    statusEl.textContent = "Error fetching invoice. Please try again.";
   }
-}
 
 // Button and modal logic
 if (invoiceId) {

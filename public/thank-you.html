@@ -72,11 +72,8 @@
 				<div class="invoice-header">
 					<h2>Invoice Details</h2>
 				</div>
-				<div id="invoice-pdf-container">
-					<!-- PDF will be embedded here -->
-				</div>
-				<div class="invoice-info">
-					<div class="invoice-details">
+				<div class="invoice-header-info">
+					<div class="invoice-info-left">
 						<p>
 							<strong>Invoice Number:</strong>
 							<span id="invoice-number">-</span>
@@ -87,15 +84,44 @@
 						<p>
 							<strong>Due Date:</strong> <span id="invoice-due-date">-</span>
 						</p>
+					</div>
+					<div class="invoice-info-right">
+						<p><strong>Customer:</strong> <span id="customer-name">-</span></p>
 						<p><strong>Status:</strong> <span id="invoice-status">-</span></p>
 					</div>
-					<div class="amount-details">
-						<p>
-							<strong>Total Amount:</strong> <span id="invoice-total">-</span>
+				</div>
+				<div class="invoice-items">
+					<table id="invoice-table">
+						<thead>
+							<tr>
+								<th>Description</th>
+								<th>Quantity</th>
+								<th>Unit Price</th>
+								<th>Discount</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody id="invoice-items-body">
+							<!-- Items will be inserted here -->
+						</tbody>
+					</table>
+				</div>
+				<div class="invoice-totals">
+					<div class="totals-section">
+						<p><strong>Subtotal:</strong> <span id="subtotal">-</span></p>
+						<p><strong>Discounts:</strong> <span id="discounts">-</span></p>
+						<p><strong>Tax:</strong> <span id="tax">-</span></p>
+						<p class="total-amount">
+							<strong>Total Amount:</strong> <span id="total-amount">-</span>
 						</p>
+					</div>
+					<div class="payment-section">
 						<p>
 							<strong>Payment Status:</strong>
 							<span id="payment-status">-</span>
+						</p>
+						<p>
+							<strong>Payment Date:</strong> <span id="payment-date">-</span>
 						</p>
 					</div>
 				</div>

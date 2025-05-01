@@ -197,6 +197,116 @@ button:hover {
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
+  .invoice-header-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .invoice-info-left, .invoice-info-right {
+    flex: 1;
+  }
+
+  .invoice-info-left p, .invoice-info-right p {
+    margin: 0.5rem 0;
+    color: #475569;
+  }
+
+  .invoice-info-left strong, .invoice-info-right strong {
+    color: #1e293b;
+  }
+
+  .invoice-items {
+    margin: 1.5rem 0;
+  }
+
+  #invoice-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  #invoice-table th, #invoice-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  #invoice-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+  }
+
+  #invoice-table td {
+    color: #475569;
+  }
+
+  #invoice-table td:first-child {
+    font-weight: 500;
+  }
+
+  .invoice-totals {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 2px solid #e2e8f0;
+  }
+
+  .totals-section, .payment-section {
+    flex: 1;
+  }
+
+  .totals-section p, .payment-section p {
+    margin: 0.5rem 0;
+    color: #475569;
+  }
+
+  .total-amount {
+    color: #1e293b;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .total-amount strong {
+    color: #1e293b;
+  }
+
+  .total-amount span {
+    color: #1e293b;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    #invoice-table {
+      display: block;
+      overflow-x: auto;
+    }
+
+    .invoice-header-info {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .invoice-info-left, .invoice-info-right {
+      flex: none;
+      width: 100%;
+    }
+
+    .invoice-totals {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .totals-section, .payment-section {
+      flex: none;
+      width: 100%;
+    }
+  }
+
   #close-modal {
     position: absolute;
     top: 1rem;
