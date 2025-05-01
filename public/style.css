@@ -258,8 +258,8 @@ button:hover {
   }
 
   .invoice-items .sku {
-    font-size: 0.875rem;
-    color: #1e293b;
+    font-size: 0.75rem;
+    color: #7c8fae;
     font-style: italic;
     opacity: 0.8;
   }
