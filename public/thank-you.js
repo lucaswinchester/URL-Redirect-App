@@ -76,6 +76,12 @@ async function showInvoice(invoiceId) {
     if (invoiceData.code === 0) {
       const invoice = invoiceData.invoice;
       
+      // Show the view invoice button
+      const button = document.getElementById('view-invoice-btn');
+      button.style.display = 'block';
+      button.textContent = 'View Invoice';
+      button.disabled = false;
+      
       // Update header information
       document.getElementById('invoice-number').textContent = invoice.number;
       document.getElementById('invoice-date').textContent = invoice.invoice_date;
