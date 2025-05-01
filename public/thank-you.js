@@ -106,7 +106,7 @@ async function showInvoice(invoiceId) {
       const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
       
       // Update totals
-      document.getElementById('subtotal').textContent = formatCurrency(invoice.subtotal);
+      document.getElementById('subtotal').textContent = formatCurrency(invoice.payment_made);
       document.getElementById('tax').textContent = formatCurrency(invoice.tax);
       document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
       
