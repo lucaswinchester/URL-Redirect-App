@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { zohoAuth } = require('./zohoAuth'); 
+const { getZohoAccessToken } = require('./zohoAuth'); 
 
 exports.handler = async (event) => {
   const { invoice_id } = event.queryStringParameters;
