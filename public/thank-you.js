@@ -33,6 +33,11 @@ async function showInvoice(invoiceId) {
     // Update totals
     document.getElementById('subtotal').textContent = invoice.sub_total || '-';
     document.getElementById('tax').textContent = invoice.tax_total || '-';
+    document.getElementById('total-amount').textContent = invoice.total || '-';
+
+    // Update payment status
+    document.getElementById('payment-status').textContent = invoice.status || '-';
+    document.getElementById('payment-date').textContent = invoice.payments[0].date || '-';
 
     // Clear existing items and add new ones
     const itemsBody = document.getElementById('invoice-items-body');
@@ -40,11 +45,12 @@ async function showInvoice(invoiceId) {
     
     invoice.invoice_items?.forEach(item => {
       const row = document.createElement('tr');
+      const total = item.price * item.quantity;
       row.innerHTML = `
         <td>${item.name || '-'}</td>
         <td>${item.quantity || '-'}</td>
-        <td>${item.unit_price || '-'}</td>
-        <td>${item.total || '-'}</td>
+        <td>${item.price || '-'}</td>
+        <td>${total || '-'}</td>
       `;
       itemsBody.appendChild(row);
     });
