@@ -169,6 +169,13 @@ if (invoiceId) {
   viewInvoiceBtn.style.display = 'inline-block';
   viewInvoiceBtn.addEventListener('click', () => showInvoice(invoiceId));
 
+const customerPortalBtn = document.getElementById('customer-portal-btn');
+if (customerPortalBtn) {
+  customerPortalBtn.addEventListener('click', () => {
+    window.location.href = 'https://billing.zohosecure.com/portal/revgennetworks';
+  });
+}
+
   // Close modal when clicking the close button
   closeModalBtn.addEventListener('click', () => {
     invoiceModal.style.display = 'none';
