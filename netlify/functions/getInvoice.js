@@ -1,6 +1,6 @@
 // netlify/functions/get-invoice.js
 const fetch = require('node-fetch');
-const { zohoAuth } = require('./zohoAuth');
+const { zohoAuth } = require('.netlify/functions/zohoAuth');
 
 exports.handler = async (event) => {
   console.log('Received invoice request:', {
