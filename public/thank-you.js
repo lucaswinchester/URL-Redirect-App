@@ -19,6 +19,18 @@ const invoiceContent = document.getElementById('invoice-content');
 const closeModalBtn = document.getElementById('close-modal');
 const statusEl = document.getElementById('status');
 
+// Add event listeners
+if (viewInvoiceBtn) {
+  viewInvoiceBtn.addEventListener('click', async () => {
+    if (invoiceId) {
+      await showInvoice(invoiceId);
+      invoiceModal.style.display = 'block';
+    } else {
+      console.error('No invoice ID found in URL parameters');
+    }
+  });
+}
+
 // Insert into sales table, avoiding duplicates
 async function recordSale() {
   if (!invoiceId) {
@@ -80,7 +92,7 @@ async function showInvoice(invoiceId) {
       const button = document.getElementById('view-invoice-btn');
       button.style.display = 'block';
       button.textContent = 'View Invoice';
-      button.disabled = false;
+      button.disabled = false;      
       
       // Update header information
       document.getElementById('invoice-number').textContent = invoice.number;
