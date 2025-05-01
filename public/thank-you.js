@@ -1,3 +1,5 @@
+ // thank-you.js
+
 import { fetchInvoice } from './fetchInvoice.js';
 
 // Supabase setup
@@ -18,20 +20,6 @@ const invoiceModal = document.getElementById('invoice-modal');
 const invoiceContent = document.getElementById('invoice-content');
 const closeModalBtn = document.getElementById('close-modal');
 const statusEl = document.getElementById('status');
-
-// Add event listeners
-if (viewInvoiceBtn) {
-  viewInvoiceBtn.addEventListener('click', async () => {
-    if (invoiceId) {
-      // Show the modal first
-      invoiceModal.style.display = 'block';
-      // Then fetch and populate the invoice data
-      await showInvoice(invoiceId);
-    } else {
-      console.error('No invoice ID found in URL parameters.');
-    }
-  });
-}
 
 // Insert into sales table, avoiding duplicates
 async function recordSale() {
@@ -90,29 +78,15 @@ async function showInvoice(invoiceId) {
     if (invoiceData.code === 0) {
       const invoice = invoiceData.invoice;
       
-      // Show the view invoice button
-      const button = document.getElementById('view-invoice-btn');
-      button.style.display = 'block';
-      button.textContent = 'View Invoice';
-      button.disabled = false;      
-      
       // Update header information
       document.getElementById('invoice-number').textContent = invoice.number;
       document.getElementById('invoice-date').textContent = invoice.invoice_date;
       document.getElementById('invoice-due-date').textContent = invoice.due_date;
       document.getElementById('customer-name').textContent = invoice.customer_name;
+      document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
       
       // Format currency
       const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
-      
-      // Update totals
-      document.getElementById('subtotal').textContent = formatCurrency(invoice.payment_made);
-      document.getElementById('tax').textContent = formatCurrency(invoice.tax);
-      document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
-      
-      // Update payment information
-      document.getElementById('payment-status').textContent = invoice.payment_status || '-';
-      document.getElementById('payment-date').textContent = invoice.payment_date || '-';
       
       // Clear existing items
       const itemsBody = document.getElementById('invoice-items-body');
@@ -129,12 +103,14 @@ async function showInvoice(invoiceId) {
             </div>
           </td>
           <td>${item.quantity}</td>
-          <td>${formatCurrency(item.unit_price)}</td>
-          <td>${formatCurrency(item.total)}</td>
+          <td>${formatCurrency(item.price)}</td>
+          <td>${formatCurrency(item.item_total)}</td>
         `;
         itemsBody.appendChild(row);
       });
       
+      // Calculate and display totals
+      const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
       const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
       
       document.getElementById('subtotal').textContent = formatCurrency(subtotal);
@@ -145,20 +121,51 @@ async function showInvoice(invoiceId) {
       document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
       if (invoice.payments && invoice.payments.length > 0) {
         document.getElementById('payment-date').textContent = invoice.payments[0].date;
-      
+        document.getElementById('customer-name').textContent = invoice.customer_name;
+        document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
+        
+        // Format currency
+        const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
+        
+        // Clear existing items
+        const itemsBody = document.getElementById('invoice-items-body');
+        itemsBody.innerHTML = '';
+        
+        // Add invoice items
+        invoice.invoice_items.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <div class="item-name">
+                ${item.name}
+                ${item.code ? `<span class="sku">SKU: ${item.code}</span>` : ''}
+              </div>
+            </td>
+            <td>${item.quantity}</td>
+            <td>${formatCurrency(item.price)}</td>
+            <td>${formatCurrency(item.item_total)}</td>
+          `;
+          itemsBody.appendChild(row);
+        });
+        
+        // Calculate and display totals
+        const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
+        const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
+        
+      }      
       // Show modal
       document.getElementById('invoice-modal').style.display = 'flex';
     } else {
       statusEl.textContent = "Failed to fetch invoice details. Please try again.";
     }
-}
-} catch (error) {
-  console.error('Error:', error);
-  statusEl.textContent = "Error fetching invoice. Please try again.";
-} finally {
-  // Always restore button state
-  button.textContent = originalText;
-  button.disabled = false;
+  } catch (error) {
+    console.error('Error:', error);
+    statusEl.textContent = "Error fetching invoice. Please try again.";
+  } finally {
+    // Always restore button state
+    button.textContent = originalText;
+    button.disabled = false;
+  }
 }
 
 // Button and modal logic
@@ -198,7 +205,6 @@ if (customerPortalBtn) {
       document.getElementById('payment-status').textContent = '-';
     }
   });
-}
 }
 
 // Run on page load
