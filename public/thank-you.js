@@ -19,69 +19,35 @@ if (invoiceId) {
 // Show invoice in modal
 async function showInvoice(invoiceId) {
   invoiceModal.style.display = 'flex';
-  invoiceContent.innerHTML = "<p>Loading invoice...</p>";
+  
   try {
-    const response = await fetch('/.netlify/functions/get-invoice?invoice_id=' + encodeURIComponent(invoiceId));
-    const invoiceData = await response.json();
+    const invoiceData = await fetchInvoice(invoiceId);
     const invoice = invoiceData.invoice;
+
+    // Update invoice header info
+    document.getElementById('invoice-number').textContent = invoice.number || '-';
+    document.getElementById('invoice-date').textContent = invoice.invoice_date || '-';
+    document.getElementById('customer-name').textContent = invoice.customer_name || '-';
+    document.getElementById('invoice-due-date').textContent = invoice.due_date || '-';
+
+    // Update totals
+    document.getElementById('subtotal').textContent = invoice.sub_total || '-';
+    document.getElementById('tax').textContent = invoice.tax_total || '-';
+
+    // Clear existing items and add new ones
+    const itemsBody = document.getElementById('invoice-items-body');
+    itemsBody.innerHTML = '';
     
-    if (!response.ok) {
-      throw new Error(invoiceData.error || 'Failed to fetch invoice');
-    }
-
-    // The invoice data structure from Zoho may be different, so we'll map it
-    const inv = {
-      invoice_number: invoice.number,
-      date: invoice.invoice_date,
-      customer_name: invoice.customer_name,
-      due_date: invoice.due_date,
-      line_items: invoice.invoice_items || [],
-      total: invoice.total
-    };
-
-    // Render invoice details
-    invoiceContent.innerHTML = `
-      <div class="invoice-header">
-        <h2>Invoice Details</h2>
-      </div>
-      <div class="invoice-header-info">
-        <div class="invoice-info-left">
-          <p><strong>Invoice Number:</strong> ${inv.invoice_number || '-'}</p>
-          <p><strong>Invoice Date:</strong> ${inv.date || '-'}</p>
-        </div>
-        <div class="invoice-info-right">
-          <p><strong>Customer:</strong> ${inv.customer_name || '-'}</p>
-          <p><strong>Due Date:</strong> ${inv.due_date || '-'}</p>
-        </div>
-      </div>
-      <div class="invoice-items">
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Quantity</th>
-              <th>Unit Price</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${inv.line_items.map(item => `
-              <tr>
-                <td>${item.name || '-'}</td>
-                <td>${item.quantity || '-'}</td>
-                <td>${item.unit_price || '-'}</td>
-                <td>${item.total || '-'}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-      <div class="invoice-total">
-        <div style="text-align:right;">
-          <strong>Total Amount:</strong> ${inv.total || '-'}
-        </div>
-      </div>
-    `;
+    invoice.invoice_items?.forEach(item => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${item.name || '-'}</td>
+        <td>${item.quantity || '-'}</td>
+        <td>${item.unit_price || '-'}</td>
+        <td>${item.total || '-'}</td>
+      `;
+      itemsBody.appendChild(row);
+    });
   } catch (err) {
     invoiceContent.innerHTML = "Failed to load invoice.<br><pre>" + err.message + "</pre>";
     console.error("Invoice fetch error:", err);
