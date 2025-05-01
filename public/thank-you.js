@@ -65,6 +65,11 @@ async function recordSale() {
   }
 }
 
+import { fetchInvoice } from './fetchInvoice.js';
+
+// Format currency
+const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
+
 // Update the showInvoice function
 async function showInvoice(invoiceId) {
   const button = document.getElementById('view-invoice-btn');
