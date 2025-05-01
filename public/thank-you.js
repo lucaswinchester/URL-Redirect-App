@@ -28,7 +28,7 @@ if (viewInvoiceBtn) {
       // Then fetch and populate the invoice data
       await showInvoice(invoiceId);
     } else {
-      console.error('No invoice ID found in URL parameters');
+      console.error('No invoice ID found in URL parameters.');
     }
   });
 }
