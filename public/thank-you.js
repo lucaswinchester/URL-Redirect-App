@@ -101,7 +101,6 @@ async function showInvoice(invoiceId) {
       document.getElementById('invoice-date').textContent = invoice.invoice_date;
       document.getElementById('invoice-due-date').textContent = invoice.due_date;
       document.getElementById('customer-name').textContent = invoice.customer_name;
-      document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
       
       // Format currency
       const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
@@ -109,7 +108,7 @@ async function showInvoice(invoiceId) {
       // Update totals
       document.getElementById('subtotal').textContent = formatCurrency(invoice.subtotal);
       document.getElementById('tax').textContent = formatCurrency(invoice.tax);
-      document.getElementById('total-amount').textContent = formatCurrency(invoice.total_amount);
+      document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
       
       // Update payment information
       document.getElementById('payment-status').textContent = invoice.payment_status || '-';
