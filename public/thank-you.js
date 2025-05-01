@@ -96,10 +96,9 @@ async function showInvoice(invoiceId) {
       invoice.invoice_items.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${item.description}</td>
+          <td>${item.name}</td>
           <td>${item.quantity}</td>
           <td>${formatCurrency(item.price)}</td>
-          <td>${formatCurrency(item.discount_amount)}</td>
           <td>${formatCurrency(item.item_total)}</td>
         `;
         itemsBody.appendChild(row);
@@ -107,11 +106,9 @@ async function showInvoice(invoiceId) {
       
       // Calculate and display totals
       const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
-      const totalDiscounts = invoice.invoice_items.reduce((sum, item) => sum + item.discount_amount, 0);
       const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
       
       document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-      document.getElementById('discounts').textContent = formatCurrency(totalDiscounts);
       document.getElementById('tax').textContent = formatCurrency(totalTax);
       document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
       
@@ -135,7 +132,7 @@ async function showInvoice(invoiceId) {
           row.innerHTML = `
             <td>
               <div class="item-name">
-                ${item.name || item.description}
+                ${item.name}
                 ${item.sku ? `<span class="sku">SKU: ${item.sku}</span>` : ''}
               </div>
             </td>
