@@ -172,7 +172,7 @@ if (invoiceId) {
 const customerPortalBtn = document.getElementById('customer-portal-btn');
 if (customerPortalBtn) {
   customerPortalBtn.addEventListener('click', () => {
-    window.location.href = 'https://billing.zohosecure.com/portal/revgennetworks';
+    window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks/signup#/send-invite';
   });
 }
 
