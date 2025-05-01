@@ -1,6 +1,5 @@
-// netlify/functions/get-invoice.js
 const fetch = require('node-fetch');
-const { zohoAuth } = require('./zohoAuth'); // Adjust path as needed
+const { zohoAuth } = require('./zohoAuth'); 
 
 exports.handler = async (event) => {
   const { invoice_id } = event.queryStringParameters;
@@ -12,9 +11,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const accessToken = await zohoAuth();
+    const accessToken = await getZohoAccessToken();
 
-    // Zoho Billing API endpoint for invoice details
     const zohoUrl = `https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`;
 
     const options = {
@@ -25,15 +23,15 @@ exports.handler = async (event) => {
       },
     };
 
-    const response = await fetch(zohoUrl, options)
-    .then(response => response.json())
-    .then(response => invoiceResponse = response)
-    .catch(err => console.error(err));
-
-    console.log('Invoice: ', invoiceResponse.invoice)
+    const response = await fetch(zohoUrl, options);
+    const data = await response.json();
 
     if (!response.ok) {
-      return { statusCode: response.status, body: JSON.stringify(data) };
+      console.error('API Error:', data);
+      return {
+        statusCode: response.status,
+        body: JSON.stringify({ error: data.message || 'Failed to fetch invoice' })
+      };
     }
 
     return {
