@@ -133,7 +133,12 @@ async function showInvoice(invoiceId) {
         invoice.invoice_items.forEach(item => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td>${item.name || item.description}</td>
+            <td>
+              <div class="item-name">
+                ${item.name || item.description}
+                ${item.sku ? `<span class="sku">SKU: ${item.sku}</span>` : ''}
+              </div>
+            </td>
             <td>${item.quantity}</td>
             <td>${formatCurrency(item.price)}</td>
             <td>${formatCurrency(item.discount_amount)}</td>
