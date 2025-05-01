@@ -40,7 +40,7 @@ exports.handler = async (event) => {
     if (!invoiceResponse.ok) {
       console.error('API Error Response:', {
         status: invoiceResponse.status,
-        data: data
+        data: invoiceResponse
       });
       return {
         statusCode: invoiceResponse.status,
@@ -51,7 +51,7 @@ exports.handler = async (event) => {
     console.log('Successfully retrieved invoice data');
     return {
       statusCode: 200,
-      body: JSON.stringify(data),
+      body: JSON.stringify(invoiceResponse),
       headers: {
         'Content-Type': 'application/json'
       }
