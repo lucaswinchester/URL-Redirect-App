@@ -37,14 +37,14 @@ exports.handler = async (event) => {
     const invoice = invoiceResponse.invoice;
     console.log('Invoice: ', invoice);
 
-    if (!invoiceResponse.ok) {
+    if (!invoiceResponse.code === 0) {
       console.error('API Error Response:', {
-        status: invoiceResponse.status,
+        status: 500,
         data: invoiceResponse
       });
       return {
-        statusCode: invoiceResponse.status,
-        body: JSON.stringify(data)
+        statusCode: 500,
+        body: JSON.stringify(invoiceResponse)
       };
     }
 
