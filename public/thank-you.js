@@ -141,7 +141,6 @@ async function showInvoice(invoiceId) {
             </td>
             <td>${item.quantity}</td>
             <td>${formatCurrency(item.price)}</td>
-            <td>${formatCurrency(item.discount_amount)}</td>
             <td>${formatCurrency(item.item_total)}</td>
           `;
           itemsBody.appendChild(row);
@@ -149,7 +148,6 @@ async function showInvoice(invoiceId) {
         
         // Calculate and display totals
         const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
-        const totalDiscounts = invoice.invoice_items.reduce((sum, item) => sum + item.discount_amount, 0);
         const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
         
       }
