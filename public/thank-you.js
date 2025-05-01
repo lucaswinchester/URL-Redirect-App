@@ -4,6 +4,14 @@ import { fetchInvoice } from './fetchInvoice.js';
 const params = new URLSearchParams(window.location.search);
 const invoiceId = params.get('invoice_id');
 
+// Get the full URL including page path
+const fullUrl = new URL(window.location.href);
+// Remove any existing search parameters to get just the base URL
+fullUrl.search = '';
+
+// Add the full URL as a parameter
+params.set('cf_source_url', fullUrl.toString());
+
 // Elements
 const viewInvoiceBtn = document.getElementById('view-invoice-btn');
 const invoiceModal = document.getElementById('invoice-modal');
