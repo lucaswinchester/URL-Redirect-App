@@ -1,5 +1,3 @@
- // thank-you.js
-
 import { fetchInvoice } from './fetchInvoice.js';
 
 // Supabase setup
@@ -20,6 +18,20 @@ const invoiceModal = document.getElementById('invoice-modal');
 const invoiceContent = document.getElementById('invoice-content');
 const closeModalBtn = document.getElementById('close-modal');
 const statusEl = document.getElementById('status');
+
+// Add event listeners
+if (viewInvoiceBtn) {
+  viewInvoiceBtn.addEventListener('click', async () => {
+    if (invoiceId) {
+      // Show the modal first
+      invoiceModal.style.display = 'block';
+      // Then fetch and populate the invoice data
+      await showInvoice(invoiceId);
+    } else {
+      console.error('No invoice ID found in URL parameters.');
+    }
+  });
+}
 
 // Insert into sales table, avoiding duplicates
 async function recordSale() {
