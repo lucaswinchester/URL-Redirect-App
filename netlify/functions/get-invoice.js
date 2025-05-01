@@ -5,6 +5,8 @@ const { zohoAuth } = require('./zohoAuth'); // Adjust path as needed
 exports.handler = async (event) => {
   const { invoice_id } = event.queryStringParameters;
 
+  console.log(invoice_id);
+
   if (!invoice_id) {
     return { statusCode: 400, body: 'Missing invoice_id' };
   }
