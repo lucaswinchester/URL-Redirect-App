@@ -13,20 +13,24 @@ exports.handler = async (event) => {
 
   try {
     const accessToken = await zohoAuth();
-    const ZOHO_ORG_ID = process.env.ZOHO_ORG_ID;
 
     // Zoho Billing API endpoint for invoice details
     const zohoUrl = `https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`;
 
-    const response = await fetch(zohoUrl, {
+    const options = {
+      method: 'GET',
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
-        'X-com-zoho-subscriptions-organizationid': ZOHO_ORG_ID,
+        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORG_ID,
       },
-    });
+    };
 
-    const data = await response.json();
-    console.log(data);
+    const response = await fetch(zohoUrl, options)
+    .then(response => response.json())
+    .then(response => invoiceResponse = response)
+    .catch(err => console.error(err));
+
+    console.log('Invoice: ', invoiceResponse.invoice)
 
     if (!response.ok) {
       return { statusCode: response.status, body: JSON.stringify(data) };
