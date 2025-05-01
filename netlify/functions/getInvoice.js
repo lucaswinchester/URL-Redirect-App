@@ -1,17 +1,22 @@
-// netlify/functions/get-invoice.js
 const fetch = require('node-fetch');
-const { zohoAuth } = require('.netlify/functions/zohoAuth');
+const { getZohoAccessToken } = require('./zohoAuth');
 
-exports.handler = async (event) => {
-  console.log('Received invoice request:', {
-    event: event,
-    invoice_id: event.queryStringParameters?.invoice_id
-  });
+exports.handler = async () => {
+  try {
+    const accessToken = await getZohoAccessToken();
 
-  const { invoice_id } = event.queryStringParameters;
+    const options = {
+      method: 'GET',
+      headers: {
+        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORGANIZATION_ID,
+        Authorization: `Zoho-oauthtoken ${accessToken}`,
+      }
+    };
 
-  if (!invoice_id) {
-    console.log('Missing invoice_id parameter');
+    const { invoice_id } = event.queryStringParameters;
+
+    if (!invoice_id) {
+      console.log('Missing invoice_id parameter');
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -20,29 +25,14 @@ exports.handler = async (event) => {
       })
     };
   }
-
-  try {
-    console.log('Fetching Zoho access token...');
-    const accessToken = await zohoAuth();
-    console.log('Successfully obtained access token');
-
-    const ZOHO_ORG_ID = process.env.ZOHO_ORG_ID;
-    console.log('Using organization ID:', ZOHO_ORG_ID);
-
-    const apiUrl = `https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`;
-    console.log('Making API request to:', apiUrl);
-
-    const response = await fetch(
-      apiUrl,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Zoho-oauthtoken ${accessToken}`,
-          'X-com-zoho-subscriptions-organizationid': ZOHO_ORG_ID,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
+  let invoiceResponse;
+      
+      const response = await fetch('https://www.zohoapis.com/billing/v1/invoices/${invoice_id}', options)
+        .then(response => response.json())
+        .then(response => invoiceResponse = response)
+        .catch(err => console.error(err));
+  
+      console.log('Response: ', invoiceResponse);
 
     console.log('API Response Status:', response.status);
     
@@ -84,4 +74,5 @@ exports.handler = async (event) => {
       })
     };
   }
-};
+}
+
