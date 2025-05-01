@@ -13,39 +13,25 @@ exports.handler = async () => {
       }
     };
 
-    const { invoice_id } = event.queryStringParameters;
-
-    if (!invoice_id) {
-      console.log('Missing invoice_id parameter');
-    return {
-      statusCode: 400,
-      body: JSON.stringify({
-        code: 'INVALID_REQUEST',
-        message: 'Invoice ID is required'
-      })
-    };
-  }
-  let invoiceResponse;
-      
-      const response = await fetch('https://www.zohoapis.com/billing/v1/invoices/${invoice_id}', options)
-        .then(response => response.json())
-        .then(response => invoiceResponse = response)
-        .catch(err => console.error(err));
-  
-      console.log('Response: ', invoiceResponse);
-
-    console.log('API Response Status:', response.status);
+    let invoiceResponse;
     
-    const data = await response.json();
-    console.log('API Response Data:', data);
+    const response = await fetch('https://www.zohoapis.com/billing/v1/invoices/' + invoice_id, options)
+      .then(response => response.json())
+      .then(response => invoiceResponse = response)
+      .catch(err => console.error(err));
 
-    if (!response.ok) {
+    console.log('Response: ', invoiceResponse);
+
+    const invoice = invoiceResponse.invoice;
+    console.log('Invoice: ', invoice);
+
+    if (!invoiceResponse.ok) {
       console.error('API Error Response:', {
-        status: response.status,
+        status: invoiceResponse.status,
         data: data
       });
       return {
-        statusCode: response.status,
+        statusCode: invoiceResponse.status,
         body: JSON.stringify(data)
       };
     }
