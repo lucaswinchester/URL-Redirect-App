@@ -106,6 +106,15 @@ async function showInvoice(invoiceId) {
       // Format currency
       const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
       
+      // Update totals
+      document.getElementById('subtotal').textContent = formatCurrency(invoice.subtotal);
+      document.getElementById('tax').textContent = formatCurrency(invoice.tax);
+      document.getElementById('total-amount').textContent = formatCurrency(invoice.total_amount);
+      
+      // Update payment information
+      document.getElementById('payment-status').textContent = invoice.payment_status || '-';
+      document.getElementById('payment-date').textContent = invoice.payment_date || '-';
+      
       // Clear existing items
       const itemsBody = document.getElementById('invoice-items-body');
       itemsBody.innerHTML = '';
@@ -121,14 +130,12 @@ async function showInvoice(invoiceId) {
             </div>
           </td>
           <td>${item.quantity}</td>
-          <td>${formatCurrency(item.price)}</td>
-          <td>${formatCurrency(item.item_total)}</td>
+          <td>${formatCurrency(item.unit_price)}</td>
+          <td>${formatCurrency(item.total)}</td>
         `;
         itemsBody.appendChild(row);
       });
       
-      // Calculate and display totals
-      const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
       const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
       
       document.getElementById('subtotal').textContent = formatCurrency(subtotal);
