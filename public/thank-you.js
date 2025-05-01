@@ -23,6 +23,12 @@ async function showInvoice(invoiceId) {
   try {
     const invoiceData = await fetchInvoice(invoiceId);
     const invoice = invoiceData.invoice;
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount);
+    }
 
     // Update invoice header info
     document.getElementById('invoice-number').textContent = invoice.number || '-';
@@ -31,12 +37,12 @@ async function showInvoice(invoiceId) {
     document.getElementById('invoice-due-date').textContent = invoice.due_date || '-';
 
     // Update totals
-    document.getElementById('subtotal').textContent = invoice.sub_total || '-';
-    document.getElementById('tax').textContent = invoice.tax_total || '-';
-    document.getElementById('total-amount').textContent = invoice.total || '-';
+    document.getElementById('payment-made').textContent = formatCurrency(invoice.payment_made) || '-';
+    document.getElementById('balance-due').textContent = formatCurrency(invoice.balance) || '-';
+    document.getElementById('total-amount').textContent = formatCurrency(invoice.total) || '-';
 
     // Update payment status
-    document.getElementById('payment-status').textContent = invoice.status || '-';
+    document.getElementById('payment-status').textContent = invoice.status.toUpperCase() || '-';
     document.getElementById('payment-date').textContent = invoice.payments[0].date || '-';
 
     // Clear existing items and add new ones
@@ -47,10 +53,10 @@ async function showInvoice(invoiceId) {
       const row = document.createElement('tr');
       const total = item.price * item.quantity;
       row.innerHTML = `
-        <td>${item.name || '-'}</td>
+        <td>${item.name || '-'}${item.code || ''}</td>
         <td>${item.quantity || '-'}</td>
-        <td>${item.price || '-'}</td>
-        <td>${total || '-'}</td>
+        <td>${formatCurrency(item.price) || '-'}</td>
+        <td>${formatCurrency(total) || '-'}</td>
       `;
       itemsBody.appendChild(row);
     });
