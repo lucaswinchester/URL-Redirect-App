@@ -254,13 +254,14 @@ button:hover {
   .invoice-items .item-name {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   .invoice-items .sku {
     font-size: 0.875rem;
-    color: #64748b;
+    color: #1e293b;
     font-style: italic;
+    opacity: 0.8;
   }
 
   .invoice-items tr:last-child td {

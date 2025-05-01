@@ -96,7 +96,12 @@ async function showInvoice(invoiceId) {
       invoice.invoice_items.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${item.name}</td>
+          <td>
+            <div class="item-name">
+              ${item.name}
+              ${item.product_id ? `<span class="sku">SKU: ${item.product_id}</span>` : ''}
+            </div>
+          </td>
           <td>${item.quantity}</td>
           <td>${formatCurrency(item.price)}</td>
           <td>${formatCurrency(item.item_total)}</td>
@@ -147,8 +152,7 @@ async function showInvoice(invoiceId) {
         const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
         const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
         
-      }
-      
+      }      
       // Show modal
       document.getElementById('invoice-modal').style.display = 'flex';
     } else {
