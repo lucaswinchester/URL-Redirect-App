@@ -21,8 +21,23 @@ async function showInvoice(invoiceId) {
   invoiceModal.style.display = 'flex';
   invoiceContent.innerHTML = "<p>Loading invoice...</p>";
   try {
-    const invoiceData = await fetchInvoice(invoiceId);
-    const inv = invoiceData.invoice;
+    const response = await fetch('/.netlify/functions/get-invoice?invoice_id=' + encodeURIComponent(invoiceId));
+    const invoiceData = await response.json();
+    const invoice = invoiceData.invoice;
+    
+    if (!response.ok) {
+      throw new Error(invoiceData.error || 'Failed to fetch invoice');
+    }
+
+    // The invoice data structure from Zoho may be different, so we'll map it
+    const inv = {
+      invoice_number: invoice.number,
+      date: invoice.invoice_date,
+      customer_name: invoice.customer_name,
+      due_date: invoice.due_date,
+      line_items: invoice.invoice_items || [],
+      total: invoice.total
+    };
 
     // Render invoice details
     invoiceContent.innerHTML = `
@@ -50,7 +65,7 @@ async function showInvoice(invoiceId) {
             </tr>
           </thead>
           <tbody>
-            ${(inv.line_items || []).map(item => `
+            ${inv.line_items.map(item => `
               <tr>
                 <td>${item.name || '-'}</td>
                 <td>${item.quantity || '-'}</td>
@@ -62,8 +77,9 @@ async function showInvoice(invoiceId) {
         </table>
       </div>
       <div class="invoice-total">
-      <div style="text-align:right;">
-        <strong>Total Amount:</strong> ${inv.total || '-'}
+        <div style="text-align:right;">
+          <strong>Total Amount:</strong> ${inv.total || '-'}
+        </div>
       </div>
     `;
   } catch (err) {
