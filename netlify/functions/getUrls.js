@@ -5,7 +5,7 @@ exports.handler = async (event) => {
   try {
     const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url } = event.queryStringParameters;
 
-    console.log(cf_source_url);
+    console.log('Source URL: ', cf_source_url);
 
     if (!planID || !cf_dealer_id || !cf_agent_id) {
       return {

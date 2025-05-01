@@ -6,8 +6,8 @@
 		<title>Redirecting...</title>
 		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 		<link rel="apple-touch-icon" href="favicon.svg" />
-		<meta name="description" content="Redirecting to checkout page">
-		<meta name="keywords" content="redirect, checkout, subscription">
+		<meta name="description" content="Redirecting to checkout page" />
+		<meta name="keywords" content="redirect, checkout, subscription" />
 		<link rel="stylesheet" href="style.css" />
 	</head>
 	<body>
@@ -31,7 +31,7 @@
 					// Create a URL object and remove query parameters
 					const url = new URL(referrer);
 					url.search = '';
-					const referrerUrl = `${url.protocol}//${url.hostname}${url.pathname}`;
+					const referrerUrl = `${url.origin}${url.pathname}`;
 					localStorage.setItem('referrerUrl', referrerUrl);
 				}
 			});
