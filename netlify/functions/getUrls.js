@@ -1,12 +1,5 @@
 const { getCheckoutUrlByPlanID, getAgentDetails } = require("./airtableHelpers");
-const { createClient } = require("@supabase/supabase-js");
-
-// Load Supabase credentials from environment variables
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-// Initialize Supabase client
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = require("./supabaseClient");
 
 exports.handler = async (event) => {
   try {
