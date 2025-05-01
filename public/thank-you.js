@@ -1,5 +1,3 @@
-// thank-you.js
-
 import { fetchInvoice } from './fetchInvoice.js';
 
 // Supabase setup
@@ -65,11 +63,6 @@ async function recordSale() {
   }
 }
 
-import { fetchInvoice } from './fetchInvoice.js';
-
-// Format currency
-const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
-
 // Update the showInvoice function
 async function showInvoice(invoiceId) {
   const button = document.getElementById('view-invoice-btn');
@@ -126,120 +119,61 @@ async function showInvoice(invoiceId) {
       document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
       if (invoice.payments && invoice.payments.length > 0) {
         document.getElementById('payment-date').textContent = invoice.payments[0].date;
-        document.getElementById('customer-name').textContent = invoice.customer_name;
-        document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
-        
-        // Format currency
-        const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
-        
-        // Clear existing items
-        const itemsBody = document.getElementById('invoice-items-body');
-        itemsBody.innerHTML = '';
-        
-        // Add invoice items
-        invoice.invoice_items.forEach(item => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>
-              <div class="item-name">
-                ${item.name}
-                ${item.code ? `<span class="sku">SKU: ${item.code}</span>` : ''}
-              </div>
-            </td>
-            <td>${item.quantity}</td>
-            <td>${formatCurrency(item.price)}</td>
-            <td>${formatCurrency(item.item_total)}</td>
-          `;
-          itemsBody.appendChild(row);
-        });
-        
-        // Calculate and display totals
-        const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
-        const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
-        
-      }      
+      
       // Show modal
       document.getElementById('invoice-modal').style.display = 'flex';
     } else {
       statusEl.textContent = "Failed to fetch invoice details. Please try again.";
     }
-  } catch (error) {
-    console.error('Error:', error);
-    statusEl.textContent = "Error fetching invoice. Please try again.";
-  } finally {
-    // Always restore button state
-    button.textContent = originalText;
-    button.disabled = false;
-  }
+}
+} catch (error) {
+  console.error('Error:', error);
+  statusEl.textContent = "Error fetching invoice. Please try again.";
+} finally {
+  // Always restore button state
+  button.textContent = originalText;
+  button.disabled = false;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Get parameters from URL
-    const params = new URLSearchParams(window.location.search);
-    const invoiceId = params.get('invoice_id');
-    
-    if (!invoiceId) {
-      console.error('No invoice_id found in URL');
-      return;
-    }
-  
-    // Elements
-    const viewInvoiceBtn = document.getElementById('view-invoice-btn');
-    const invoiceModal = document.getElementById('invoice-modal');
-    const invoiceContent = document.getElementById('invoice-content');
-    const closeModalBtn = document.getElementById('close-modal');
-    const statusEl = document.getElementById('status');
-  
-    if (!viewInvoiceBtn) {
-      console.error('View invoice button not found');
-      return;
-    }
-  
-    viewInvoiceBtn.style.display = 'inline-block';
-    viewInvoiceBtn.addEventListener('click', async () => {
-      try {
-        await showInvoice(invoiceId);
-      } catch (error) {
-        console.error('Error showing invoice:', error);
-        statusEl.textContent = "Error showing invoice. Please try again.";
-      }
-    });
-  
-    const customerPortalBtn = document.getElementById('customer-portal-btn');
-    if (customerPortalBtn) {
-      customerPortalBtn.addEventListener('click', () => {
-        window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks/signup#/send-invite';
-      });
-    }
-  
-    // Close modal when clicking the close button
-    if (closeModalBtn) {
-      closeModalBtn.addEventListener('click', () => {
-        invoiceModal.style.display = 'none';
-        document.getElementById('invoice-pdf-container').innerHTML = '';
-        document.getElementById('invoice-number').textContent = '-';
-        document.getElementById('invoice-date').textContent = '-';
-        document.getElementById('invoice-due-date').textContent = '-';
-        document.getElementById('invoice-status').textContent = '-';
-        document.getElementById('invoice-total').textContent = '-';
-        document.getElementById('payment-status').textContent = '-';
-      });
-    }
-  
-    // Close modal when clicking outside of modal content
-    invoiceModal.addEventListener('click', (e) => {
-      if (e.target === invoiceModal) {
-        invoiceModal.style.display = 'none';
-        document.getElementById('invoice-pdf-container').innerHTML = '';
-        document.getElementById('invoice-number').textContent = '-';
-        document.getElementById('invoice-date').textContent = '-';
-        document.getElementById('invoice-due-date').textContent = '-';
-        document.getElementById('invoice-status').textContent = '-';
-        document.getElementById('invoice-total').textContent = '-';
-        document.getElementById('payment-status').textContent = '-';
-      }
-    });
-  
-    // Run on page load
-    recordSale();
+// Button and modal logic
+if (invoiceId) {
+  viewInvoiceBtn.style.display = 'inline-block';
+  viewInvoiceBtn.addEventListener('click', () => showInvoice(invoiceId));
+
+const customerPortalBtn = document.getElementById('customer-portal-btn');
+if (customerPortalBtn) {
+  customerPortalBtn.addEventListener('click', () => {
+    window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks/signup#/send-invite';
   });
+}
+
+  // Close modal when clicking the close button
+  closeModalBtn.addEventListener('click', () => {
+    invoiceModal.style.display = 'none';
+    document.getElementById('invoice-pdf-container').innerHTML = '';
+    document.getElementById('invoice-number').textContent = '-';
+    document.getElementById('invoice-date').textContent = '-';
+    document.getElementById('invoice-due-date').textContent = '-';
+    document.getElementById('invoice-status').textContent = '-';
+    document.getElementById('invoice-total').textContent = '-';
+    document.getElementById('payment-status').textContent = '-';
+  });
+
+  // Close modal when clicking outside of modal content
+  invoiceModal.addEventListener('click', (e) => {
+    if (e.target === invoiceModal) {
+      invoiceModal.style.display = 'none';
+      document.getElementById('invoice-pdf-container').innerHTML = '';
+      document.getElementById('invoice-number').textContent = '-';
+      document.getElementById('invoice-date').textContent = '-';
+      document.getElementById('invoice-due-date').textContent = '-';
+      document.getElementById('invoice-status').textContent = '-';
+      document.getElementById('invoice-total').textContent = '-';
+      document.getElementById('payment-status').textContent = '-';
+    }
+  });
+}
+}
+
+// Run on page load
+recordSale();
