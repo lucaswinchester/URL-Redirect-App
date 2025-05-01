@@ -171,7 +171,9 @@ async function showInvoice(invoiceId) {
 // Button and modal logic
 if (invoiceId) {
   viewInvoiceBtn.style.display = 'inline-block';
-  viewInvoiceBtn.addEventListener('click', () => showInvoice(invoiceId));
+  viewInvoiceBtn.addEventListener('click', async () => {
+    await showInvoice(invoiceId);
+  });
 
 const customerPortalBtn = document.getElementById('customer-portal-btn');
 if (customerPortalBtn) {
