@@ -67,16 +67,58 @@ async function recordSale() {
 
 // Update the showInvoice function
 async function showInvoice(invoiceId) {
-    try {
-      const invoiceData = await fetchInvoice(invoiceId);
+  const button = document.getElementById('view-invoice-btn');
+  const originalText = button.textContent;
+  button.textContent = 'Loading...';
+  button.disabled = true;
+  
+  try {
+    const invoiceData = await fetchInvoice(invoiceId);
+    
+    if (invoiceData.code === 0) {
+      const invoice = invoiceData.invoice;
       
-      if (invoiceData.code === 0) {
-        const invoice = invoiceData.invoice;
-        
-        // Update header information
-        document.getElementById('invoice-number').textContent = invoice.number;
-        document.getElementById('invoice-date').textContent = invoice.invoice_date;
-        document.getElementById('invoice-due-date').textContent = invoice.due_date;
+      // Update header information
+      document.getElementById('invoice-number').textContent = invoice.number;
+      document.getElementById('invoice-date').textContent = invoice.invoice_date;
+      document.getElementById('invoice-due-date').textContent = invoice.due_date;
+      document.getElementById('customer-name').textContent = invoice.customer_name;
+      document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
+      
+      // Format currency
+      const formatCurrency = (amount) => `${invoice.currency_symbol}${amount.toFixed(2)}`;
+      
+      // Clear existing items
+      const itemsBody = document.getElementById('invoice-items-body');
+      itemsBody.innerHTML = '';
+      
+      // Add invoice items
+      invoice.invoice_items.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.description}</td>
+          <td>${item.quantity}</td>
+          <td>${formatCurrency(item.price)}</td>
+          <td>${formatCurrency(item.discount_amount)}</td>
+          <td>${formatCurrency(item.item_total)}</td>
+        `;
+        itemsBody.appendChild(row);
+      });
+      
+      // Calculate and display totals
+      const subtotal = invoice.invoice_items.reduce((sum, item) => sum + item.item_total, 0);
+      const totalDiscounts = invoice.invoice_items.reduce((sum, item) => sum + item.discount_amount, 0);
+      const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
+      
+      document.getElementById('subtotal').textContent = formatCurrency(subtotal);
+      document.getElementById('discounts').textContent = formatCurrency(totalDiscounts);
+      document.getElementById('tax').textContent = formatCurrency(totalTax);
+      document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
+      
+      // Update payment information
+      document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
+      if (invoice.payments && invoice.payments.length > 0) {
+        document.getElementById('payment-date').textContent = invoice.payments[0].date;
         document.getElementById('customer-name').textContent = invoice.customer_name;
         document.getElementById('invoice-status').textContent = invoice.status.toUpperCase();
         
@@ -105,27 +147,22 @@ async function showInvoice(invoiceId) {
         const totalDiscounts = invoice.invoice_items.reduce((sum, item) => sum + item.discount_amount, 0);
         const totalTax = invoice.invoice_items.reduce((sum, item) => sum + (item.tax_amount || 0), 0);
         
-        document.getElementById('subtotal').textContent = formatCurrency(subtotal);
-        document.getElementById('discounts').textContent = formatCurrency(totalDiscounts);
-        document.getElementById('tax').textContent = formatCurrency(totalTax);
-        document.getElementById('total-amount').textContent = formatCurrency(invoice.total);
-        
-        // Update payment information
-        document.getElementById('payment-status').textContent = invoice.status === 'paid' ? 'Paid' : 'Pending';
-        if (invoice.payments && invoice.payments.length > 0) {
-          document.getElementById('payment-date').textContent = invoice.payments[0].date;
-        }
-        
-        // Show modal
-        document.getElementById('invoice-modal').style.display = 'flex';
-      } else {
-        statusEl.textContent = "Failed to fetch invoice details. Please try again.";
       }
-    } catch (error) {
-      console.error('Error:', error);
-      statusEl.textContent = "Error fetching invoice. Please try again.";
+      
+      // Show modal
+      document.getElementById('invoice-modal').style.display = 'flex';
+    } else {
+      statusEl.textContent = "Failed to fetch invoice details. Please try again.";
     }
+  } catch (error) {
+    console.error('Error:', error);
+    statusEl.textContent = "Error fetching invoice. Please try again.";
+  } finally {
+    // Always restore button state
+    button.textContent = originalText;
+    button.disabled = false;
   }
+}
 
 // Button and modal logic
 if (invoiceId) {
