@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { getZohoAccessToken } = require('./zohoAuth');
 
-exports.handler = async () => {
+exports.handler = async (event) => {
   try {
     const accessToken = await getZohoAccessToken();
 
@@ -15,7 +15,19 @@ exports.handler = async () => {
 
     let invoiceResponse;
     
-    const response = await fetch('https://www.zohoapis.com/billing/v1/invoices/' + invoice_id, options)
+    const { invoice_id } = event.queryStringParameters;
+    
+    if (!invoice_id) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          code: 'INVALID_REQUEST',
+          message: 'Invoice ID is required'
+        })
+      };
+    }
+
+    const response = await fetch(`https://www.zohoapis.com/billing/v1/invoices/${invoice_id}`, options)
       .then(response => response.json())
       .then(response => invoiceResponse = response)
       .catch(err => console.error(err));
