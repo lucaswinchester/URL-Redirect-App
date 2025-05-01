@@ -138,7 +138,7 @@ async function showInvoice(invoiceId) {
             <td>
               <div class="item-name">
                 ${item.name}
-                ${item.sku ? `<span class="sku">SKU: ${item.sku}</span>` : ''}
+                ${item.code ? `<span class="sku">SKU: ${item.code}</span>` : ''}
               </div>
             </td>
             <td>${item.quantity}</td>
