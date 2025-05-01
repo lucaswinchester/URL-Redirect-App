@@ -19,7 +19,7 @@ exports.handler = async (event) => {
       method: 'GET',
       headers: {
         Authorization: `Zoho-oauthtoken ${accessToken}`,
-        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORG_ID,
+        'X-com-zoho-subscriptions-organizationid': process.env.ZOHO_ORGANIZATION_ID,
       },
     };
 
