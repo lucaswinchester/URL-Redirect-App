@@ -178,7 +178,6 @@ button:hover {
     background: rgba(0,0,0,0.5);
     justify-content: center;
     align-items: center;
-    /* Use flex to center content */
     display: flex;
   }
   
@@ -188,15 +187,83 @@ button:hover {
   
   #invoice-modal-content {
     background: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 90vw;
+    padding: 1.5rem;
+    border-radius: 12px;
+    max-width: 900px;
+    width: 90%;
     max-height: 90vh;
-    overflow: auto;
+    overflow-y: auto;
     position: relative;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.2);
-  }  
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
 
+  #close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #64748b;
+    transition: color 0.2s;
+  }
+
+  #close-modal:hover {
+    color: #475569;
+  }
+
+  .invoice-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .invoice-header h2 {
+    color: #1e293b;
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  #invoice-pdf-container {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8fafc;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .invoice-info {
+    display: flex;
+    gap: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e2e8f0;
+  }
+
+  .invoice-details, .amount-details {
+    flex: 1;
+  }
+
+  .invoice-details p, .amount-details p {
+    margin: 0.5rem 0;
+    color: #475569;
+  }
+
+  .invoice-details strong, .amount-details strong {
+    color: #1e293b;
+  }
+
+  .invoice-details span, .amount-details span {
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .amount-details span {
+    color: #1e293b;
+  }
   @keyframes fadeInUp {
     0% {
       opacity: 0;

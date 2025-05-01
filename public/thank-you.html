@@ -65,11 +65,28 @@
 					View Invoice
 				</button>
 			</div>
-		</div>
-		<div id="invoice-modal" style="display: none">
-			<div id="invoice-modal-content">
-				<button id="close-modal">&times;</button>
-				<div id="invoice-content"></div>
+			<div id="invoice-modal">
+				<div id="invoice-modal-content">
+					<button id="close-modal">&times;</button>
+					<div class="invoice-header">
+						<h2>Invoice Details</h2>
+					</div>
+					<div id="invoice-pdf-container">
+						<!-- PDF will be embedded here -->
+					</div>
+					<div class="invoice-info">
+						<div class="invoice-details">
+							<p><strong>Invoice Number:</strong> <span id="invoice-number">-</span></p>
+							<p><strong>Invoice Date:</strong> <span id="invoice-date">-</span></p>
+							<p><strong>Due Date:</strong> <span id="invoice-due-date">-</span></p>
+							<p><strong>Status:</strong> <span id="invoice-status">-</span></p>
+						</div>
+						<div class="amount-details">
+							<p><strong>Total Amount:</strong> <span id="invoice-total">-</span></p>
+							<p><strong>Payment Status:</strong> <span id="payment-status">-</span></p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
