@@ -27,10 +27,10 @@ async function createZohoPaymentLink(planID, agentInfo) {
       },
       "addons": [],
       "custom_fields": [{
-        "label": "cf_agent_id",
+        "label": "Agent ID#",
         "value": agentInfo["Agent ID"]
       }, {
-        "label": "cf_dealer_id",
+        "label": "Dealer ID#",
         "value": agentInfo["Dealer ID"]
       }],
       "redirect_url": process.env.SUCCESS_REDIRECT_URL,
