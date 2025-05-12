@@ -29,18 +29,18 @@ async function createZohoPaymentLink(planID, agentInfo) {
       'Authorization': `Zoho-oauthtoken ${accessToken}`,
       'Content-Type': 'application/json'
     },
-    body: {
-        "customer": {
-          "first_name": agentInfo["First Name"] || "",
-          "last_name": agentInfo["Last Name"] || "",
-          "display_name": `${agentInfo["First Name"] || ''} ${agentInfo["Last Name"] || ''}`.trim(),
-          "email": agentInfo["Email"],
-          "company_name": agentInfo["Company Name"]
-        },
-        "plan": {
-          "plan_code": planID
-        }
+    body: JSON.stringify({
+      "customer": {
+        "first_name": agentInfo["First Name"] || "",
+        "last_name": agentInfo["Last Name"] || "",
+        "display_name": `${agentInfo["First Name"] || ''} ${agentInfo["Last Name"] || ''}`.trim(),
+        "email": agentInfo["Email"],
+        "company_name": agentInfo["Company Name"]
+      },
+      "plan": {
+        "plan_code": planID
       }
+    })
     };
 
     const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription`, options);
