@@ -1,9 +1,10 @@
-const { getCheckoutUrlByPlanID, getAgentDetails } = require("./airtableHelpers");
+const { getAgentDetails } = require("./airtableHelpers");
+const { createZohoPaymentLink } = require("./getZohoLink");
 const supabase = require("./supabaseClient");
 
 exports.handler = async (event) => {
   try {
-    const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url } = event.queryStringParameters;
+    const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url, customerInfo } = event.queryStringParameters;
 
     console.log('Source URL: ', cf_source_url);
 
@@ -14,13 +15,38 @@ exports.handler = async (event) => {
       };
     }
 
-    const checkoutUrl = await getCheckoutUrlByPlanID(planID);
+    // Parse customer info from form
+    let customerInfoObj = {};
+    try {
+      customerInfoObj = JSON.parse(customerInfo);
+    } catch (e) {
+      console.error('Failed to parse customer info:', e);
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Invalid customer information" }),
+      };
+    }
+
+    // Get agent details
     const agentInfo = await getAgentDetails(cf_dealer_id, cf_agent_id);
 
-    if (!checkoutUrl || !agentInfo) {
+    if (!agentInfo) {
       return {
         statusCode: 404,
-        body: JSON.stringify({ error: "No matching checkout page or agent info found" }),
+        body: JSON.stringify({ error: "No matching agent info found" }),
+      };
+    }
+
+    // Create Zoho payment link with customer information
+    const checkoutUrl = await createZohoPaymentLink(planID, {
+      ...agentInfo,
+      ...customerInfoObj
+    });
+
+    if (!checkoutUrl) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: "Failed to create payment link" }),
       };
     }
 
