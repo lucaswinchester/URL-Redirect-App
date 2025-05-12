@@ -16,17 +16,10 @@ async function createZohoPaymentLink(planID, agentInfo) {
       "email": agentInfo["Email"],
       "company_name": agentInfo["Company Name"]
     },
-    "redirect_url": process.env.SUCCESS_REDIRECT_URL,
-    "cancel_url": process.env.CANCEL_REDIRECT_URL,
-    "payment_options": {
-      "payment_gateways": [
-        {
-          "gateway_id": process.env.ZOHO_PAYMENT_GATEWAY_ID
-        }
-      ]
-    }
   };
 
+  console.log('Creating payment link with payload:', JSON.stringify(payload, null, 2));
+  
   const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription?organization_id=${ZOHO_ORGANIZATION_ID}`, {
     method: 'POST',
     headers: {
@@ -37,7 +30,23 @@ async function createZohoPaymentLink(planID, agentInfo) {
   });
 
   const data = await response.json();
-  return data.payment_link?.payment_link_url;
+  console.log('Zoho API response:', JSON.stringify(data, null, 2));
+  
+  if (!response.ok) {
+    console.error('Zoho API error:', {
+      status: response.status,
+      statusText: response.statusText,
+      data
+    });
+    throw new Error(`Zoho API error: ${response.status} - ${response.statusText}`);
+  }
+
+  if (!data.payment_link?.payment_link_url) {
+    console.error('No payment link URL in response:', data);
+    return null;
+  }
+
+  return data.payment_link.payment_link_url;
 }
 
 module.exports = { createZohoPaymentLink };

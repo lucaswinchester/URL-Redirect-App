@@ -38,15 +38,19 @@ exports.handler = async (event) => {
     }
 
     // Create Zoho payment link with customer information
-    const checkoutUrl = await createZohoPaymentLink(planID, {
+    const combinedInfo = {
       ...agentInfo,
       ...customerInfoObj
-    });
+    };
+    console.log('Combined customer info:', JSON.stringify(combinedInfo, null, 2));
+    
+    const checkoutUrl = await createZohoPaymentLink(planID, combinedInfo);
 
     if (!checkoutUrl) {
+      console.error('Failed to create payment link. Response:', response);
       return {
         statusCode: 500,
-        body: JSON.stringify({ error: "Failed to create payment link" }),
+        body: JSON.stringify({ error: "Failed to create payment link", details: response }),
       };
     }
 
