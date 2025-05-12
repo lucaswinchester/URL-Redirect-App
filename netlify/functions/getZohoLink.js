@@ -8,7 +8,6 @@ async function createZohoPaymentLink(planID, agentInfo) {
   const accessToken = await getZohoAccessToken();
   
   const payload = {
-    "plan_id": planID,
     "customer": {
       "first_name": agentInfo["First Name"] || "",
       "last_name": agentInfo["Last Name"] || "",
@@ -16,17 +15,25 @@ async function createZohoPaymentLink(planID, agentInfo) {
       "email": agentInfo["Email"],
       "company_name": agentInfo["Company Name"]
     },
+    "plan": {
+      "plan_code": planID
+    }
   };
 
   console.log('Creating payment link with payload:', JSON.stringify(payload, null, 2));
   
-  const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription?organization_id=${ZOHO_ORGANIZATION_ID}`, {
+  const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription`, {
     method: 'POST',
     headers: {
       'Authorization': `Zoho-oauthtoken ${accessToken}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/x-www-form-urlencoded'
     },
-    body: JSON.stringify(payload)
+    body: new URLSearchParams({
+      'JSONString': JSON.stringify({
+        'organization_id': ZOHO_ORGANIZATION_ID,
+        ...payload
+      })
+    }).toString()
   });
 
   const data = await response.json();
