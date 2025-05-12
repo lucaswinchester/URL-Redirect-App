@@ -7,21 +7,6 @@ const ZOHO_BILLING_API_URL = "https://www.zohoapis.com/billing/v1";
 async function createZohoPaymentLink(planID, agentInfo) {
   const accessToken = await getZohoAccessToken();
   
-  const payload = {
-    "customer": {
-      "first_name": agentInfo["First Name"] || "",
-      "last_name": agentInfo["Last Name"] || "",
-      "display_name": `${agentInfo["First Name"] || ''} ${agentInfo["Last Name"] || ''}`.trim(),
-      "email": agentInfo["Email"],
-      "company_name": agentInfo["Company Name"]
-    },
-    "plan": {
-      "plan_code": planID
-    }
-  };
-
-  console.log('Creating payment link with payload:', JSON.stringify(payload, null, 2));
-  
   const options = {
     method: 'POST',
     headers: {
@@ -39,7 +24,16 @@ async function createZohoPaymentLink(planID, agentInfo) {
       },
       "plan": {
         "plan_code": planID
-      }
+      },
+      "addons": [],
+      "custom_fields": [{
+        "label": "cf_agent_id",
+        "value": agentInfo["Agent ID"]
+      }, {
+        "label": "cf_dealer_id",
+        "value": agentInfo["Dealer ID"]
+      }],
+      "redirect_url": process.env.SUCCESS_REDIRECT_URL,
     })
     };
 
@@ -56,12 +50,12 @@ async function createZohoPaymentLink(planID, agentInfo) {
     throw new Error(`Zoho API error: ${response.status} - ${response.statusText}`);
   }
 
-  if (!data.payment_link?.payment_link_url) {
+  if (!data.hostedpage?.url) {
     console.error('No payment link URL in response:', data);
     return null;
   }
 
-  return data.payment_link.payment_link_url;
+  return data.hostedpage.url;
 }
 
 module.exports = { createZohoPaymentLink };
