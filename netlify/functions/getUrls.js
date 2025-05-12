@@ -104,8 +104,10 @@ exports.handler = async (event) => {
     fullUrl.searchParams.set("checkout_data_id", checkoutDataId);
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ url: fullUrl.toString() }),
+      statusCode: 302,
+      headers: {
+        Location: fullUrl.toString()
+      }
     };
   } catch (error) {
     console.error("Function error:", error);
