@@ -12,6 +12,7 @@ async function createZohoPaymentLink(planID, agentInfo) {
     "customer": {
       "first_name": agentInfo["First Name"] || "",
       "last_name": agentInfo["Last Name"] || "",
+      "display_name": `${agentInfo["First Name"] || ''} ${agentInfo["Last Name"] || ''}`.trim(),
       "email": agentInfo["Email"],
       "company_name": agentInfo["Company Name"]
     },
