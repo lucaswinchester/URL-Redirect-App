@@ -16,6 +16,7 @@
 				min-height: 100vh;
 				align-items: flex-start;
 				box-sizing: border-box; /* Include padding in height calculation */
+				padding-top: 4rem; /* Increased top padding */
 			}
 
 			html {
@@ -26,9 +27,9 @@
 			.form-container {
 				max-width: 600px;
 				width: 100%;
-				margin: 2rem auto; /* Increased top margin */
+				margin: 0 auto; /* Remove top margin since we're using body padding */
 				padding: 1.5rem;
-				background: #1e293b; /* Matching card background from thank you page */
+				background: var(--bg-dark);
 				border: 1px solid var(--border-color);
 				border-radius: var(--radius);
 				box-shadow: 0 0 30px rgba(201, 9, 23, 0.2);
