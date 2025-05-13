@@ -133,13 +133,15 @@
 
 			<div id="newCustomerForm" class="form-section">
 				<h3>New Customer Information</h3>
-				<div class="form-group form-group-half">
-					<label for="firstName">First Name *</label>
-					<input type="text" id="firstName" required />
-				</div>
-				<div class="form-group form-group-half">
-					<label for="lastName">Last Name *</label>
-					<input type="text" id="lastName" required />
+				<div class="form-row">
+					<div class="form-group form-group-half">
+						<label for="firstName">First Name *</label>
+						<input type="text" id="firstName" required />
+					</div>
+					<div class="form-group form-group-half">
+						<label for="lastName">Last Name *</label>
+						<input type="text" id="lastName" required />
+					</div>
 				</div>
 				<div class="form-group">
 					<label for="email">Email *</label>
@@ -375,7 +377,6 @@
 								state: document.getElementById('billingState').value,
 								zip: document.getElementById('billingZip').value,
 								country: document.getElementById('billingCountry').value,
-								fax: document.getElementById('billingFax').value,
 							};
 
 							// Get shipping address (same as billing if checkbox is checked)
@@ -390,7 +391,6 @@
 									state: document.getElementById('shippingState').value,
 									zip: document.getElementById('shippingZip').value,
 									country: document.getElementById('shippingCountry').value,
-									fax: document.getElementById('shippingFax').value,
 								};
 							}
 
@@ -442,7 +442,7 @@
 							cf_dealer_id,
 							cf_agent_id,
 							source,
-							customerData
+							customerData,
 						});
 
 						// Redirect to getUrls with customer information
