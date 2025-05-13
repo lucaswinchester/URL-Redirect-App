@@ -42,7 +42,7 @@ exports.handler = async (event) => {
     
     if (customer_id) {
       // For existing customers, structure the customer ID as expected by getZohoLink.js
-      zohoData.customer = {
+      customer = {
         customer_id: customer_id
       };
       // Remove any customer fields that might have come from agentInfo
