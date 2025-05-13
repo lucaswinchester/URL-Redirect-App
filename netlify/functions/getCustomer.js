@@ -22,6 +22,7 @@ exports.handler = async (event) => {
       };
     }
 
+    console.log('Searching for customer with email:', email);
     const accessToken = await getZohoAccessToken();
     
     // Search for customer by email
@@ -38,6 +39,7 @@ exports.handler = async (event) => {
     );
 
     const data = await response.json();
+    console.log('Zoho API response:', JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error('Zoho API error:', data);
@@ -50,18 +52,33 @@ exports.handler = async (event) => {
       };
     }
 
+
     // Check if we found any customers
     if (data.customers && data.customers.length > 0) {
-      // Return the first matching customer
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ 
-          customer: data.customers[0]
-        })
-      };
+      // Find exact email match (case insensitive)
+      const customer = data.customers.find(c => 
+        c.email && c.email.toLowerCase() === email.toLowerCase()
+      );
+
+      if (customer) {
+        console.log('Found customer:', customer);
+        return {
+          statusCode: 200,
+          body: JSON.stringify({ 
+            customer: {
+              first_name: customer.first_name || '',
+              last_name: customer.last_name || '',
+              display_name: customer.display_name || '',
+              email: customer.email,
+              customer_id: customer.customer_id
+            }
+          })
+        };
+      }
     }
 
     // No customers found
+    console.log('No customer found with email:', email);
     return {
       statusCode: 200,
       body: JSON.stringify({ 
