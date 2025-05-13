@@ -343,7 +343,77 @@
 					} else {
 						shippingSection.style.display = 'block';
 					}
+                    validateForm();
 				});
+
+            // Function to validate the form
+            function validateForm() {
+                const customerType = document.querySelector('input[name="customerType"]:checked')?.value;
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (customerType === 'existing') {
+                    // For existing customers, just check if a customer is selected
+                    const isCustomerSelected = !!window.selectedCustomerId;
+                    submitBtn.disabled = !isCustomerSelected;
+                    submitBtn.style.opacity = isCustomerSelected ? '1' : '0.7';
+                    submitBtn.style.cursor = isCustomerSelected ? 'pointer' : 'not-allowed';
+                    return;
+                }
+                
+                // For new customers, check all required fields
+                const requiredFields = [
+                    'firstName', 'lastName', 'email', 'billingStreet', 
+                    'billingCity', 'billingState', 'billingZip', 'billingCountry'
+                ];
+                
+                const isFormValid = requiredFields.every(fieldId => {
+                    const element = document.getElementById(fieldId);
+                    return element && element.value.trim() !== '';
+                });
+                
+                // If shipping address is shown, validate those fields too
+                if (!document.getElementById('sameAsBilling').checked) {
+                    const shippingFields = [
+                        'shippingStreet', 'shippingCity', 
+                        'shippingState', 'shippingZip', 'shippingCountry'
+                    ];
+                    
+                    const isShippingValid = shippingFields.every(fieldId => {
+                        const element = document.getElementById(fieldId);
+                        return element && element.value.trim() !== '';
+                    });
+                    
+                    submitBtn.disabled = !(isFormValid && isShippingValid);
+                    submitBtn.style.opacity = (isFormValid && isShippingValid) ? '1' : '0.7';
+                    submitBtn.style.cursor = (isFormValid && isShippingValid) ? 'pointer' : 'not-allowed';
+                } else {
+                    submitBtn.disabled = !isFormValid;
+                    submitBtn.style.opacity = isFormValid ? '1' : '0.7';
+                    submitBtn.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
+                }
+            }
+            
+            // Add input event listeners to all form fields
+            const formFields = [
+                // New customer fields
+                'firstName', 'lastName', 'email', 'companyName',
+                // Billing address fields
+                'billingStreet', 'billingCity', 'billingState', 'billingZip', 'billingCountry',
+                // Shipping address fields
+                'shippingStreet', 'shippingCity', 'shippingState', 'shippingZip', 'shippingCountry'
+            ];
+            
+            formFields.forEach(fieldId => {
+                const element = document.getElementById(fieldId);
+                if (element) {
+                    element.addEventListener('input', validateForm);
+                }
+            });
+            
+            // Also validate when customer type changes
+            document.querySelectorAll('input[name="customerType"]').forEach(radio => {
+                radio.addEventListener('change', validateForm);
+            });
 
 			// Auto-fill billing attention with full name
 			document
