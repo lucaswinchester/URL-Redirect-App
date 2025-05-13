@@ -239,7 +239,19 @@
 				<h3>Existing Customer Information</h3>
 				<div class="form-group">
 					<label for="existingEmail">Email *</label>
-					<input type="email" id="existingEmail" required />
+					<div class="search-container" style="display: flex; gap: 0.5rem;">
+						<input type="email" id="existingEmail" required style="flex: 1;" />
+						<button type="button" id="searchCustomerBtn" class="btn" style="margin-top: 0; padding: 0.5rem 1rem;">
+							Search
+						</button>
+					</div>
+					<div id="customerSearchStatus" class="hidden" style="margin-top: 0.5rem; font-size: 0.9rem; display: none;"></div>
+				</div>
+				<div id="customerDetails" class="hidden" style="display: none;">
+					<div class="form-group">
+						<label>Customer Name</label>
+						<p id="customerName" style="margin: 0.25rem 0 1rem 0; font-weight: 600;"></p>
+					</div>
 				</div>
 			</div>
 
@@ -453,6 +465,78 @@
 						console.error('Error submitting form:', error);
 					}
 				});
+
+			// Add event listener for customer search
+			document.getElementById('searchCustomerBtn').addEventListener('click', searchCustomer);
+
+			// Allow pressing Enter in the email field to trigger search
+			document.getElementById('existingEmail').addEventListener('keypress', (e) => {
+				if (e.key === 'Enter') {
+					e.preventDefault();
+					searchCustomer();
+				}
+			});
+
+			async function searchCustomer() {
+				const email = document.getElementById('existingEmail').value.trim();
+				const statusElement = document.getElementById('customerSearchStatus');
+				const customerDetails = document.getElementById('customerDetails');
+
+				if (!email) {
+					showStatus('Please enter an email address', 'error');
+					return;
+				}
+
+				try {
+					showStatus('Searching for customer...', 'info');
+					customerDetails.classList.add('hidden');
+
+					// Call Netlify function to search for customer
+					const response = await fetch('/.netlify/functions/getCustomer', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({ email })
+					});
+
+					const data = await response.json();
+
+					if (!response.ok) {
+						throw new Error(data.error || 'Failed to search for customer');
+					}
+
+					if (data.customer) {
+						showStatus('Customer found!', 'success');
+						document.getElementById('customerName').textContent = 
+							`${data.customer.first_name} ${data.customer.last_name}`.trim() || 'No name available';
+						customerDetails.classList.remove('hidden');
+					} else {
+						showStatus('No customer found with this email', 'warning');
+					}
+				} catch (error) {
+					console.error('Error searching for customer:', error);
+					showStatus(error.message || 'Error searching for customer', 'error');
+				}
+			}
+
+			function showStatus(message, type = 'info') {
+				const statusElement = document.getElementById('customerSearchStatus');
+				statusElement.textContent = message;
+				statusElement.className = ''; // Clear all classes
+				statusElement.classList.remove('hidden');
+
+				// Set color based on message type
+				if (type === 'error') {
+					statusElement.style.color = '#ff4d4f';
+				} else if (type === 'success') {
+					statusElement.style.color = '#52c41a';
+				} else if (type === 'warning') {
+					statusElement.style.color = '#faad14';
+				} else {
+					statusElement.style.color = '#1890ff';
+				}
+			}
 		</script>
 	</body>
 </html>
