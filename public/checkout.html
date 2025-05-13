@@ -451,8 +451,11 @@
 								shipping_address: shippingAddress,
 							};
 						} else {
+							if (!window.selectedCustomerId) {
+								throw new Error('Please select a customer');
+							}
 							customerData = {
-								Email: document.getElementById('existingEmail').value,
+								customer_id: window.selectedCustomerId
 							};
 						}
 
@@ -482,6 +485,7 @@
 							cf_agent_id,
 							source,
 							customerInfo: JSON.stringify(customerData),
+							...(window.selectedCustomerId && { customer_id: window.selectedCustomerId })
 						});
 
 						// Log the data being sent
@@ -545,10 +549,8 @@
 				submitBtn.style.opacity = '1';
 				submitBtn.style.cursor = 'pointer';
 
-				// Update URL with customer ID for form submission
-				const url = new URL(window.location);
-				url.searchParams.set('customer_id', customer.customer_id);
-				window.history.pushState({}, '', url);
+				// Store customer ID for form submission
+				window.selectedCustomerId = customer.customer_id;
 			}
 
 			// Function to create customer button
