@@ -256,20 +256,43 @@
 						style="margin-top: 0.5rem; font-size: 0.9rem; display: none"
 					></div>
 				</div>
-				<div id="customerResults" style="margin-top: 1rem; display: none;">
+				<div id="customerResults" style="margin-top: 1rem; display: none">
 					<label>Select Customer:</label>
-					<div id="customerList" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+					<div
+						id="customerList"
+						style="
+							margin-top: 0.5rem;
+							display: flex;
+							flex-direction: column;
+							gap: 0.5rem;
+						"
+					>
 						<!-- Customer buttons will be inserted here -->
 					</div>
 				</div>
-				<div id="selectedCustomer" style="margin-top: 1rem; display: none; padding: 1rem; background: rgba(0, 0, 0, 0.1); border-radius: 4px;">
+				<div
+					id="selectedCustomer"
+					style="
+						margin-top: 1rem;
+						display: none;
+						padding: 1rem;
+						background: rgba(0, 0, 0, 0.1);
+						border-radius: 4px;
+					"
+				>
 					<strong>Selected Customer:</strong>
-					<div id="customerDetails" style="margin-top: 0.5rem;"></div>
+					<div id="customerDetails" style="margin-top: 0.5rem"></div>
 				</div>
 			</div>
 
 			<div class="form-section">
-				<button type="button" class="btn" id="submitBtn" disabled style="opacity: 0.7; cursor: not-allowed;">
+				<button
+					type="button"
+					class="btn"
+					id="submitBtn"
+					disabled
+					style="opacity: 0.7; cursor: not-allowed"
+				>
 					Continue to Checkout
 				</button>
 			</div>
@@ -500,14 +523,14 @@
 			// Function to handle customer selection
 			function selectCustomer(customer) {
 				selectedCustomer = customer;
-				
+
 				// Update selected customer display
 				const customerDetails = document.getElementById('customerDetails');
-				const displayName = 
-					customer.display_name || 
-					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 
+				const displayName =
+					customer.display_name ||
+					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
 					'No name available';
-				
+
 				customerDetails.innerHTML = `
 					<div><strong>Name:</strong> ${displayName}</div>
 					<div><strong>Email:</strong> ${customer.email}</div>
@@ -536,16 +559,17 @@
 				button.style.cssText = `
 					text-align: left;
 					padding: 0.75rem;
-					border: 1px solid #ddd;
+					border: 1px solid #1890ff;
 					border-radius: 4px;
 					background: white;
 					cursor: pointer;
 					transition: all 0.2s;
+					box-shadow: 0 0 0 1px rgba(24, 144, 255, 0.2);
 				`;
 
-				const displayName = 
-					customer.display_name || 
-					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 
+				const displayName =
+					customer.display_name ||
+					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
 					'No name available';
 
 				button.innerHTML = `
@@ -555,14 +579,16 @@
 
 				button.addEventListener('click', () => {
 					// Remove active class from all buttons
-					document.querySelectorAll('.customer-btn').forEach(btn => {
-						btn.style.borderColor = '#ddd';
+					document.querySelectorAll('.customer-btn').forEach((btn) => {
+						btn.style.borderColor = '#1890ff';
 						btn.style.backgroundColor = 'white';
+						btn.style.boxShadow = '0 0 0 1px rgba(24, 144, 255, 0.2)';
 					});
 
 					// Add active class to clicked button
 					button.style.borderColor = '#c90917';
 					button.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
+					button.style.boxShadow = '0 0 0 1px rgba(201, 9, 23, 0.5)';
 
 					// Select the customer
 					selectCustomer(customer);
@@ -575,13 +601,14 @@
 				const email = document.getElementById('existingEmail').value.trim();
 				const statusElement = document.getElementById('customerSearchStatus');
 				const customerResults = document.getElementById('customerResults');
-				const selectedCustomerSection = document.getElementById('selectedCustomer');
+				const selectedCustomerSection =
+					document.getElementById('selectedCustomer');
 
 				// Reset state
 				customerResults.style.display = 'none';
 				selectedCustomerSection.style.display = 'none';
 				document.getElementById('customerList').innerHTML = '';
-				
+
 				// Disable checkout button until customer is selected
 				const submitBtn = document.getElementById('submitBtn');
 				submitBtn.disabled = true;
@@ -614,13 +641,13 @@
 
 					if (data.customers && data.customers.length > 0) {
 						showStatus(`Found ${data.customers.length} customer(s)`, 'success');
-						
+
 						// Add customer buttons to the list
 						const customerList = document.getElementById('customerList');
-						data.customers.forEach(customer => {
+						data.customers.forEach((customer) => {
 							customerList.appendChild(createCustomerButton(customer));
 						});
-						
+
 						// Show the results
 						customerResults.style.display = 'block';
 					} else {
