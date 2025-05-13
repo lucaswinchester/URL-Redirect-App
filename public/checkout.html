@@ -455,7 +455,7 @@
 								throw new Error('Please select a customer');
 							}
 							customerData = {
-								customer_id: window.selectedCustomerId,
+								customer_id: window.selectedCustomerId
 							};
 						}
 
@@ -486,10 +486,7 @@
 							cf_dealer_id,
 							cf_agent_id,
 							source,
-							customerInfo: JSON.stringify(customerData),
-							...(window.selectedCustomerId && {
-								customer_id: window.selectedCustomerId,
-							}),
+							customerInfo: JSON.stringify(customerData)
 						});
 
 						// Log the data being sent
