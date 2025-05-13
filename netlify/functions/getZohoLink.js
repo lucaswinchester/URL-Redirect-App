@@ -7,7 +7,34 @@ const ZOHO_BILLING_API_URL = "https://www.zohoapis.com/billing/v1";
 async function createZohoPaymentLink(planID, agentInfo) {
   const accessToken = await getZohoAccessToken();
   
-  // Prepare billing address
+  // If we have a customer_id, we don't need to send customer details
+  if (agentInfo.customer_id) {
+    const requestBody = {
+      customer: {
+        customer_id: agentInfo.customer_id
+      },
+      plan: {
+        plan_code: planID
+      },
+      addons: [],
+      custom_fields: [
+        {
+          label: "Agent ID#",
+          value: agentInfo["Agent ID"] || ''
+        },
+        {
+          label: "Dealer ID#",
+          value: agentInfo["Dealer ID"] || ''
+        }
+      ],
+      redirect_url: process.env.SUCCESS_REDIRECT_URL,
+    };
+    
+    console.log('Using existing customer with ID:', agentInfo.customer_id);
+    return makeZohoApiCall(requestBody, accessToken);
+  }
+  
+  // For new customers, prepare all the customer details
   const billingAddress = agentInfo.billing_address ? {
     attention: agentInfo.billing_address.attention || '',
     street: agentInfo.billing_address.street || '',
@@ -18,7 +45,6 @@ async function createZohoPaymentLink(planID, agentInfo) {
     fax: agentInfo.billing_address.fax || ''
   } : null;
 
-  // Prepare shipping address (use billing if shipping is same as billing)
   const shippingAddress = agentInfo.shipping_address ? {
     attention: agentInfo.shipping_address.attention || '',
     street: agentInfo.shipping_address.street || '',
@@ -55,7 +81,11 @@ async function createZohoPaymentLink(planID, agentInfo) {
     ],
     redirect_url: process.env.SUCCESS_REDIRECT_URL,
   };
+  
+  return makeZohoApiCall(requestBody, accessToken);
+}
 
+async function makeZohoApiCall(requestBody, accessToken) {
   console.log('Sending to Zoho:', JSON.stringify(requestBody, null, 2));
   
   const options = {
@@ -68,10 +98,10 @@ async function createZohoPaymentLink(planID, agentInfo) {
     body: JSON.stringify(requestBody)
   };
 
-    const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription`, options);
-    const data = await response.json();
-    console.log('Zoho API response:', JSON.stringify(data, null, 2));
-  
+  const response = await fetch(`${ZOHO_BILLING_API_URL}/hostedpages/newsubscription`, options);
+  const data = await response.json();
+  console.log('Zoho API response:', JSON.stringify(data, null, 2));
+
   if (!response.ok) {
     console.error('Zoho API error:', {
       status: response.status,

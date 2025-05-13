@@ -18,7 +18,7 @@ exports.handler = async (event) => {
     // Parse customer info from form
     let customerInfoObj = {};
     try {
-      customerInfoObj = JSON.parse(customerInfo);
+      customerInfoObj = customerInfo ? JSON.parse(customerInfo) : {};
     } catch (e) {
       console.error('Failed to parse customer info:', e);
       return {
@@ -37,9 +37,9 @@ exports.handler = async (event) => {
       };
     }
 
-    // Create Zoho payment link with customer information
+    // If we have a customer_id, we don't need to send customer details
     const combinedInfo = {
-      ...agentInfo,
+      ...(customerInfoObj.customer_id ? {} : agentInfo), // Only include agent info if not using existing customer
       ...customerInfoObj
     };
     console.log('Combined customer info:', JSON.stringify(combinedInfo, null, 2));
