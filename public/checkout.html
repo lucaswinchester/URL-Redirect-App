@@ -22,7 +22,7 @@
 				width: 100%;
 				margin: 1rem auto;
 				padding: 1.5rem;
-				background: var(--bg-dark);
+				background: rgba(0, 0, 0, 0.5);
 				border: 1px solid var(--border-color);
 				border-radius: var(--radius);
 				box-shadow: 0 0 30px rgba(201, 9, 23, 0.2);
@@ -47,6 +47,17 @@
 				margin-bottom: 0.35rem;
 				color: var(--text-muted);
 				font-size: 0.9rem;
+			}
+
+			.form-row {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+
+			.form-group-half {
+				flex: 1;
+				min-width: 0; /* Prevents flex items from overflowing */
 			}
 
 			.form-group input,
@@ -142,28 +153,37 @@
 						<label for="billingStreet">Street *</label>
 						<input type="text" id="billingStreet" required />
 					</div>
-					<div class="form-group">
-						<label for="billingCity">City *</label>
-						<input type="text" id="billingCity" required />
+					<div class="form-row">
+						<div class="form-group form-group-half">
+							<label for="billingCity">City *</label>
+							<input type="text" id="billingCity" required />
+						</div>
+						<div class="form-group form-group-half">
+							<label for="billingState">State *</label>
+							<input type="text" id="billingState" required />
+						</div>
 					</div>
-					<div class="form-group">
-						<label for="billingState">State *</label>
-						<input type="text" id="billingState" required />
-					</div>
-					<div class="form-group">
-						<label for="billingZip">ZIP Code *</label>
-						<input type="text" id="billingZip" required />
-					</div>
-					<div class="form-group">
-						<label for="billingCountry">Country *</label>
-						<input type="text" id="billingCountry" required value="U.S.A" />
+					<div class="form-row">
+						<div class="form-group form-group-half">
+							<label for="billingZip">ZIP Code *</label>
+							<input type="text" id="billingZip" required />
+						</div>
+						<div class="form-group form-group-half">
+							<label for="billingCountry">Country *</label>
+							<input type="text" id="billingCountry" required value="U.S.A" />
+						</div>
 					</div>
 				</div>
 
 				<div class="form-section">
 					<div class="form-group">
 						<label>
-							<input type="checkbox" id="sameAsBilling" checked onchange="copyBillingToShipping()" />
+							<input
+								type="checkbox"
+								id="sameAsBilling"
+								checked
+								onchange="copyBillingToShipping()"
+							/>
 							Shipping address is the same as Billing address
 						</label>
 					</div>
@@ -183,21 +203,25 @@
 						<label for="shippingStreet">Street *</label>
 						<input type="text" id="shippingStreet" />
 					</div>
-					<div class="form-group">
-						<label for="shippingCity">City *</label>
-						<input type="text" id="shippingCity" />
+					<div class="form-row">
+						<div class="form-group form-group-half">
+							<label for="shippingCity">City *</label>
+							<input type="text" id="shippingCity" />
+						</div>
+						<div class="form-group form-group-half">
+							<label for="shippingState">State *</label>
+							<input type="text" id="shippingState" />
+						</div>
 					</div>
-					<div class="form-group">
-						<label for="shippingState">State *</label>
-						<input type="text" id="shippingState" />
-					</div>
-					<div class="form-group">
-						<label for="shippingZip">ZIP Code *</label>
-						<input type="text" id="shippingZip" />
-					</div>
-					<div class="form-group">
-						<label for="shippingCountry">Country *</label>
-						<input type="text" id="shippingCountry" value="U.S.A" />
+					<div class="form-row">
+						<div class="form-group form-group-half">
+							<label for="shippingZip">ZIP Code *</label>
+							<input type="text" id="shippingZip" />
+						</div>
+						<div class="form-group form-group-half">
+							<label for="shippingCountry">Country *</label>
+							<input type="text" id="shippingCountry" value="U.S.A" />
+						</div>
 					</div>
 				</div>
 			</div>
@@ -249,25 +273,33 @@
 				});
 
 			// Toggle shipping address fields and copy billing to shipping when checked
-			document.getElementById('sameAsBilling').addEventListener('change', function() {
-				const shippingSection = document.getElementById('shippingAddressSection');
-				if (this.checked) {
-					shippingSection.style.display = 'none';
-				} else {
-					shippingSection.style.display = 'block';
-				}
-			});
+			document
+				.getElementById('sameAsBilling')
+				.addEventListener('change', function () {
+					const shippingSection = document.getElementById(
+						'shippingAddressSection'
+					);
+					if (this.checked) {
+						shippingSection.style.display = 'none';
+					} else {
+						shippingSection.style.display = 'block';
+					}
+				});
 
 			// Auto-fill billing attention with full name
-			document.getElementById('firstName').addEventListener('input', updateBillingAttention);
-			document.getElementById('lastName').addEventListener('input', updateBillingAttention);
+			document
+				.getElementById('firstName')
+				.addEventListener('input', updateBillingAttention);
+			document
+				.getElementById('lastName')
+				.addEventListener('input', updateBillingAttention);
 
 			function updateBillingAttention() {
 				const firstName = document.getElementById('firstName').value;
 				const lastName = document.getElementById('lastName').value;
 				const fullName = `${firstName} ${lastName}`.trim();
 				document.getElementById('billingAttention').value = fullName;
-				
+
 				// If same as billing is checked, update shipping attention too
 				if (document.getElementById('sameAsBilling').checked) {
 					document.getElementById('shippingAttention').value = fullName;
@@ -278,17 +310,32 @@
 			function copyBillingToShipping() {
 				if (document.getElementById('sameAsBilling').checked) {
 					// Get all billing address fields
-					const billingFields = ['Attention', 'Street', 'City', 'State', 'Zip', 'Country'];
-					billingFields.forEach(field => {
-						const billingValue = document.getElementById(`billing${field}`).value;
+					const billingFields = [
+						'Attention',
+						'Street',
+						'City',
+						'State',
+						'Zip',
+						'Country',
+					];
+					billingFields.forEach((field) => {
+						const billingValue = document.getElementById(
+							`billing${field}`
+						).value;
 						document.getElementById(`shipping${field}`).value = billingValue;
 					});
 				}
 			}
 
 			// Add event listeners to update shipping address when billing address changes and checkbox is checked
-			['billingStreet', 'billingCity', 'billingState', 'billingZip', 'billingCountry'].forEach(id => {
-				document.getElementById(id).addEventListener('input', function() {
+			[
+				'billingStreet',
+				'billingCity',
+				'billingState',
+				'billingZip',
+				'billingCountry',
+			].forEach((id) => {
+				document.getElementById(id).addEventListener('input', function () {
 					if (document.getElementById('sameAsBilling').checked) {
 						const field = id.replace('billing', '');
 						document.getElementById(`shipping${field}`).value = this.value;
