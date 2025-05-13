@@ -256,19 +256,20 @@
 						style="margin-top: 0.5rem; font-size: 0.9rem; display: none"
 					></div>
 				</div>
-				<div id="customerDetails" class="hidden" style="display: none">
-					<div class="form-group">
-						<label>Customer Name</label>
-						<p
-							id="customerName"
-							style="margin: 0.25rem 0 1rem 0; font-weight: 600"
-						></p>
+				<div id="customerResults" style="margin-top: 1rem; display: none;">
+					<label>Select Customer:</label>
+					<div id="customerList" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+						<!-- Customer buttons will be inserted here -->
 					</div>
+				</div>
+				<div id="selectedCustomer" style="margin-top: 1rem; display: none; padding: 1rem; background: rgba(0, 0, 0, 0.1); border-radius: 4px;">
+					<strong>Selected Customer:</strong>
+					<div id="customerDetails" style="margin-top: 0.5rem;"></div>
 				</div>
 			</div>
 
 			<div class="form-section">
-				<button type="button" class="btn" id="submitBtn">
+				<button type="button" class="btn" id="submitBtn" disabled style="opacity: 0.7; cursor: not-allowed;">
 					Continue to Checkout
 				</button>
 			</div>
@@ -493,10 +494,99 @@
 					}
 				});
 
+			// Track selected customer
+			let selectedCustomer = null;
+
+			// Function to handle customer selection
+			function selectCustomer(customer) {
+				selectedCustomer = customer;
+				
+				// Update selected customer display
+				const customerDetails = document.getElementById('customerDetails');
+				const displayName = 
+					customer.display_name || 
+					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 
+					'No name available';
+				
+				customerDetails.innerHTML = `
+					<div><strong>Name:</strong> ${displayName}</div>
+					<div><strong>Email:</strong> ${customer.email}</div>
+				`;
+
+				// Show selected customer section
+				document.getElementById('selectedCustomer').style.display = 'block';
+
+				// Enable checkout button
+				const submitBtn = document.getElementById('submitBtn');
+				submitBtn.disabled = false;
+				submitBtn.style.opacity = '1';
+				submitBtn.style.cursor = 'pointer';
+
+				// Update URL with customer ID for form submission
+				const url = new URL(window.location);
+				url.searchParams.set('customer_id', customer.customer_id);
+				window.history.pushState({}, '', url);
+			}
+
+			// Function to create customer button
+			function createCustomerButton(customer) {
+				const button = document.createElement('button');
+				button.type = 'button';
+				button.className = 'customer-btn';
+				button.style.cssText = `
+					text-align: left;
+					padding: 0.75rem;
+					border: 1px solid #ddd;
+					border-radius: 4px;
+					background: white;
+					cursor: pointer;
+					transition: all 0.2s;
+				`;
+
+				const displayName = 
+					customer.display_name || 
+					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() || 
+					'No name available';
+
+				button.innerHTML = `
+					<div style="font-weight: 600;">${displayName}</div>
+					<div style="font-size: 0.9em; color: #666;">${customer.email}</div>
+				`;
+
+				button.addEventListener('click', () => {
+					// Remove active class from all buttons
+					document.querySelectorAll('.customer-btn').forEach(btn => {
+						btn.style.borderColor = '#ddd';
+						btn.style.backgroundColor = 'white';
+					});
+
+					// Add active class to clicked button
+					button.style.borderColor = '#c90917';
+					button.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
+
+					// Select the customer
+					selectCustomer(customer);
+				});
+
+				return button;
+			}
+
 			async function searchCustomer() {
 				const email = document.getElementById('existingEmail').value.trim();
 				const statusElement = document.getElementById('customerSearchStatus');
-				const customerDetails = document.getElementById('customerDetails');
+				const customerResults = document.getElementById('customerResults');
+				const selectedCustomerSection = document.getElementById('selectedCustomer');
+
+				// Reset state
+				customerResults.style.display = 'none';
+				selectedCustomerSection.style.display = 'none';
+				document.getElementById('customerList').innerHTML = '';
+				
+				// Disable checkout button until customer is selected
+				const submitBtn = document.getElementById('submitBtn');
+				submitBtn.disabled = true;
+				submitBtn.style.opacity = '0.7';
+				submitBtn.style.cursor = 'not-allowed';
 
 				if (!email) {
 					showStatus('Please enter an email address', 'error');
@@ -504,10 +594,9 @@
 				}
 
 				try {
-					showStatus('Searching for customer...', 'info');
-					customerDetails.style.display = 'none';
+					showStatus('Searching for customers...', 'info');
 
-					// Call Netlify function to search for customer
+					// Call Netlify function to search for customers
 					const response = await fetch('/.netlify/functions/getCustomer', {
 						method: 'POST',
 						headers: {
@@ -520,25 +609,26 @@
 					console.log('Customer search response:', data);
 
 					if (!response.ok) {
-						throw new Error(data.error || 'Failed to search for customer');
+						throw new Error(data.error || 'Failed to search for customers');
 					}
 
-					if (data.customer) {
-						showStatus('Customer found!', 'success');
-						const displayName =
-							data.customer.display_name ||
-							`${data.customer.first_name || ''} ${
-								data.customer.last_name || ''
-							}`.trim() ||
-							'No name available';
-						document.getElementById('customerName').textContent = displayName;
-						customerDetails.style.display = 'block';
+					if (data.customers && data.customers.length > 0) {
+						showStatus(`Found ${data.customers.length} customer(s)`, 'success');
+						
+						// Add customer buttons to the list
+						const customerList = document.getElementById('customerList');
+						data.customers.forEach(customer => {
+							customerList.appendChild(createCustomerButton(customer));
+						});
+						
+						// Show the results
+						customerResults.style.display = 'block';
 					} else {
-						showStatus('No customer found with this email', 'warning');
+						showStatus('No customers found with this email', 'warning');
 					}
 				} catch (error) {
-					console.error('Error searching for customer:', error);
-					showStatus(error.message || 'Error searching for customer', 'error');
+					console.error('Error searching for customers:', error);
+					showStatus(error.message || 'Error searching for customers', 'error');
 				}
 			}
 

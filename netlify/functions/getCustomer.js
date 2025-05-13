@@ -55,23 +55,23 @@ exports.handler = async (event) => {
 
     // Check if we found any customers
     if (data.customers && data.customers.length > 0) {
-      // Find exact email match (case insensitive)
-      const customer = data.customers.find(c => 
-        c.email && c.email.toLowerCase() === email.toLowerCase()
-      );
+      // Return all matching customers (case insensitive partial match)
+      const matchingCustomers = data.customers
+        .filter(c => c.email && c.email.toLowerCase().includes(email.toLowerCase()))
+        .map(customer => ({
+          first_name: customer.first_name || '',
+          last_name: customer.last_name || '',
+          display_name: customer.display_name || '',
+          email: customer.email,
+          customer_id: customer.customer_id
+        }));
 
-      if (customer) {
-        console.log('Found customer:', customer);
+      if (matchingCustomers.length > 0) {
+        console.log('Found customers:', matchingCustomers);
         return {
           statusCode: 200,
           body: JSON.stringify({ 
-            customer: {
-              first_name: customer.first_name || '',
-              last_name: customer.last_name || '',
-              display_name: customer.display_name || '',
-              email: customer.email,
-              customer_id: customer.customer_id
-            }
+            customers: matchingCustomers
           })
         };
       }
