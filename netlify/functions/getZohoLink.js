@@ -14,7 +14,10 @@ async function createZohoPaymentLink(planID, agentInfo) {
       plan: {
         plan_code: planID
       },
-      addons: [],
+      addons: [
+        { addon_code: 'RGN-MEMFEE' },
+        { addon_code: 'RGN-RAFEE' }
+      ],
       custom_fields: [
         {
           label: "Agent ID#",
