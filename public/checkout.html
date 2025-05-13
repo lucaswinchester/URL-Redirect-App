@@ -10,22 +10,29 @@
 		<style>
 			/* Using existing styles from style.css */
 			body {
-				padding: 2rem 1rem;
+				padding: 2rem 1rem 4rem; /* Added more padding at the bottom */
 				display: flex;
 				justify-content: center;
 				min-height: 100vh;
 				align-items: flex-start;
+				box-sizing: border-box; /* Include padding in height calculation */
+			}
+
+			html {
+				height: 100%;
+				scroll-padding-top: 2rem; /* Ensures content isn't hidden under fixed headers */
 			}
 
 			.form-container {
 				max-width: 600px;
 				width: 100%;
-				margin: 1rem auto;
+				margin: 2rem auto; /* Increased top margin */
 				padding: 1.5rem;
-				background: rgba(0, 0, 0, 0.5);
+				background: #1e293b; /* Matching card background from thank you page */
 				border: 1px solid var(--border-color);
 				border-radius: var(--radius);
 				box-shadow: 0 0 30px rgba(201, 9, 23, 0.2);
+				position: relative; /* For z-index context if needed */
 			}
 
 			.form-section {
