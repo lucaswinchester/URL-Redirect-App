@@ -107,6 +107,7 @@ exports.handler = async (event) => {
     if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
     if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
     if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
+    if (customer_id) fullUrl.searchParams.set("customer_id", customer_id);
     if (source) fullUrl.searchParams.set("source", source);
     if (cf_source_url) fullUrl.searchParams.set("cf_source_url", cf_source_url);
     // Add the checkout_data_id for tracking
