@@ -4,7 +4,7 @@ const supabase = require("./supabaseClient");
 
 exports.handler = async (event) => {
   try {
-    const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url, customerInfo } = event.queryStringParameters;
+    const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url, customerInfo, customer_id } = event.queryStringParameters;
 
     console.log('Source URL: ', cf_source_url);
 
@@ -37,11 +37,18 @@ exports.handler = async (event) => {
       };
     }
 
-    // If we have a customer_id, we don't need to send customer details
+    // Always include agent info, but use customer_id for the account if provided
     const combinedInfo = {
-      ...(customerInfoObj.customer_id ? {} : agentInfo), // Only include agent info if not using existing customer
-      ...customerInfoObj
+      ...agentInfo, // Always include agent info
+      ...(customer_id ? { customer_id } : customerInfoObj) // Use customer_id if provided, otherwise use customerInfoObj
     };
+    
+    // Remove any customer fields that might have come from agentInfo when we have a customer_id
+    if (customer_id) {
+      delete combinedInfo.email;
+      delete combinedInfo.first_name;
+      delete combinedInfo.last_name;
+    }
     console.log('Combined customer info:', JSON.stringify(combinedInfo, null, 2));
     
     const checkoutUrl = await createZohoPaymentLink(planID, combinedInfo);
