@@ -47,9 +47,18 @@ exports.handler = async (event) => {
       delete zohoData.email;
       delete zohoData.first_name;
       delete zohoData.last_name;
-    } else {
+    } else if (customerInfoObj) {
       // For new customers, include all customer info
-      Object.assign(zohoData, customerInfoObj);
+      // Map the customer data to the expected format
+      zohoData = {
+        ...zohoData,
+        'First Name': customerInfoObj['First Name'],
+        'Last Name': customerInfoObj['Last Name'],
+        'Email': customerInfoObj['Email'],
+        'Company Name': customerInfoObj['Company Name'],
+        billing_address: customerInfoObj.billing_address,
+        shipping_address: customerInfoObj.shipping_address
+      };
     }
     console.log('Sending to Zoho:', JSON.stringify(zohoData, null, 2));
     
