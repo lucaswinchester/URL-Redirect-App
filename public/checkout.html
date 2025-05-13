@@ -485,9 +485,15 @@
 							planID,
 							cf_dealer_id,
 							cf_agent_id,
-							source,
-							customerInfo: JSON.stringify(customerData)
+							source
 						});
+
+						// Add customer info based on whether we have an existing customer
+						if (window.selectedCustomerId) {
+							urlParams.append('customer_id', window.selectedCustomerId);
+						} else {
+							urlParams.append('customerInfo', JSON.stringify(customerData));
+						}
 
 						// Log the data being sent
 						console.log('Submitting form with data:', {
