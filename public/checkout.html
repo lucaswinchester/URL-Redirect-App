@@ -559,9 +559,9 @@
 				button.style.cssText = `
 					text-align: left;
 					padding: 0.75rem;
-					border: 1px solid #1890ff;
-					border-radius: 4px;
-					background: white;
+					border: 1px solid var(--border-color);
+					border-radius: var(--radius);
+					background: rgba(201, 9, 23, 0.05);
 					cursor: pointer;
 					transition: all 0.2s;
 					box-shadow: 0 0 0 1px rgba(24, 144, 255, 0.2);
@@ -580,8 +580,8 @@
 				button.addEventListener('click', () => {
 					// Remove active class from all buttons
 					document.querySelectorAll('.customer-btn').forEach((btn) => {
-						btn.style.borderColor = '#1890ff';
-						btn.style.backgroundColor = 'white';
+						btn.style.borderColor = 'var(--border-color)';
+						btn.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
 						btn.style.boxShadow = '0 0 0 1px rgba(24, 144, 255, 0.2)';
 					});
 
