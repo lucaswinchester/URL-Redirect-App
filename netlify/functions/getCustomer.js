@@ -26,7 +26,7 @@ exports.handler = async (event) => {
     
     // Search for customer by email
     const response = await fetch(
-      `${ZOHO_BILLING_API_URL}/customums/receivingcustomers?email=${encodeURIComponent(email)}`,
+      `${ZOHO_BILLING_API_URL}/customers?email=${encodeURIComponent(email)}`,
       {
         method: 'GET',
         headers: {
