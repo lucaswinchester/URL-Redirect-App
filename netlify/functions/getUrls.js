@@ -37,21 +37,23 @@ exports.handler = async (event) => {
       };
     }
 
-    // Always include agent info, but use customer_id for the account if provided
-    const combinedInfo = {
-      ...agentInfo, // Always include agent info
-      ...(customer_id ? { customer_id } : customerInfoObj) // Use customer_id if provided, otherwise use customerInfoObj
-    };
+    // Prepare the data to send to Zoho
+    let zohoData = { ...agentInfo };
     
-    // Remove any customer fields that might have come from agentInfo when we have a customer_id
     if (customer_id) {
-      delete combinedInfo.email;
-      delete combinedInfo.first_name;
-      delete combinedInfo.last_name;
+      // For existing customers, only send the customer_id at the top level
+      zohoData.customer_id = customer_id;
+      // Remove any customer fields that might have come from agentInfo
+      delete zohoData.email;
+      delete zohoData.first_name;
+      delete zohoData.last_name;
+    } else {
+      // For new customers, include all customer info
+      Object.assign(zohoData, customerInfoObj);
     }
-    console.log('Combined customer info:', JSON.stringify(combinedInfo, null, 2));
+    console.log('Sending to Zoho:', JSON.stringify(zohoData, null, 2));
     
-    const checkoutUrl = await createZohoPaymentLink(planID, combinedInfo);
+    const checkoutUrl = await createZohoPaymentLink(planID, zohoData);
 
     if (!checkoutUrl) {
       console.error('Failed to create payment link. Response:', response);
