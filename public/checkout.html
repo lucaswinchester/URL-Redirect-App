@@ -454,13 +454,11 @@
 							if (!window.selectedCustomerId) {
 								throw new Error('Please select a customer');
 							}
-							customerData = {
-								customer_id: window.selectedCustomerId
-							};
+							customer_id = window.selectedCustomerId;
 						}
 
 						// Skip email validation if we have a customer_id
-						if (!customerData.customer_id) {
+						if (!customer_id) {
 							const requiredFields = ['Email'];
 							const missingFields = requiredFields.filter(
 								(field) => !customerData[field]
@@ -485,12 +483,12 @@
 							planID,
 							cf_dealer_id,
 							cf_agent_id,
-							source
+							source,
 						});
 
 						// Add customer info based on whether we have an existing customer
-						if (window.selectedCustomerId) {
-							urlParams.append('customer_id', window.selectedCustomerId);
+						if (customer_id) {
+							urlParams.append('customer_id', customer_id);
 						} else {
 							urlParams.append('customerInfo', JSON.stringify(customerData));
 						}
@@ -501,6 +499,7 @@
 							cf_dealer_id,
 							cf_agent_id,
 							source,
+							customer_id,
 							customerData,
 						});
 
