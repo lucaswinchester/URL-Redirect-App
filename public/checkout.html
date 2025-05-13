@@ -455,27 +455,29 @@
 								throw new Error('Please select a customer');
 							}
 							customerData = {
-								customer_id: window.selectedCustomerId
+								customer_id: window.selectedCustomerId,
 							};
 						}
 
-						// Validate required fields
-						const requiredFields = ['Email'];
-						const missingFields = requiredFields.filter(
-							(field) => !customerData[field]
-						);
+						// Skip email validation if we have a customer_id
+						if (!customerData.customer_id) {
+							const requiredFields = ['Email'];
+							const missingFields = requiredFields.filter(
+								(field) => !customerData[field]
+							);
 
-						if (missingFields.length > 0) {
-							console.log('Missing required fields:', missingFields);
-							document
-								.getElementById('errorContainer')
-								.classList.remove('hidden');
-							document.getElementById(
-								'errorMessage'
-							).textContent = `Please fill in all required fields: ${missingFields.join(
-								', '
-							)}`;
-							return;
+							if (missingFields.length > 0) {
+								console.log('Missing required fields:', missingFields);
+								document
+									.getElementById('errorContainer')
+									.classList.remove('hidden');
+								document.getElementById(
+									'errorMessage'
+								).textContent = `Please fill in all required fields: ${missingFields.join(
+									', '
+								)}`;
+								return;
+							}
 						}
 
 						// Prepare URL parameters
@@ -485,7 +487,9 @@
 							cf_agent_id,
 							source,
 							customerInfo: JSON.stringify(customerData),
-							...(window.selectedCustomerId && { customer_id: window.selectedCustomerId })
+							...(window.selectedCustomerId && {
+								customer_id: window.selectedCustomerId,
+							}),
 						});
 
 						// Log the data being sent
