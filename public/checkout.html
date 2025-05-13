@@ -242,7 +242,7 @@
 			</div>
 
 			<div class="form-section">
-				<button class="btn" id="submitBtn">Continue to Checkout</button>
+				<button type="button" class="btn" id="submitBtn">Continue to Checkout</button>
 			</div>
 
 			<div id="errorContainer" class="hidden">
@@ -352,7 +352,8 @@
 
 			document
 				.getElementById('submitBtn')
-				.addEventListener('click', async () => {
+				.addEventListener('click', async (e) => {
+					e.preventDefault(); // Prevent default form submission
 					const customerType = document.querySelector(
 						'input[name="customerType"]:checked'
 					).value;
