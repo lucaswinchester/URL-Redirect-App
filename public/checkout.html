@@ -133,11 +133,11 @@
 
 			<div id="newCustomerForm" class="form-section">
 				<h3>New Customer Information</h3>
-				<div class="form-group">
+				<div class="form-group form-group-half">
 					<label for="firstName">First Name *</label>
 					<input type="text" id="firstName" required />
 				</div>
-				<div class="form-group">
+				<div class="form-group form-group-half">
 					<label for="lastName">Last Name *</label>
 					<input type="text" id="lastName" required />
 				</div>
@@ -242,7 +242,9 @@
 			</div>
 
 			<div class="form-section">
-				<button type="button" class="btn" id="submitBtn">Continue to Checkout</button>
+				<button type="button" class="btn" id="submitBtn">
+					Continue to Checkout
+				</button>
 			</div>
 
 			<div id="errorContainer" class="hidden">
@@ -350,87 +352,106 @@
 				});
 			});
 
+			// Add debug logging
+			console.log('Script loaded, adding event listeners');
+
 			document
 				.getElementById('submitBtn')
 				.addEventListener('click', async (e) => {
-					e.preventDefault(); // Prevent default form submission
-					const customerType = document.querySelector(
-						'input[name="customerType"]:checked'
-					).value;
-					let customerData = {};
+					try {
+						console.log('Submit button clicked');
+						e.preventDefault(); // Prevent default form submission
+						const customerType = document.querySelector(
+							'input[name="customerType"]:checked'
+						).value;
+						let customerData = {};
 
-					if (customerType === 'new') {
-						// Get billing address
-						const billingAddress = {
-							attention: document.getElementById('billingAttention').value,
-							street: document.getElementById('billingStreet').value,
-							city: document.getElementById('billingCity').value,
-							state: document.getElementById('billingState').value,
-							zip: document.getElementById('billingZip').value,
-							country: document.getElementById('billingCountry').value,
-							fax: document.getElementById('billingFax').value,
-						};
+						if (customerType === 'new') {
+							// Get billing address
+							const billingAddress = {
+								attention: document.getElementById('billingAttention').value,
+								street: document.getElementById('billingStreet').value,
+								city: document.getElementById('billingCity').value,
+								state: document.getElementById('billingState').value,
+								zip: document.getElementById('billingZip').value,
+								country: document.getElementById('billingCountry').value,
+								fax: document.getElementById('billingFax').value,
+							};
 
-						// Get shipping address (same as billing if checkbox is checked)
-						let shippingAddress;
-						if (document.getElementById('sameAsBilling').checked) {
-							shippingAddress = { ...billingAddress };
+							// Get shipping address (same as billing if checkbox is checked)
+							let shippingAddress;
+							if (document.getElementById('sameAsBilling').checked) {
+								shippingAddress = { ...billingAddress };
+							} else {
+								shippingAddress = {
+									attention: document.getElementById('shippingAttention').value,
+									street: document.getElementById('shippingStreet').value,
+									city: document.getElementById('shippingCity').value,
+									state: document.getElementById('shippingState').value,
+									zip: document.getElementById('shippingZip').value,
+									country: document.getElementById('shippingCountry').value,
+									fax: document.getElementById('shippingFax').value,
+								};
+							}
+
+							customerData = {
+								'First Name': document.getElementById('firstName').value,
+								'Last Name': document.getElementById('lastName').value,
+								Email: document.getElementById('email').value,
+								'Company Name': document.getElementById('companyName').value,
+								billing_address: billingAddress,
+								shipping_address: shippingAddress,
+							};
 						} else {
-							shippingAddress = {
-								attention: document.getElementById('shippingAttention').value,
-								street: document.getElementById('shippingStreet').value,
-								city: document.getElementById('shippingCity').value,
-								state: document.getElementById('shippingState').value,
-								zip: document.getElementById('shippingZip').value,
-								country: document.getElementById('shippingCountry').value,
-								fax: document.getElementById('shippingFax').value,
+							customerData = {
+								Email: document.getElementById('existingEmail').value,
 							};
 						}
 
-						customerData = {
-							'First Name': document.getElementById('firstName').value,
-							'Last Name': document.getElementById('lastName').value,
-							Email: document.getElementById('email').value,
-							'Company Name': document.getElementById('companyName').value,
-							billing_address: billingAddress,
-							shipping_address: shippingAddress,
-						};
-					} else {
-						customerData = {
-							Email: document.getElementById('existingEmail').value,
-						};
+						// Validate required fields
+						const requiredFields = ['Email'];
+						const missingFields = requiredFields.filter(
+							(field) => !customerData[field]
+						);
+
+						if (missingFields.length > 0) {
+							console.log('Missing required fields:', missingFields);
+							document
+								.getElementById('errorContainer')
+								.classList.remove('hidden');
+							document.getElementById(
+								'errorMessage'
+							).textContent = `Please fill in all required fields: ${missingFields.join(
+								', '
+							)}`;
+							return;
+						}
+
+						// Prepare URL parameters
+						const urlParams = new URLSearchParams({
+							planID,
+							cf_dealer_id,
+							cf_agent_id,
+							source,
+							customerInfo: JSON.stringify(customerData),
+						});
+
+						// Log the data being sent
+						console.log('Submitting form with data:', {
+							planID,
+							cf_dealer_id,
+							cf_agent_id,
+							source,
+							customerData
+						});
+
+						// Redirect to getUrls with customer information
+						const redirectUrl = `/.netlify/functions/getUrls?${urlParams.toString()}`;
+						console.log('Redirecting to:', redirectUrl);
+						window.location.href = redirectUrl;
+					} catch (error) {
+						console.error('Error submitting form:', error);
 					}
-
-					// Validate required fields
-					const requiredFields = ['Email'];
-					const missingFields = requiredFields.filter(
-						(field) => !customerData[field]
-					);
-
-					if (missingFields.length > 0) {
-						document
-							.getElementById('errorContainer')
-							.classList.remove('hidden');
-						document.getElementById(
-							'errorMessage'
-						).textContent = `Please fill in all required fields: ${missingFields.join(
-							', '
-						)}`;
-						return;
-					}
-
-					// Prepare URL parameters
-					const urlParams = new URLSearchParams({
-						planID,
-						cf_dealer_id,
-						cf_agent_id,
-						source,
-						customerInfo: JSON.stringify(customerData),
-					});
-
-					// Redirect to getUrls with customer information
-					const redirectUrl = `/.netlify/functions/getUrls?${urlParams.toString()}`;
-					window.location.href = redirectUrl;
 				});
 		</script>
 	</body>
