@@ -10,9 +10,7 @@ async function createZohoPaymentLink(planID, agentInfo) {
   // If we have a customer_id, we don't need to send customer details
   if (agentInfo.customer_id) {
     const requestBody = {
-      customer: {
-        customer_id: agentInfo.customer_id
-      },
+      customer_id: agentInfo.customer_id,
       plan: {
         plan_code: planID
       },
