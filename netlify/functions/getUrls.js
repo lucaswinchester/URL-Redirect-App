@@ -2,6 +2,9 @@ const { getAgentDetails } = require("./airtableHelpers");
 const { createZohoPaymentLink } = require("./getZohoLink");
 const supabase = require("./supabaseClient");
 
+const ADDONS = [
+];
+
 exports.handler = async (event) => {
   try {
     const { planID, cf_dealer_id, cf_agent_id, source, cf_source_url, customerInfo, customer_id } = event.queryStringParameters;
@@ -60,17 +63,9 @@ exports.handler = async (event) => {
         shipping_address: customerInfoObj.shipping_address
       };
     }
-    console.log('Sending to Zoho:', JSON.stringify(zohoData, null, 2));
-    
-    const checkoutUrl = await createZohoPaymentLink(planID, zohoData);
-
-    if (!checkoutUrl) {
-      console.error('Failed to create payment link. Response:', response);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: "Failed to create payment link", details: response }),
-      };
-    }
+    // We'll store the plan and customer data in Supabase now
+    // The actual payment URL will be generated when the short URL is accessed
+    console.log('Storing plan and customer data in Supabase');
 
     // Helper function to sanitize text fields
     const sanitizeText = (value) => {
@@ -82,7 +77,7 @@ exports.handler = async (event) => {
     // Prepare data for Supabase
     const supabaseData = {
       plan_id: planID,
-      checkout_url: checkoutUrl,
+      addon_id: JSON.stringify(ADDONS.map(a => a.addon_code)),
       cf_dealer_id,
       cf_agent_id,
       cf_dealer_name: sanitizeText(agentInfo["Company Name"]) || null,
@@ -90,6 +85,8 @@ exports.handler = async (event) => {
       cf_distributor_id: sanitizeText(agentInfo["Distributor ID"]) || null,
       cf_dealer_email: sanitizeText(agentInfo["Email"]) || null,
       source: cf_source_url || null,
+      customer_info: customerInfo ? JSON.stringify(customerInfoObj) : null,
+      customer_id: customer_id || null
     };
 
     // Insert data into Supabase and get the inserted row
@@ -108,25 +105,28 @@ exports.handler = async (event) => {
 
     const checkoutDataId = data[0].id;
 
-    // Build the full checkout URL with all params
-    const fullUrl = new URL(checkoutUrl);
-    fullUrl.searchParams.set("cf_dealer_id", cf_dealer_id);
-    if (agentInfo["Agent ID"]) fullUrl.searchParams.set("cf_agent_id", agentInfo["Agent ID"]);
-    if (agentInfo["Company Name"]) fullUrl.searchParams.set("cf_dealer_name", agentInfo["Company Name"]);
-    if (agentInfo["Distributor Name"]) fullUrl.searchParams.set("cf_distributor_name", agentInfo["Distributor Name"]);
-    if (agentInfo["Distributor ID"]) fullUrl.searchParams.set("cf_distributor_id", agentInfo["Distributor ID"]);
-    if (agentInfo["Email"]) fullUrl.searchParams.set("cf_dealer_email", agentInfo["Email"]);
-    if (customer_id) fullUrl.searchParams.set("customer_id", customer_id);
-    if (source) fullUrl.searchParams.set("source", source);
-    if (cf_source_url) fullUrl.searchParams.set("cf_source_url", cf_source_url);
-    // Add the checkout_data_id for tracking
-    fullUrl.searchParams.set("checkout_data_id", checkoutDataId);
-
+    // Return the short URL that can be used to generate the checkout link
+    const shortUrl = `/checkout/${checkoutDataId}`;
+    
+    // Make sure we're returning JSON, not redirecting
     return {
-      statusCode: 302,
+      statusCode: 200,
       headers: {
-        Location: fullUrl.toString()
-      }
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      },
+      body: JSON.stringify({
+        success: true,
+        bundle_id: checkoutDataId,
+        short_url: shortUrl,
+        plan_id: planID,
+        addon_id: ADDONS.map(a => a.addon_code),
+        cf_dealer_id,
+        cf_agent_id: agentInfo["Agent ID"] || cf_agent_id,
+        expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days from now
+      })
     };
   } catch (error) {
     console.error("Function error:", error);

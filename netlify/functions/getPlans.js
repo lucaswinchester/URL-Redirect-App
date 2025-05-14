@@ -3,11 +3,11 @@ const supabase = require('./supabaseClient');
 
 exports.handler = async () => {
   try {
-    const { data, error } = await supabase.from('plans').select('*');
+    const { data, error } = await supabase.from('bundles').select('*');
     if (error) throw error;
     return {
       statusCode: 200,
-      body: JSON.stringify({ plans: data }),
+      body: JSON.stringify({ bundles: data }),
     };
   } catch (err) {
     return {
