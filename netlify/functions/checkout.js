@@ -5,15 +5,18 @@ exports.handler = async (event) => {
   try {
     // Extract the ID from the URL
     const id = event.path.split('/').pop();
+
+    console.log('ID: ', id);
     
     // Look up the bundle in Supabase
     const { data, error } = await supabase
-      .from('checkout_data')
+      .from('bundles')
       .select('*')
       .eq('id', id)
       .single();
 
     if (error || !data) {
+      console.log(error)
       return {
         statusCode: 404,
         headers: { 'Content-Type': 'application/json' },
