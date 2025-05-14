@@ -2,19 +2,12 @@
   functions = "netlify/functions"
   publish = "public"
 
-# Serve the checkout page for /checkout/
 [[redirects]]
   from = "/checkout/*"
   to = "/checkout.html"
   status = 200
+  force = true
 
-# Handle API requests for bundle data
-[[redirects]]
-  from = "/api/bundles/*"
-  to = "/.netlify/functions/getUrls"
-  status = 200
-
-# Serve all other HTML files
 [[redirects]]
   from = "/*"
   to = "/index.html"
