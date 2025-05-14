@@ -730,29 +730,52 @@
 						submitBtn.textContent = 'Processing...';
 
 						try {
+							// Extract planID from URL (format: /checkout/planID)
+							const pathSegments = window.location.pathname.split('/');
+							const planID = pathSegments[pathSegments.length - 1];
+							
+							if (!planID) {
+								throw new Error('Plan ID not found in URL');
+							}
+
+							// Prepare request data
+							const requestData = {
+								planID,
+								cf_dealer_id,
+								cf_agent_id,
+								source,
+								customer_id,
+								customerInfo: customer_id ? undefined : customerData,
+							};
+
+							console.log('Sending request to server:', {
+								url: '/.netlify/functions/getUrls',
+								method: 'POST',
+								data: requestData
+							});
+
 							// Send data to server using fetch
 							const response = await fetch('/.netlify/functions/getUrls', {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/json',
 								},
-								body: JSON.stringify({
-									planID,
-									cf_dealer_id,
-									cf_agent_id,
-									source,
-									customer_id,
-									customerData: customer_id ? undefined : customerData, // Only send customerData for new customers
-								}),
+								body: JSON.stringify(requestData),
+							});
+
+							const responseData = await response.json();
+							console.log('Server response:', {
+								status: response.status,
+								statusText: response.statusText,
+								data: responseData
 							});
 
 							if (!response.ok) {
-								const error = await response.json();
-								throw new Error(error.message || 'Failed to process payment');
+								throw new Error(responseData.message || responseData.error || 'Failed to process payment');
 							}
 
-							const result = await response.json();
-							
+							const result = responseData;
+
 							// Check if we have a checkout URL
 							if (result.checkout_url) {
 								// Redirect to the payment URL
