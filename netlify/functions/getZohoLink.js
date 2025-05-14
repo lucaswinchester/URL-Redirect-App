@@ -4,7 +4,7 @@ const { getZohoAccessToken } = require("./zohoAuth");
 const ZOHO_ORGANIZATION_ID = process.env.ZOHO_ORGANIZATION_ID;
 const ZOHO_BILLING_API_URL = "https://www.zohoapis.com/billing/v1";
 
-async function createZohoPaymentLink(planID, agentInfo) {
+async function createZohoPaymentLink(planID, agentInfo, addonID) {
   const accessToken = await getZohoAccessToken();
   
   // If we have a customer_id, we don't need to send customer details
@@ -14,10 +14,7 @@ async function createZohoPaymentLink(planID, agentInfo) {
       plan: {
         plan_code: planID
       },
-      addons: [
-        { addon_code: 'RGN-MEMFEE' },
-        { addon_code: 'RGN-RAFEE' }
-      ],
+      addons: addonID ? [{ addon_code: addonID }] : [],
       custom_fields: [
         {
           label: "Agent ID#",
@@ -56,11 +53,23 @@ async function createZohoPaymentLink(planID, agentInfo) {
     fax: agentInfo.shipping_address.fax || ''
   } : billingAddress;
   
+  // Ensure we have at least a first or last name for display_name
+  const firstName = agentInfo["First Name"] || '';
+  const lastName = agentInfo["Last Name"] || '';
+  let displayName = `${firstName} ${lastName}`.trim();
+  
+  // If both names are empty, use company name or email as fallback
+  if (!displayName) {
+    displayName = agentInfo["Company Name"] || 
+                agentInfo["Email"]?.split('@')[0] || 
+                'Customer';
+  }
+
   const requestBody = {
     customer: {
-      first_name: agentInfo["First Name"] || "",
-      last_name: agentInfo["Last Name"] || "",
-      display_name: `${agentInfo["First Name"] || ''} ${agentInfo["Last Name"] || ''}`.trim(),
+      first_name: firstName,
+      last_name: lastName,
+      display_name: displayName,
       email: agentInfo["Email"],
       company_name: agentInfo["Company Name"] || '',
       billing_address: billingAddress,
@@ -69,10 +78,7 @@ async function createZohoPaymentLink(planID, agentInfo) {
     plan: {
       plan_code: planID
     },
-    addons: [ 
-      { addon_code: 'RGN-MEMFEE' },
-      { addon_code: 'RGN-RAFEE' }
-     ],
+    addons: Array.isArray(addonID) ? addonID : (addonID ? [addonID] : []),
     custom_fields: [
       {
         label: "Agent ID#",

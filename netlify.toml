@@ -3,9 +3,10 @@
   publish = "public"
 
 [[redirects]]
-  from = "/checkout/:id"
-  to = "/.netlify/functions/checkout/:id"
+  from = "/checkout/*"
+  to = "/.netlify/functions/getUrls"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
@@ -14,3 +15,4 @@
 
 [functions]
   directory = "netlify/functions"
+  node_bundler = "esbuild"

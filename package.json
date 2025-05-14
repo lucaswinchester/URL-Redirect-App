@@ -4,6 +4,7 @@
     "dependencies": {
         "@supabase/supabase-js": "^2.49.4",
         "dotenv": "^16.4.7",
-        "node-fetch": "^2.7.0"
+        "node-fetch": "^2.7.0",
+        "uuid": "^11.1.0"
     }
 }

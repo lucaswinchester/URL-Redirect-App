@@ -564,20 +564,53 @@
 							urlParams.append('customerInfo', JSON.stringify(customerData));
 						}
 
-						// Log the data being sent
-						console.log('Submitting form with data:', {
-							planID,
-							cf_dealer_id,
-							cf_agent_id,
-							source,
-							customer_id,
-							customerData,
-						});
+						// Show loading state
+						const submitBtn = document.getElementById('submitBtn');
+						submitBtn.disabled = true;
+						submitBtn.textContent = 'Processing...';
 
-						// Redirect to getUrls with customer information
-						const redirectUrl = `/.netlify/functions/getUrls?${urlParams.toString()}`;
-						console.log('Redirecting to:', redirectUrl);
-						window.location.href = redirectUrl;
+						try {
+							// Send data to server using fetch
+							const response = await fetch('/.netlify/functions/getUrls', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify({
+									planID,
+									cf_dealer_id,
+									cf_agent_id,
+									source,
+									customer_id,
+									customerData: customer_id ? undefined : customerData, // Only send customerData for new customers
+								}),
+							});
+
+							if (!response.ok) {
+								const error = await response.json();
+								throw new Error(error.message || 'Failed to process payment');
+							}
+
+							const result = await response.json();
+							
+							// Check if we have a checkout URL
+							if (result.checkout_url) {
+								// Redirect to the payment URL
+								window.location.href = result.checkout_url;
+							} else if (result.short_url) {
+								// Fallback to short URL if checkout_url is not available
+								window.location.href = result.short_url;
+							} else {
+								throw new Error('No valid URL received from server');
+							}
+						} catch (error) {
+							console.error('Error processing payment:', error);
+							document.getElementById('errorContainer').classList.remove('hidden');
+							document.getElementById('errorMessage').textContent = 
+								`Error: ${error.message || 'Failed to process payment. Please try again.'}`;
+							submitBtn.disabled = false;
+							submitBtn.textContent = 'Submit Order';
+						}
 					} catch (error) {
 						console.error('Error submitting form:', error);
 					}
