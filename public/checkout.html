@@ -8,7 +8,6 @@
 		<link rel="apple-touch-icon" href="favicon.svg" />
 		<link rel="stylesheet" href="style.css" />
 		<style>
-			/* Updated styles to match the checkout page design */
 			:root {
 				--primary-color: #c90917;
 				--primary-hover: #a30713;
@@ -21,7 +20,6 @@
 				--border-radius: 12px;
 				--box-shadow: 0 0 30px rgba(201, 9, 23, 0.3);
 			}
-
 			body {
 				padding: 2rem 1rem;
 				margin: 0;
@@ -32,10 +30,10 @@
 				box-sizing: border-box;
 				background-color: #0a0a1a;
 				color: var(--text-light);
-				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segree UI', Roboto, Oxygen, Ubuntu, sans-serif;
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+					Roboto, Oxygen, Ubuntu, sans-serif;
 				line-height: 1.5;
 			}
-
 			.form-container {
 				width: 100%;
 				max-width: 800px;
@@ -48,21 +46,18 @@
 				position: relative;
 				color: var(--text-light);
 			}
-
 			h1 {
 				color: var(--text-dark);
 				font-size: 1.875rem;
 				margin-bottom: 1.5rem;
 				font-weight: 700;
 			}
-
 			h3 {
 				color: var(--primary-color);
 				font-size: 1.25rem;
 				margin: 1.5rem 0 1rem;
 				font-weight: 600;
 			}
-
 			.form-section {
 				margin-bottom: 2rem;
 				padding: 1.5rem;
@@ -70,11 +65,9 @@
 				border-radius: var(--border-radius);
 				border: 1px solid var(--border-color);
 			}
-
 			.form-group {
 				margin-bottom: 1.25rem;
 			}
-
 			.form-group label {
 				display: block;
 				margin-bottom: 0.5rem;
@@ -82,7 +75,6 @@
 				color: var(--text-muted);
 				font-size: 0.9rem;
 			}
-
 			.form-group input,
 			.form-group select,
 			.form-group textarea {
@@ -97,7 +89,6 @@
 				box-sizing: border-box;
 				transition: all 0.2s ease;
 			}
-
 			.form-group input:focus,
 			.form-group select:focus,
 			.form-group textarea:focus {
@@ -106,21 +97,25 @@
 				box-shadow: 0 0 0 2px rgba(201, 9, 23, 0.3);
 				background: rgba(0, 0, 0, 0.2);
 			}
-
-			.form-group input:focus,
-			.form-group select:focus,
-			.form-group textarea:focus {
-				outline: none;
-				border-color: var(--primary-color);
-				box-shadow: 0 0 0 3px rgba(201, 9, 23, 0.1);
+			.form-group textarea {
+				min-height: 80px;
+				resize: vertical;
 			}
-
+			.form-row {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 1rem;
+			}
+			.form-group-half {
+				flex: 1;
+				min-width: 0;
+				width: 100%;
+			}
 			.radio-group {
 				display: flex;
 				gap: 1.5rem;
 				margin: 1rem 0;
 			}
-
 			.radio-group label {
 				display: inline-flex;
 				align-items: center;
@@ -129,11 +124,9 @@
 				margin-right: 1.5rem;
 				color: var(--text-dark);
 			}
-
 			.radio-group input[type='radio'] {
 				margin-right: 0.35rem;
 			}
-
 			button {
 				background-color: var(--primary-color);
 				color: white;
@@ -145,138 +138,133 @@
 				cursor: pointer;
 				transition: background-color 0.2s;
 			}
-
 			button:hover {
 				background-color: var(--primary-hover);
 			}
-
 			.button-group {
 				display: flex;
 				gap: 1rem;
 				margin-top: 1.5rem;
 			}
-
+			.btn {
+				padding: 0.5rem 1.25rem;
+				font-size: 0.9rem;
+			}
+			.btn.secondary {
+				background: none;
+				color: var(--primary-color);
+				border: 1px solid var(--primary-color);
+			}
+			.btn.secondary:hover {
+				background: rgba(201, 9, 23, 0.1);
+			}
 			.hidden {
 				display: none;
 			}
-
-			/* Status message styling */
-			.status-message {
-				padding: 1rem;
-				margin: 1rem 0;
+			/* Address Card Styles (NEW) */
+			.address-card {
+				background: var(--bg-dark);
+				border: 1px solid var(--border-color);
 				border-radius: var(--border-radius);
-				font-weight: 500;
+				padding: 1rem 1.5rem 1rem 1rem;
+				margin-bottom: 1.5rem;
+				position: relative;
+				min-height: 120px;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
 			}
-
-			.status-success {
-				background-color: #dcfce7;
-				color: #166534;
+			.address-card .edit-btn {
+				position: absolute;
+				top: 1rem;
+				right: 1rem;
+				background: none;
+				border: none;
+				color: var(--primary-color);
+				cursor: pointer;
+				font-size: 1.2rem;
+				padding: 0.2rem;
+				border-radius: 50%;
+				transition: background 0.2s;
 			}
-
-			.status-error {
-				background-color: #fee2e2;
-				color: #991b1b;
+			.address-card .edit-btn:hover {
+				background: rgba(201, 9, 23, 0.1);
 			}
-
-			/* Responsive adjustments */
-			@media (max-width: 640px) {
-				.form-container {
-					padding: 1.5rem;
-				}
-
-				.form-section {
-					padding: 1rem;
-				}
-
-				.radio-group {
-					flex-direction: column;
-					gap: 0.5rem;
-				}
+			.address-form {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75rem;
+				margin-top: 0.5rem;
 			}
-
-			.form-section {
-				margin-bottom: 1.25rem;
-			}
-
-			.form-section h3 {
-				color: var(--accent-red);
-				margin-bottom: 0.75rem;
-				font-size: 1.1rem;
-			}
-
-			.form-group {
-				margin-bottom: 1rem;
-			}
-
-			.form-group label {
-				display: block;
-				margin-bottom: 0.35rem;
-				color: var(--text-muted);
-				font-size: 0.9rem;
-			}
-
-			.form-row {
+			.address-form .form-row {
 				display: flex;
 				gap: 1rem;
-				margin-bottom: 1rem;
 			}
-
-			.form-group-half {
+			.address-form .form-group {
 				flex: 1;
 				min-width: 0;
-				width: 100%;
 			}
-
-			.form-group input,
-			.form-group select,
-			.form-group textarea {
+			.address-form label {
+				color: var(--text-muted);
+				font-size: 0.9rem;
+				margin-bottom: 0.2rem;
+				display: block;
+			}
+			.address-form input,
+			.address-form select {
 				width: 100%;
 				padding: 0.5rem 0.75rem;
-				background: var(--bg-dark);
+				background: rgba(255, 255, 255, 0.05);
 				border: 1px solid var(--border-color);
 				border-radius: 6px;
 				color: var(--text-light);
 				font-size: 0.9rem;
+				height: 40px;
+				box-sizing: border-box;
+				transition: all 0.2s ease;
 			}
-
-			.form-group textarea {
-				min-height: 80px;
-				resize: vertical;
+			.address-form input:focus,
+			.address-form select:focus {
+				outline: none;
+				border-color: var(--primary-color);
+				box-shadow: 0 0 0 2px rgba(201, 9, 23, 0.3);
+				background: rgba(0, 0, 0, 0.2);
 			}
-
-			.radio-group {
-				margin-bottom: 1rem;
+			.address-actions {
+				display: flex;
+				gap: 1rem;
+				margin-top: 0.5rem;
 			}
-
-			.radio-group label {
-				display: inline-flex;
-				align-items: center;
-				margin-right: 1.5rem;
-				color: var(--text-light);
-				cursor: pointer;
-				font-size: 0.9rem;
+			.address-label {
+				font-weight: 600;
+				color: var(--primary-color);
+				margin-bottom: 0.5rem;
 			}
-
-			.radio-group input[type='radio'] {
-				margin-right: 0.35rem;
-				accent-color: var(--accent-red);
+			.address-empty {
+				color: var(--text-muted);
+				font-style: italic;
+				margin-bottom: 0.5rem;
 			}
-
-			h1 {
-				font-size: 1.5rem;
-				margin-bottom: 1.25rem;
-			}
-
-			.btn {
-				padding: 0.5rem 1.25rem;
-				font-size: 0.9rem;
+			@media (max-width: 640px) {
+				.form-container {
+					padding: 1.5rem;
+				}
+				.form-section {
+					padding: 1rem;
+				}
+				.radio-group {
+					flex-direction: column;
+					gap: 0.5rem;
+				}
+				.address-card {
+					padding: 1rem 0.5rem 1rem 1rem;
+				}
 			}
 		</style>
 	</head>
 	<body>
 		<div class="form-container">
 			<h1>Order Information</h1>
-
 			<div class="form-section">
 				<h3>Customer Type</h3>
 				<div class="radio-group">
@@ -290,7 +278,6 @@
 					</label>
 				</div>
 			</div>
-
 			<div id="newCustomerForm" class="form-section">
 				<h3>New Customer Information</h3>
 				<div class="form-row">
@@ -311,39 +298,46 @@
 					<label for="companyName">Company Name (Optional)</label>
 					<input type="text" id="companyName" />
 				</div>
-
-				<div class="form-section">
+				<div class="form-section" style="margin-top: 2rem">
 					<h3>Billing Address</h3>
-					<div class="form-group">
-						<label for="billingAttention">Attention *</label>
-						<input type="text" id="billingAttention" required />
-					</div>
-					<div class="form-group">
-						<label for="billingStreet">Street *</label>
-						<input type="text" id="billingStreet" required />
-					</div>
-					<div class="form-row">
-						<div class="form-group form-group-half">
-							<label for="billingCity">City *</label>
-							<input type="text" id="billingCity" required />
-						</div>
-						<div class="form-group form-group-half">
-							<label for="billingState">State *</label>
-							<input type="text" id="billingState" required />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group form-group-half">
-							<label for="billingZip">ZIP Code *</label>
-							<input type="text" id="billingZip" required />
-						</div>
-						<div class="form-group form-group-half">
-							<label for="billingCountry">Country *</label>
-							<input type="text" id="billingCountry" required value="U.S.A" />
+					<div class="address-container">
+						<div class="address-fields">
+							<div class="form-group">
+								<label for="newBillingAttention">Attention *</label>
+								<input type="text" id="newBillingAttention" required />
+							</div>
+							<div class="form-group">
+								<label for="newBillingStreet">Street *</label>
+								<input type="text" id="newBillingStreet" required />
+							</div>
+							<div class="form-row">
+								<div class="form-group form-group-half">
+									<label for="newBillingCity">City *</label>
+									<input type="text" id="newBillingCity" required />
+								</div>
+								<div class="form-group form-group-half">
+									<label for="newBillingState">State *</label>
+									<input type="text" id="newBillingState" required />
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group form-group-half">
+									<label for="newBillingZip">ZIP Code *</label>
+									<input type="text" id="newBillingZip" required />
+								</div>
+								<div class="form-group form-group-half">
+									<label for="newBillingCountry">Country *</label>
+									<select id="newBillingCountry" required>
+										<option value="U.S.A" selected>United States</option>
+										<option value="CAN">Canada</option>
+										<option value="MEX">Mexico</option>
+										<option value="Other">Other</option>
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-
 				<div class="form-section">
 					<div class="form-group">
 						<label>
@@ -357,44 +351,51 @@
 						</label>
 					</div>
 				</div>
-
 				<div
 					id="shippingAddressSection"
 					class="form-section"
 					style="display: none"
 				>
 					<h3>Shipping Address</h3>
-					<div class="form-group">
-						<label for="shippingAttention">Attention *</label>
-						<input type="text" id="shippingAttention" />
-					</div>
-					<div class="form-group">
-						<label for="shippingStreet">Street *</label>
-						<input type="text" id="shippingStreet" />
-					</div>
-					<div class="form-row">
-						<div class="form-group form-group-half">
-							<label for="shippingCity">City *</label>
-							<input type="text" id="shippingCity" />
-						</div>
-						<div class="form-group form-group-half">
-							<label for="shippingState">State *</label>
-							<input type="text" id="shippingState" />
-						</div>
-					</div>
-					<div class="form-row">
-						<div class="form-group form-group-half">
-							<label for="shippingZip">ZIP Code *</label>
-							<input type="text" id="shippingZip" />
-						</div>
-						<div class="form-group form-group-half">
-							<label for="shippingCountry">Country *</label>
-							<input type="text" id="shippingCountry" value="U.S.A" />
+					<div class="address-container">
+						<div class="address-fields">
+							<div class="form-group">
+								<label for="newShippingAttention">Attention *</label>
+								<input type="text" id="newShippingAttention" required />
+							</div>
+							<div class="form-group">
+								<label for="newShippingStreet">Street *</label>
+								<input type="text" id="newShippingStreet" required />
+							</div>
+							<div class="form-row">
+								<div class="form-group form-group-half">
+									<label for="newShippingCity">City *</label>
+									<input type="text" id="newShippingCity" required />
+								</div>
+								<div class="form-group form-group-half">
+									<label for="newShippingState">State *</label>
+									<input type="text" id="newShippingState" required />
+								</div>
+							</div>
+							<div class="form-row">
+								<div class="form-group form-group-half">
+									<label for="newShippingZip">ZIP Code *</label>
+									<input type="text" id="newShippingZip" required />
+								</div>
+								<div class="form-group form-group-half">
+									<label for="newShippingCountry">Country *</label>
+									<select id="newShippingCountry" required>
+										<option value="U.S.A" selected>United States</option>
+										<option value="CAN">Canada</option>
+										<option value="MEX">Mexico</option>
+										<option value="Other">Other</option>
+									</select>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div id="existingCustomerForm" class="form-section hidden">
 				<h3>Existing Customer Information</h3>
 				<div class="form-group">
@@ -442,9 +443,9 @@
 				>
 					<strong>Selected Customer:</strong>
 					<div id="customerDetails" style="margin-top: 0.5rem"></div>
+					<div id="addressCards" style="margin-top: 1.5rem"></div>
 				</div>
 			</div>
-
 			<div class="form-section">
 				<button
 					type="button"
@@ -456,355 +457,197 @@
 					Continue to Checkout
 				</button>
 			</div>
-
 			<div id="errorContainer" class="hidden">
 				<p id="errorMessage" style="color: red"></p>
 			</div>
 		</div>
-
 		<script>
-			// Get URL parameters
-			const params = new URLSearchParams(window.location.search);
-			const planID = params.get('planID');
-			const cf_dealer_id = params.get('cf_dealer_id');
-			const cf_agent_id = params.get('cf_agent_id');
-			const source = params.get('source');
+			// --- Address Card UI for Existing Customers ---
+			function createAddressCard(address, type, editable, customerId) {
+				const card = document.createElement('div');
+				card.className = 'address-card';
+				card.dataset.type = type;
+				const label = document.createElement('div');
+				label.className = 'address-label';
+				label.textContent =
+					type === 'billing' ? 'Billing Address' : 'Shipping Address';
+				card.appendChild(label);
 
-			if (!planID || !cf_dealer_id || !cf_agent_id) {
-				document.getElementById('errorContainer').classList.remove('hidden');
-				document.getElementById('errorMessage').textContent =
-					'Missing required parameters';
-			}
-
-			// Toggle form sections based on customer type
-			document
-				.querySelectorAll('input[name="customerType"]')
-				.forEach((radio) => {
-					radio.addEventListener('change', () => {
-						const isExisting = radio.value === 'existing';
-						document
-							.getElementById('newCustomerForm')
-							.classList.toggle('hidden', isExisting);
-						document
-							.getElementById('existingCustomerForm')
-							.classList.toggle('hidden', !isExisting);
-					});
-				});
-
-			// Toggle shipping address fields and copy billing to shipping when checked
-			document
-				.getElementById('sameAsBilling')
-				.addEventListener('change', function () {
-					const shippingSection = document.getElementById(
-						'shippingAddressSection'
-					);
-					if (this.checked) {
-						shippingSection.style.display = 'none';
-					} else {
-						shippingSection.style.display = 'block';
-					}
-                    validateForm();
-				});
-
-            // Function to validate the form
-            function validateForm() {
-                const customerType = document.querySelector('input[name="customerType"]:checked')?.value;
-                const submitBtn = document.getElementById('submitBtn');
-                
-                if (customerType === 'existing') {
-                    // For existing customers, just check if a customer is selected
-                    const isCustomerSelected = !!window.selectedCustomerId;
-                    submitBtn.disabled = !isCustomerSelected;
-                    submitBtn.style.opacity = isCustomerSelected ? '1' : '0.7';
-                    submitBtn.style.cursor = isCustomerSelected ? 'pointer' : 'not-allowed';
-                    return;
-                }
-                
-                // For new customers, check all required fields
-                const requiredFields = [
-                    'firstName', 'lastName', 'email', 'billingStreet', 
-                    'billingCity', 'billingState', 'billingZip', 'billingCountry'
-                ];
-                
-                const isFormValid = requiredFields.every(fieldId => {
-                    const element = document.getElementById(fieldId);
-                    return element && element.value.trim() !== '';
-                });
-                
-                // If shipping address is shown, validate those fields too
-                if (!document.getElementById('sameAsBilling').checked) {
-                    const shippingFields = [
-                        'shippingStreet', 'shippingCity', 
-                        'shippingState', 'shippingZip', 'shippingCountry'
-                    ];
-                    
-                    const isShippingValid = shippingFields.every(fieldId => {
-                        const element = document.getElementById(fieldId);
-                        return element && element.value.trim() !== '';
-                    });
-                    
-                    submitBtn.disabled = !(isFormValid && isShippingValid);
-                    submitBtn.style.opacity = (isFormValid && isShippingValid) ? '1' : '0.7';
-                    submitBtn.style.cursor = (isFormValid && isShippingValid) ? 'pointer' : 'not-allowed';
-                } else {
-                    submitBtn.disabled = !isFormValid;
-                    submitBtn.style.opacity = isFormValid ? '1' : '0.7';
-                    submitBtn.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
-                }
-            }
-            
-            // Add input event listeners to all form fields
-            const formFields = [
-                // New customer fields
-                'firstName', 'lastName', 'email', 'companyName',
-                // Billing address fields
-                'billingStreet', 'billingCity', 'billingState', 'billingZip', 'billingCountry',
-                // Shipping address fields
-                'shippingStreet', 'shippingCity', 'shippingState', 'shippingZip', 'shippingCountry'
-            ];
-            
-            formFields.forEach(fieldId => {
-                const element = document.getElementById(fieldId);
-                if (element) {
-                    element.addEventListener('input', validateForm);
-                }
-            });
-            
-            // Also validate when customer type changes
-            document.querySelectorAll('input[name="customerType"]').forEach(radio => {
-                radio.addEventListener('change', validateForm);
-            });
-
-			// Auto-fill billing attention with full name
-			document
-				.getElementById('firstName')
-				.addEventListener('input', updateBillingAttention);
-			document
-				.getElementById('lastName')
-				.addEventListener('input', updateBillingAttention);
-
-			function updateBillingAttention() {
-				const firstName = document.getElementById('firstName').value;
-				const lastName = document.getElementById('lastName').value;
-				const fullName = `${firstName} ${lastName}`.trim();
-				document.getElementById('billingAttention').value = fullName;
-
-				// If same as billing is checked, update shipping attention too
-				if (document.getElementById('sameAsBilling').checked) {
-					document.getElementById('shippingAttention').value = fullName;
-				}
-			}
-
-			// Copy billing address to shipping address when checkbox is toggled
-			function copyBillingToShipping() {
-				if (document.getElementById('sameAsBilling').checked) {
-					// Get all billing address fields
-					const billingFields = [
-						'Attention',
-						'Street',
-						'City',
-						'State',
-						'Zip',
-						'Country',
-					];
-					billingFields.forEach((field) => {
-						const billingValue = document.getElementById(
-							`billing${field}`
-						).value;
-						document.getElementById(`shipping${field}`).value = billingValue;
-					});
-				}
-			}
-
-			// Add event listeners to update shipping address when billing address changes and checkbox is checked
-			[
-				'billingStreet',
-				'billingCity',
-				'billingState',
-				'billingZip',
-				'billingCountry',
-			].forEach((id) => {
-				document.getElementById(id).addEventListener('input', function () {
-					if (document.getElementById('sameAsBilling').checked) {
-						const field = id.replace('billing', '');
-						document.getElementById(`shipping${field}`).value = this.value;
-					}
-				});
-			});
-
-			// Add debug logging
-			console.log('Script loaded, adding event listeners');
-
-			document
-				.getElementById('submitBtn')
-				.addEventListener('click', async (e) => {
-					try {
-						console.log('Submit button clicked');
-						e.preventDefault(); // Prevent default form submission
-						const customerType = document.querySelector(
-							'input[name="customerType"]:checked'
-						).value;
-						let customerData = {};
-						let customer_id = null; // Properly declare customer_id
-
-						if (customerType === 'new') {
-							// Get billing address
-							const billingAddress = {
-								attention: document.getElementById('billingAttention').value,
-								street: document.getElementById('billingStreet').value,
-								city: document.getElementById('billingCity').value,
-								state: document.getElementById('billingState').value,
-								zip: document.getElementById('billingZip').value,
-								country: document.getElementById('billingCountry').value,
-							};
-
-							// Get shipping address (same as billing if checkbox is checked)
-							let shippingAddress;
-							if (document.getElementById('sameAsBilling').checked) {
-								shippingAddress = { ...billingAddress };
-							} else {
-								shippingAddress = {
-									attention: document.getElementById('shippingAttention').value,
-									street: document.getElementById('shippingStreet').value,
-									city: document.getElementById('shippingCity').value,
-									state: document.getElementById('shippingState').value,
-									zip: document.getElementById('shippingZip').value,
-									country: document.getElementById('shippingCountry').value,
-								};
-							}
-
-							customerData = {
-								'First Name': document.getElementById('firstName').value,
-								'Last Name': document.getElementById('lastName').value,
-								Email: document.getElementById('email').value,
-								'Company Name': document.getElementById('companyName').value,
-								billing_address: billingAddress,
-								shipping_address: shippingAddress,
-							};
-						} else {
-							if (!window.selectedCustomerId) {
-								throw new Error('Please select a customer');
-							}
-							customer_id = window.selectedCustomerId;
-						}
-
-						// Skip email validation if we have a customer_id
-						if (!customer_id) {
-							const requiredFields = ['Email'];
-							const missingFields = requiredFields.filter(
-								(field) => !customerData[field]
-							);
-
-							if (missingFields.length > 0) {
-								console.log('Missing required fields:', missingFields);
-								document
-									.getElementById('errorContainer')
-									.classList.remove('hidden');
-								document.getElementById(
-									'errorMessage'
-								).textContent = `Please fill in all required fields: ${missingFields.join(
-									', '
-								)}`;
-								return;
-							}
-						}
-
-						// Prepare URL parameters
-						const urlParams = new URLSearchParams({
-							planID,
-							cf_dealer_id,
-							cf_agent_id,
-							source,
-						});
-
-						// Add customer info based on whether we have an existing customer
-						if (customer_id) {
-							urlParams.append('customer_id', customer_id);
-						} else {
-							urlParams.append('customerInfo', JSON.stringify(customerData));
-						}
-
-						// Show loading state
-						const submitBtn = document.getElementById('submitBtn');
-						submitBtn.disabled = true;
-						submitBtn.textContent = 'Processing...';
-
+				if (editable) {
+					const form = document.createElement('form');
+					form.className = 'address-form';
+					form.innerHTML = `
+						<div class="form-group">
+							<label>Attention *</label>
+							<input type="text" name="attention" required value="${
+								address.attention || ''
+							}" />
+						</div>
+						<div class="form-group">
+							<label>Street *</label>
+							<input type="text" name="street" required value="${address.street || ''}" />
+						</div>
+						<div class="form-row">
+							<div class="form-group form-group-half">
+								<label>City *</label>
+								<input type="text" name="city" required value="${address.city || ''}" />
+							</div>
+							<div class="form-group form-group-half">
+								<label>State *</label>
+								<input type="text" name="state" required value="${address.state || ''}" />
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group form-group-half">
+								<label>ZIP Code *</label>
+								<input type="text" name="zip" required value="${address.zip || ''}" />
+							</div>
+							<div class="form-group form-group-half">
+								<label>Country *</label>
+								<select name="country" required>
+									<option value="U.S.A" ${
+										address.country === 'U.S.A' ? 'selected' : ''
+									}>United States</option>
+									<option value="CAN" ${
+										address.country === 'CAN' ? 'selected' : ''
+									}>Canada</option>
+									<option value="MEX" ${
+										address.country === 'MEX' ? 'selected' : ''
+									}>Mexico</option>
+									<option value="Other" ${
+										address.country === 'Other' ? 'selected' : ''
+									}>Other</option>
+								</select>
+							</div>
+						</div>
+						<div class="address-actions">
+							<button type="submit" class="btn">Save</button>
+							<button type="button" class="btn secondary cancel-edit-btn">Cancel</button>
+						</div>
+					`;
+					card.appendChild(form);
+					form.addEventListener('submit', async function (e) {
+						e.preventDefault();
+						const formData = new FormData(form);
+						const updatedAddress = {
+							attention: formData.get('attention'),
+							street: formData.get('street'),
+							city: formData.get('city'),
+							state: formData.get('state'),
+							zip: formData.get('zip'),
+							country: formData.get('country'),
+						};
 						try {
-							// Extract planID from URL (format: /checkout/planID)
-							const pathSegments = window.location.pathname.split('/');
-							const planID = pathSegments[pathSegments.length - 1];
-							
-							if (!planID) {
-								throw new Error('Plan ID not found in URL');
-							}
-
-							// Prepare request data
-							const requestData = {
-								planID,
-								cf_dealer_id,
-								cf_agent_id,
-								source,
-								customer_id,
-								customerInfo: customer_id ? undefined : customerData,
-							};
-
-							console.log('Sending request to server:', {
-								url: '/.netlify/functions/getUrls',
-								method: 'POST',
-								data: requestData
-							});
-
-							// Send data to server using fetch
-							const response = await fetch('/.netlify/functions/getUrls', {
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json',
-								},
-								body: JSON.stringify(requestData),
-							});
-
-							const responseData = await response.json();
-							console.log('Server response:', {
-								status: response.status,
-								statusText: response.statusText,
-								data: responseData
-							});
-
-							if (!response.ok) {
-								throw new Error(responseData.message || responseData.error || 'Failed to process payment');
-							}
-
-							const result = responseData;
-
-							// Check if we have a checkout URL
-							if (result.checkout_url) {
-								// Redirect to the payment URL
-								window.location.href = result.checkout_url;
-							} else if (result.short_url) {
-								// Fallback to short URL if checkout_url is not available
-								window.location.href = result.short_url;
-							} else {
-								throw new Error('No valid URL received from server');
-							}
-						} catch (error) {
-							console.error('Error processing payment:', error);
-							document.getElementById('errorContainer').classList.remove('hidden');
-							document.getElementById('errorMessage').textContent = 
-								`Error: ${error.message || 'Failed to process payment. Please try again.'}`;
-							submitBtn.disabled = false;
-							submitBtn.textContent = 'Submit Order';
+							await updateCustomerAddress(customerId, updatedAddress, type);
+							const updatedCustomer = await getCustomerById(customerId);
+							selectCustomer(updatedCustomer);
+						} catch (err) {
+							alert('Failed to update address: ' + (err.message || err));
 						}
-					} catch (error) {
-						console.error('Error submitting form:', error);
+					});
+					form
+						.querySelector('.cancel-edit-btn')
+						.addEventListener('click', function () {
+							renderAddressCards(window.selectedCustomer);
+						});
+				} else {
+					if (
+						address &&
+						(address.street || address.city || address.state || address.zip)
+					) {
+						card.innerHTML += `
+							<div>
+								<div>${address.attention || ''}</div>
+								<div>${address.street || ''}</div>
+								<div>${address.city || ''}, ${address.state || ''} ${address.zip || ''}</div>
+								<div>${address.country || ''}</div>
+							</div>
+						`;
+					} else {
+						card.innerHTML += `<div class="address-empty">No ${type} address on file.</div>`;
 					}
-				});
+					const editBtn = document.createElement('button');
+					editBtn.type = 'button';
+					editBtn.className = 'edit-btn';
+					editBtn.title = 'Edit Address';
+					editBtn.innerHTML =
+						'<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>';
+					editBtn.addEventListener('click', function () {
+						renderAddressCards(window.selectedCustomer, type);
+					});
+					card.appendChild(editBtn);
+				}
+				return card;
+			}
 
-			// Add event listener for customer search
+			function renderAddressCards(customer, editType = null) {
+				const addressCards = document.getElementById('addressCards');
+				addressCards.innerHTML = '';
+				const customerId = customer.customer_id || customer.id;
+				let billing = null,
+					shipping = null;
+				if (customer.addresses && Array.isArray(customer.addresses)) {
+					billing = customer.addresses.find((a) => a.type === 'billing') || {};
+					shipping =
+						customer.addresses.find((a) => a.type === 'shipping') || {};
+				}
+				addressCards.appendChild(
+					createAddressCard(
+						billing,
+						'billing',
+						editType === 'billing',
+						customerId
+					)
+				);
+				addressCards.appendChild(
+					createAddressCard(
+						shipping,
+						'shipping',
+						editType === 'shipping',
+						customerId
+					)
+				);
+			}
+
+			async function getCustomerById(customerId) {
+				const response = await fetch('/.netlify/functions/getCustomer', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ customerId }),
+				});
+				const data = await response.json();
+				if (!response.ok)
+					throw new Error(data.error || 'Failed to fetch customer');
+				return data.customers ? data.customers[0] : data;
+			}
+
+			async function updateCustomerAddress(
+				customerId,
+				addressData,
+				addressType
+			) {
+				const requestBody = {
+					customerId,
+					address: { ...addressData, type: addressType },
+				};
+				const response = await fetch('/.netlify/functions/updateCustomer', {
+					method: 'PUT',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(requestBody),
+				});
+				const result = await response.json();
+				if (!response.ok) {
+					const errorMsg =
+						result.error || `HTTP error! status: ${response.status}`;
+					throw new Error(errorMsg);
+				}
+				return result;
+			}
+
+			// --- Customer search and selection logic ---
 			document
 				.getElementById('searchCustomerBtn')
 				.addEventListener('click', searchCustomer);
-
-			// Allow pressing Enter in the email field to trigger search
 			document
 				.getElementById('existingEmail')
 				.addEventListener('keypress', (e) => {
@@ -814,39 +657,20 @@
 					}
 				});
 
-			// Track selected customer
-			let selectedCustomer = null;
-
-			// Function to handle customer selection
-			function selectCustomer(customer) {
-				selectedCustomer = customer;
-
-				// Update selected customer display
-				const customerDetails = document.getElementById('customerDetails');
-				const displayName =
-					customer.display_name ||
-					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
-					'No name available';
-
-				customerDetails.innerHTML = `
-					<div><strong>Name:</strong> ${displayName}</div>
-					<div><strong>Email:</strong> ${customer.email}</div>
-				`;
-
-				// Show selected customer section
-				document.getElementById('selectedCustomer').style.display = 'block';
-
-				// Enable checkout button
-				const submitBtn = document.getElementById('submitBtn');
-				submitBtn.disabled = false;
-				submitBtn.style.opacity = '1';
-				submitBtn.style.cursor = 'pointer';
-
-				// Store customer ID for form submission
-				window.selectedCustomerId = customer.customer_id;
+			function showStatus(message, type = 'info') {
+				const statusElement = document.getElementById('customerSearchStatus');
+				statusElement.textContent = message;
+				statusElement.style.display = 'block';
+				statusElement.style.color =
+					type === 'error'
+						? '#ff4d4f'
+						: type === 'success'
+						? '#52c41a'
+						: type === 'warning'
+						? '#faad14'
+						: '#1890ff';
 			}
 
-			// Function to create customer button
 			function createCustomerButton(customer) {
 				const button = document.createElement('button');
 				button.type = 'button';
@@ -861,34 +685,25 @@
 					transition: all 0.2s;
 					box-shadow: 0 0 0 1px rgba(24, 144, 255, 0.2);
 				`;
-
 				const displayName =
 					customer.display_name ||
 					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
 					'No name available';
-
 				button.innerHTML = `
 					<div style="font-weight: 600;">${displayName}</div>
 					<div style="font-size: 0.9em; color: #666;">${customer.email}</div>
 				`;
-
 				button.addEventListener('click', () => {
-					// Remove active class from all buttons
 					document.querySelectorAll('.customer-btn').forEach((btn) => {
 						btn.style.borderColor = 'var(--border-color)';
 						btn.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
 						btn.style.boxShadow = '0 0 0 1px rgba(24, 144, 255, 0.2)';
 					});
-
-					// Add active class to clicked button
 					button.style.borderColor = '#c90917';
 					button.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
 					button.style.boxShadow = '0 0 0 1px rgba(201, 9, 23, 0.5)';
-
-					// Select the customer
 					selectCustomer(customer);
 				});
-
 				return button;
 			}
 
@@ -898,78 +713,291 @@
 				const customerResults = document.getElementById('customerResults');
 				const selectedCustomerSection =
 					document.getElementById('selectedCustomer');
-
-				// Reset state
 				customerResults.style.display = 'none';
 				selectedCustomerSection.style.display = 'none';
 				document.getElementById('customerList').innerHTML = '';
-
-				// Disable checkout button until customer is selected
 				const submitBtn = document.getElementById('submitBtn');
 				submitBtn.disabled = true;
 				submitBtn.style.opacity = '0.7';
 				submitBtn.style.cursor = 'not-allowed';
-
 				if (!email) {
 					showStatus('Please enter an email address', 'error');
 					return;
 				}
-
 				try {
 					showStatus('Searching for customers...', 'info');
-
-					// Call Netlify function to search for customers
 					const response = await fetch('/.netlify/functions/getCustomer', {
 						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
+						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ email }),
 					});
-
 					const data = await response.json();
-					console.log('Customer search response:', data);
-
-					if (!response.ok) {
+					if (!response.ok)
 						throw new Error(data.error || 'Failed to search for customers');
-					}
-
 					if (data.customers && data.customers.length > 0) {
 						showStatus(`Found ${data.customers.length} customer(s)`, 'success');
-
-						// Add customer buttons to the list
 						const customerList = document.getElementById('customerList');
 						data.customers.forEach((customer) => {
 							customerList.appendChild(createCustomerButton(customer));
 						});
-
-						// Show the results
 						customerResults.style.display = 'block';
 					} else {
 						showStatus('No customers found with this email', 'warning');
 					}
 				} catch (error) {
-					console.error('Error searching for customers:', error);
 					showStatus(error.message || 'Error searching for customers', 'error');
 				}
 			}
 
-			function showStatus(message, type = 'info') {
-				const statusElement = document.getElementById('customerSearchStatus');
-				statusElement.textContent = message;
-				statusElement.style.display = 'block';
+			function selectCustomer(customer) {
+				window.selectedCustomer = customer;
+				window.selectedCustomerId = customer.customer_id || customer.id;
+				console.log('Selected customer:', customer);
+				console.log('Set selectedCustomerId:', window.selectedCustomerId);
+				const customerDetails = document.getElementById('customerDetails');
+				const displayName =
+					customer.display_name ||
+					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
+					'No name available';
+				customerDetails.innerHTML = `
+					<div><strong>Name:</strong> ${displayName}</div>
+					<div><strong>Email:</strong> ${customer.email || 'N/A'}</div>
+				`;
+				document.getElementById('selectedCustomer').style.display = 'block';
+				renderAddressCards(customer);
+				const submitBtn = document.getElementById('submitBtn');
+				submitBtn.disabled = false;
+				submitBtn.style.opacity = '1';
+				submitBtn.style.cursor = 'pointer';
+			}
 
-				// Set color based on message type
-				if (type === 'error') {
-					statusElement.style.color = '#ff4d4f';
-				} else if (type === 'success') {
-					statusElement.style.color = '#52c41a';
-				} else if (type === 'warning') {
-					statusElement.style.color = '#faad14';
-				} else {
-					statusElement.style.color = '#1890ff';
+			// --- New customer shipping/billing copy logic ---
+			function copyBillingToShipping() {
+				if (document.getElementById('sameAsBilling').checked) {
+					const billingFields = [
+						'Attention',
+						'Street',
+						'City',
+						'State',
+						'Zip',
+						'Country',
+					];
+					billingFields.forEach((field) => {
+						const billingValue = document.getElementById(
+							`newBilling${field}`
+						).value;
+						document.getElementById(`newShipping${field}`).value = billingValue;
+					});
 				}
 			}
+			document
+				.getElementById('sameAsBilling')
+				.addEventListener('change', function () {
+					const shippingSection = document.getElementById(
+						'shippingAddressSection'
+					);
+					shippingSection.style.display = this.checked ? 'none' : 'block';
+				});
+			document
+				.getElementById('firstName')
+				.addEventListener('input', updateBillingAttention);
+			document
+				.getElementById('lastName')
+				.addEventListener('input', updateBillingAttention);
+			function updateBillingAttention() {
+				const firstName = document.getElementById('firstName').value;
+				const lastName = document.getElementById('lastName').value;
+				const fullName = `${firstName} ${lastName}`.trim();
+				document.getElementById('newBillingAttention').value = fullName;
+				if (document.getElementById('sameAsBilling').checked) {
+					document.getElementById('newShippingAttention').value = fullName;
+				}
+			}
+			document
+				.querySelectorAll('input[name="customerType"]')
+				.forEach((radio) => {
+					radio.addEventListener('change', function () {
+						const isExisting = radio.value === 'existing';
+						document
+							.getElementById('newCustomerForm')
+							.classList.toggle('hidden', isExisting);
+						document
+							.getElementById('existingCustomerForm')
+							.classList.toggle('hidden', !isExisting);
+					});
+				});
+
+			function validateForm() {
+				const customerType = document.querySelector(
+					'input[name="customerType"]:checked'
+				)?.value;
+				const submitBtn = document.getElementById('submitBtn');
+				if (customerType === 'existing') {
+					const isCustomerSelected = !!window.selectedCustomerId;
+					submitBtn.disabled = !isCustomerSelected;
+					submitBtn.style.opacity = isCustomerSelected ? '1' : '0.7';
+					submitBtn.style.cursor = isCustomerSelected
+						? 'pointer'
+						: 'not-allowed';
+					return;
+				}
+				const requiredFields = [
+					'firstName',
+					'lastName',
+					'email',
+					'newBillingStreet',
+					'newBillingCity',
+					'newBillingState',
+					'newBillingZip',
+					'newBillingCountry',
+				];
+				const isFormValid = requiredFields.every((fieldId) => {
+					const element = document.getElementById(fieldId);
+					return element && element.value.trim() !== '';
+				});
+				if (!document.getElementById('sameAsBilling').checked) {
+					const shippingFields = [
+						'newShippingStreet',
+						'newShippingCity',
+						'newShippingState',
+						'newShippingZip',
+						'newShippingCountry',
+					];
+					const isShippingValid = shippingFields.every((fieldId) => {
+						const element = document.getElementById(fieldId);
+						return element && element.value.trim() !== '';
+					});
+					submitBtn.disabled = !(isFormValid && isShippingValid);
+					submitBtn.style.opacity =
+						isFormValid && isShippingValid ? '1' : '0.7';
+					submitBtn.style.cursor =
+						isFormValid && isShippingValid ? 'pointer' : 'not-allowed';
+				} else {
+					submitBtn.disabled = !isFormValid;
+					submitBtn.style.opacity = isFormValid ? '1' : '0.7';
+					submitBtn.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
+				}
+			}
+			[
+				'firstName',
+				'lastName',
+				'email',
+				'companyName',
+				'newBillingStreet',
+				'newBillingCity',
+				'newBillingState',
+				'newBillingZip',
+				'newBillingCountry',
+				'newShippingStreet',
+				'newShippingCity',
+				'newShippingState',
+				'newShippingZip',
+				'newShippingCountry',
+			].forEach((fieldId) => {
+				const element = document.getElementById(fieldId);
+				if (element) element.addEventListener('input', validateForm);
+			});
+			document
+				.querySelectorAll('input[name="customerType"]')
+				.forEach((radio) => {
+					radio.addEventListener('change', validateForm);
+				});
+
+			document
+				.getElementById('submitBtn')
+				.addEventListener('click', async (e) => {
+					try {
+						e.preventDefault();
+						const customerType = document.querySelector(
+							'input[name="customerType"]:checked'
+						).value;
+						let payload = {};
+						if (customerType === 'new') {
+							const billingAddress = {
+								attention: document.getElementById('newBillingAttention').value,
+								street: document.getElementById('newBillingStreet').value,
+								city: document.getElementById('newBillingCity').value,
+								state: document.getElementById('newBillingState').value,
+								zip: document.getElementById('newBillingZip').value,
+								country: document.getElementById('newBillingCountry').value,
+							};
+							let shippingAddress;
+							if (document.getElementById('sameAsBilling').checked) {
+								shippingAddress = { ...billingAddress };
+							} else {
+								shippingAddress = {
+									attention: document.getElementById('newShippingAttention')
+										.value,
+									street: document.getElementById('newShippingStreet').value,
+									city: document.getElementById('newShippingCity').value,
+									state: document.getElementById('newShippingState').value,
+									zip: document.getElementById('newShippingZip').value,
+									country: document.getElementById('newShippingCountry').value,
+								};
+							}
+							payload.customerData = {
+								first_name: document.getElementById('firstName').value,
+								last_name: document.getElementById('lastName').value,
+								email: document.getElementById('email').value,
+								company_name: document.getElementById('companyName').value,
+								display_name: `${document.getElementById('firstName').value} ${
+									document.getElementById('lastName').value
+								}`.trim(),
+								billing_address: billingAddress,
+								shipping_address: shippingAddress,
+							};
+						} else if (customerType === 'existing') {
+							if (!window.selectedCustomerId) {
+								alert('Please select a customer.');
+								return;
+							}
+							payload.customer_id = window.selectedCustomerId;
+						}
+						const pathSegments = window.location.pathname
+							.split('/')
+							.filter(Boolean);
+						const bundleId = pathSegments[pathSegments.length - 1];
+						const urlParams = new URLSearchParams(window.location.search);
+						payload.cf_agent_id = urlParams.get('cf_agent_id') || '';
+						payload.cf_dealer_id = urlParams.get('cf_dealer_id') || '';
+						payload.source = urlParams.get('source') || 'checkout';
+
+						const submitBtn = document.getElementById('submitBtn');
+						submitBtn.disabled = true;
+						submitBtn.textContent = 'Processing...';
+
+						console.log('Submitting payload:', payload);
+
+						const response = await fetch(
+							`/.netlify/functions/getUrls/checkout/${bundleId}`,
+							{
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(payload),
+							}
+						);
+						if (!response.ok) {
+							const error = await response.json();
+							throw new Error(error.message || 'Failed to process payment');
+						}
+						const result = await response.json();
+						if (result.hostedPageUrl) {
+							window.location.href = result.hostedPageUrl;
+						} else {
+							throw new Error('No hosted page URL received');
+						}
+					} catch (error) {
+						document
+							.getElementById('errorContainer')
+							.classList.remove('hidden');
+						document.getElementById('errorMessage').textContent = `Error: ${
+							error.message || 'Failed to process payment. Please try again.'
+						}`;
+						const submitBtn = document.getElementById('submitBtn');
+						submitBtn.disabled = false;
+						submitBtn.textContent = 'Submit Order';
+					}
+				});
 		</script>
 	</body>
 </html>
