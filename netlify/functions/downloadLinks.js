@@ -6,6 +6,9 @@ exports.handler = async (event) => {
   const agent_id = params.agent_id || params.cf_agent_id;
   const dealer_id = params.dealer_id || params.cf_dealer_id;
 
+  console.log('Agent ID:', agent_id);
+  console.log('Dealer ID:', dealer_id);
+
   // 2. Get redirect: query param > Referer header > fallback
   let redirect = params.redirect;
   if (!redirect) {
@@ -47,19 +50,23 @@ exports.handler = async (event) => {
     const bundleIds = plans.map((p) => p.bundle_id);
     const { data: bundles } = await supabase
       .from('bundles')
-      .select('id, plan_id, plan_name, addon_id')
+      .select('id, plan_id, Plan, addon_id, router_id')
       .in('id', bundleIds);
+
+    console.log('Bundles:', bundles);
 
     // 8. Merge plans and bundles, build CSV rows
     const rows = plans.map((plan) => {
       const bundle = bundles.find((b) => b.id === plan.bundle_id) || {};
       return {
-        'Plan Name': bundle.plan_name || '',
-        'Plan ID': bundle.plan_id || '',
-        'Plan Add-on(s)': bundle.addon_id || '',
-        'Short Link': `https://rvgn.link/checkout/${plan.short_code}`,
+        'Plan Name': bundle.Plan || '',
+        'Device Model': bundle.router_id || '',
+        'Add-on(s)': bundle.addon_id || '',
+        'Affiliate Link': `https://rvgn.link/checkout/${plan.short_code}`,
       };
     });
+
+    console.log('Rows:', rows);
 
     // 9. Convert to CSV
     const csvHeader = Object.keys(rows[0]).join(',') + '\n';
