@@ -956,7 +956,7 @@
 						const pathSegments = window.location.pathname
 							.split('/')
 							.filter(Boolean);
-						const bundleId = pathSegments[pathSegments.length - 1];
+						const short_code = pathSegments[pathSegments.length - 1];
 						const urlParams = new URLSearchParams(window.location.search);
 						payload.cf_agent_id = urlParams.get('cf_agent_id') || '';
 						payload.cf_dealer_id = urlParams.get('cf_dealer_id') || '';
@@ -969,7 +969,7 @@
 						console.log('Submitting payload:', payload);
 
 						const response = await fetch(
-							`/.netlify/functions/getUrls/checkout/${bundleId}`,
+							`/.netlify/functions/getUrls/checkout/${short_code}`,
 							{
 								method: 'POST',
 								headers: { 'Content-Type': 'application/json' },

@@ -1,7 +1,5 @@
-const { getAgentDetails } = require("./airtableHelpers");
 const { createZohoPaymentLink } = require("./getZohoLink");
 const supabase = require("./supabaseClient");
-const { v4: uuidv4 } = require('uuid');
 
 exports.handler = async (event) => {
   console.log('Incoming request:', {
@@ -10,27 +8,48 @@ exports.handler = async (event) => {
     query: event.queryStringParameters
   });
 
-  // Handle GET /checkout/:id and POST /checkout/:id requests
   if ((event.httpMethod === 'GET' || event.httpMethod === 'POST') && event.path.includes('/checkout/')) {
     try {
-      // Extract ID from path
-      const id = event.path.split('/').pop();
-      if (!id) {
-        return { statusCode: 400, body: JSON.stringify({ error: 'Missing ID' }) };
+      // Extract short_code from path
+      const short_code = event.path.split('/').pop();
+      if (!short_code) {
+        return { statusCode: 400, body: JSON.stringify({ error: 'Missing short_code' }) };
       }
 
-      // Lookup bundle/plan in Supabase
-      let { data, error } = await supabase
-        .from('bundles')
+      // Lookup partner_plan by short_code
+      const { data: partnerPlan, error: planError } = await supabase
+        .from('partner_plans')
         .select('*')
-        .or(`plan_id.eq.${id},id.eq.${id}`)
+        .eq('short_code', short_code)
         .single();
 
-      if (error || !data) {
-        return { statusCode: 404, body: JSON.stringify({ error: 'Plan or checkout session not found' }) };
+      if (planError || !partnerPlan) {
+        return { statusCode: 404, body: JSON.stringify({ error: 'Plan not found' }) };
       }
 
-      // Parse the request body if this is a POST request
+      // Get the partner (agent) details
+      const { data: partner, error: partnerError } = await supabase
+        .from('partners')
+        .select('*')
+        .eq('agent_id_auto', partnerPlan.agent_id_auto)
+        .single();
+
+      if (partnerError || !partner) {
+        return { statusCode: 404, body: JSON.stringify({ error: 'Partner not found' }) };
+      }
+
+      // Get the bundle (plan) details
+      const { data: bundle, error: bundleError } = await supabase
+        .from('bundles')
+        .select('*')
+        .eq('id', partnerPlan.bundle_id)
+        .single();
+
+      if (bundleError || !bundle) {
+        return { statusCode: 404, body: JSON.stringify({ error: 'Bundle not found' }) };
+      }
+
+      // Parse request body if POST
       let requestBody = {};
       if (event.httpMethod === 'POST' && event.body) {
         try {
@@ -43,47 +62,39 @@ exports.handler = async (event) => {
       // Parse URL query parameters
       const queryParams = event.queryStringParameters || {};
 
-      // Get agent details from Airtable
-      let airtableResponse = await getAgentDetails(requestBody.dealer_id, requestBody.agent_id);
-      if (!airtableResponse) {
-        airtableResponse = await getAgentDetails(requestBody.cf_dealer_id, requestBody.cf_agent_id);
-      }
-
-      // Prepare agent info for Zoho
+      // Prepare agent info for Zoho (from partners table)
       let agentInfo = {
-        cf_agent_id: data.cf_agent_id || queryParams.cf_agent_id,
-        cf_dealer_id: data.cf_dealer_id || queryParams.cf_dealer_id,
-        cf_dealer_name: airtableResponse?.['Company Name'] || data.cf_dealer_name || queryParams.cf_dealer_name,
-        cf_distributor_name: airtableResponse?.['Distributor Name']?.[0] || data.cf_distributor_name || queryParams.cf_distributor_name,
-        cf_distributor_id: airtableResponse?.['Distributor ID']?.[0] || data.cf_distributor_id || queryParams.cf_distributor_id,
-        cf_dealer_email: airtableResponse?.['Email'] || data.cf_dealer_email || queryParams.cf_dealer_email,
-        'Agent ID': airtableResponse?.['Agent ID'] || data['Agent ID'] || data.agent_id,
-        'Company Name': airtableResponse?.['Company Name'] || data.cf_dealer_name || queryParams.cf_dealer_name,
-        'Distributor Name': airtableResponse?.['Distributor Name']?.[0] || data.cf_distributor_name || queryParams.cf_distributor_name,
-        'Distributor ID': airtableResponse?.['Distributor ID']?.[0] || data.cf_distributor_id || queryParams.cf_distributor_id,
+        cf_agent_id: partner.agent_id,
+        cf_dealer_id: partner.rgid,
+        cf_dealer_name: partner.company_name,
+        cf_distributor_name: partner.distributor_name,
+        cf_distributor_id: partner.distributor_id,
+        cf_dealer_email: partner.email,
+        'Agent ID': partner.agent_id,
+        'Company Name': partner.company_name,
+        'Distributor Name': partner.distributor_name,
+        'Distributor ID': partner.distributor_id,
       };
 
       // --- CRITICAL LOGIC: Only pass customer_id for existing, or customerData for new ---
       if (requestBody.customer_id) {
-        // Existing customer: only include customer_id
         agentInfo.customer_id = requestBody.customer_id;
       } else if (requestBody.customerData) {
-        // New customer: include all customer fields at root
         Object.assign(agentInfo, requestBody.customerData);
       }
 
       // Prepare plan data for Zoho
       let addons = [];
-      if (data.addon_id) {
-        if (Array.isArray(data.addon_id)) {
-          addons = data.addon_id
+      if (bundle.addon_id) {
+        if (Array.isArray(bundle.addon_id)) {
+          addons = bundle.addon_id
             .filter(id => id && typeof id === 'string')
             .map(id => id.trim())
             .filter(id => id.length > 0)
             .map(id => ({ addon_code: id }));
-        } else if (typeof data.addon_id === 'string') {
+        } else if (typeof bundle.addon_id === 'string') {
           try {
-            const parsed = JSON.parse(data.addon_id);
+            const parsed = JSON.parse(bundle.addon_id);
             if (Array.isArray(parsed)) {
               addons = parsed
                 .filter(id => id && typeof id === 'string')
@@ -95,18 +106,19 @@ exports.handler = async (event) => {
               if (id) addons = [{ addon_code: id }];
             }
           } catch (e) {
-            const id = data.addon_id.trim();
+            const id = bundle.addon_id.trim();
             if (id) addons = [{ addon_code: id }];
           }
         }
       }
 
       const planData = {
-        plan_id: data.plan_id,
+        plan_id: bundle.plan_id,
         addons: addons,
         has_addons: addons.length > 0,
-        ...(data.plan_name && { plan_name: data.plan_name }),
-        ...(data.plan_price && { plan_price: data.plan_price })
+        ...(bundle.plan_name && { plan_name: bundle.plan_name }),
+        ...(bundle.plan_price && { plan_price: bundle.plan_price }),
+        ...(bundle.url && { url: bundle.url })
       };
 
       // --- Call Zoho ---
@@ -119,14 +131,14 @@ exports.handler = async (event) => {
       // Add query parameters to the checkout URL
       const url = new URL(zohoResponse.hostedPageUrl);
       const params = {
-        cf_dealer_id: data.cf_dealer_id,
-        cf_agent_id: data.cf_agent_id,
-        cf_dealer_name: data.cf_dealer_name,
-        cf_distributor_name: data.cf_distributor_name,
-        cf_distributor_id: data.cf_distributor_id,
-        cf_dealer_email: data.cf_dealer_email,
-        cf_source_url: data.source,
-        customer_id: data.customer_id
+        cf_dealer_id: partner.rgid,
+        cf_agent_id: partner.agent_id,
+        cf_dealer_name: partner.company_name,
+        cf_distributor_name: partner.distributor_name,
+        cf_distributor_id: partner.distributor_id,
+        cf_dealer_email: partner.email,
+        cf_source_url: bundle.source,
+        customer_id: bundle.customer_id
       };
       Object.entries(params).forEach(([key, value]) => {
         if (value) url.searchParams.set(key, value);
@@ -134,7 +146,7 @@ exports.handler = async (event) => {
 
       const finalUrl = url.toString();
 
-      // Store the final URL in Supabase for reference
+      // Store the final URL in Supabase for reference (optional)
       try {
         await supabase
           .from('bundles')
@@ -143,7 +155,7 @@ exports.handler = async (event) => {
             status: 'redirected',
             redirected_at: new Date().toISOString()
           })
-          .eq('id', data.id);
+          .eq('id', bundle.id);
       } catch (updateError) {
         console.error('Error updating bundle with redirect info:', updateError);
       }
@@ -155,7 +167,7 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: true,
           hostedPageUrl: finalUrl,
-          plan_id: data.plan_id,
+          plan_id: bundle.plan_id,
           addons: addons
         })
       };
