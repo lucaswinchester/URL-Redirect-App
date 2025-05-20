@@ -67,6 +67,14 @@ async function showInvoice(invoiceId) {
   invoiceModal.style.display = 'flex';
 }
 
+// Customer portal button
+const customerPortalBtn = document.getElementById('customer-portal-btn');
+if (customerPortalBtn) {
+  customerPortalBtn.addEventListener('click', () => {
+    window.location.href = 'https://billing.revgennetworks.com/portal/revgennetworks';
+  });
+}
+
 // Close modal logic
 closeModalBtn.addEventListener('click', () => {
   invoiceModal.style.display = 'none';
