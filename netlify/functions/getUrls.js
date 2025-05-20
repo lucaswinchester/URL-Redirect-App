@@ -138,7 +138,8 @@ exports.handler = async (event) => {
         cf_distributor_id: partner.distributor_id,
         cf_dealer_email: partner.email,
         cf_source_url: bundle.source,
-        customer_id: bundle.customer_id
+        customer_id: bundle.customer_id,
+        redirect_url: encodeURIComponent('https://rvgn.link/thank-you')
       };
       Object.entries(params).forEach(([key, value]) => {
         if (value) url.searchParams.set(key, value);
