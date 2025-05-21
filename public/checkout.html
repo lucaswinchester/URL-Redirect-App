@@ -610,7 +610,7 @@
 			}
 
 			async function getCustomerById(customerId) {
-				const response = await fetch('/.netlify/functions/getCustomer', {
+				const response = await fetch('/api/getCustomer', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ customerId }),
@@ -630,7 +630,7 @@
 					customerId,
 					address: { ...addressData, type: addressType },
 				};
-				const response = await fetch('/.netlify/functions/updateCustomer', {
+				const response = await fetch('/api/updateCustomer', {
 					method: 'PUT',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(requestBody),
@@ -726,7 +726,7 @@
 				}
 				try {
 					showStatus('Searching for customers...', 'info');
-					const response = await fetch('/.netlify/functions/getCustomer', {
+					const response = await fetch('/api/getCustomer', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
 						body: JSON.stringify({ email }),
@@ -956,11 +956,8 @@
 						const pathSegments = window.location.pathname
 							.split('/')
 							.filter(Boolean);
+
 						const short_code = pathSegments[pathSegments.length - 1];
-						const urlParams = new URLSearchParams(window.location.search);
-						payload.cf_agent_id = urlParams.get('cf_agent_id') || '';
-						payload.cf_dealer_id = urlParams.get('cf_dealer_id') || '';
-						payload.source = urlParams.get('source') || 'checkout';
 
 						const submitBtn = document.getElementById('submitBtn');
 						submitBtn.disabled = true;
@@ -969,7 +966,7 @@
 						console.log('Submitting payload:', payload);
 
 						const response = await fetch(
-							`/.netlify/functions/getUrls/checkout/${short_code}`,
+							`/api/getUrls/checkout/${short_code}`,
 							{
 								method: 'POST',
 								headers: { 'Content-Type': 'application/json' },
@@ -981,7 +978,42 @@
 							throw new Error(error.message || 'Failed to process payment');
 						}
 						const result = await response.json();
+
+						const url = new URL(result.hostedPageUrl);
+						const urlParams = new URLSearchParams(url.search);
+						const urlOrigin = url.origin + url.pathname;
+
+						payload.cf_agent_id = urlParams.get('cf_agent_id') || '';
+						payload.cf_dealer_id = urlParams.get('cf_dealer_id') || '';
+						payload.source = urlParams.get('source') || 'direct';
+
 						if (result.hostedPageUrl) {
+							// --- Log event to Netlify function ---
+							const logPayload = {
+								plan_id: result.plan_id || '', // or get from your payload if not in result
+								checkout_url: urlOrigin,
+								cf_agent_id: payload.cf_agent_id || '',
+								cf_dealer_id: payload.cf_dealer_id || '',
+								cf_dealer_name: urlParams.get('cf_dealer_name') || '',
+								cf_distributor_name: urlParams.get('cf_distributor_name') || '',
+								cf_distributor_id: urlParams.get('cf_distributor_id') || '',
+								cf_dealer_email: urlParams.get('cf_dealer_email') || '',
+								source: payload.source || '',
+								event_type: 'checkout',
+							};
+
+							console.log('Logging event:', logPayload);
+
+							// Fire and forget (don't block redirect)
+							fetch('/api/logEvent', {
+								method: 'POST',
+								headers: { 'Content-Type': 'application/json' },
+								body: JSON.stringify(logPayload),
+							}).catch((err) => {
+								// Optionally log error, but don't block user
+								console.error('Failed to log event:', err);
+							});
+
 							window.location.href = result.hostedPageUrl;
 						} else {
 							throw new Error('No hosted page URL received');
