@@ -76,11 +76,31 @@ exports.handler = async (event) => {
         'Distributor ID': partner.distributor_id,
       };
 
-      // --- CRITICAL LOGIC: Only pass customer_id for existing, or customerData for new ---
+      // --- CRITICAL LOGIC: Handle customer data and serial number ---
+      console.log('Request body received:', JSON.stringify(requestBody, null, 2));
+      
+      // Handle serial number from request body (top level)
+      if (requestBody.serial_number) {
+        agentInfo.serial_number = requestBody.serial_number;
+        console.log('Serial number from request body:', requestBody.serial_number);
+      }
+      
       if (requestBody.customer_id) {
+        // For existing customers
         agentInfo.customer_id = requestBody.customer_id;
+        
+        // Include any customer data
+        if (requestBody.customerData) {
+          Object.assign(agentInfo, requestBody.customerData);
+        }
       } else if (requestBody.customerData) {
+        // For new customers, merge all customer data
         Object.assign(agentInfo, requestBody.customerData);
+      }
+      
+      // Final check for serial number in customerData
+      if (!agentInfo.serial_number && requestBody.customerData?.serial_number) {
+        agentInfo.serial_number = requestBody.customerData.serial_number;
       }
 
       // Prepare plan data for Zoho
@@ -121,6 +141,13 @@ exports.handler = async (event) => {
         ...(bundle.url && { url: bundle.url })
       };
 
+      // Log the agent info with serial number for debugging
+      console.log('Agent Info with Serial Number:', {
+        ...agentInfo,
+        serial_number: agentInfo.serial_number || 'Not provided',
+        has_serial_number: !!agentInfo.serial_number
+      });
+
       // --- Call Zoho ---
       const zohoResponse = await createZohoPaymentLink(planData, agentInfo);
 
@@ -137,10 +164,17 @@ exports.handler = async (event) => {
         cf_distributor_name: partner.distributor_name,
         cf_distributor_id: partner.distributor_id,
         cf_dealer_email: partner.email,
-        cf_source_url: bundle.source,
+        cf_serial_number: agentInfo.serial_number,
+        cf_source_url: 'Amazon',  // Set source to Amazon as default
+        source: 'Amazon',         // Also set the main source parameter
         customer_id: bundle.customer_id,
         redirect_url: encodeURIComponent('https://rvgn.link/thank-you')
       };
+      
+      // Add serial number to URL params if it exists in the agent info
+      if (agentInfo.serial_number) {
+        params.cf_serial_number = agentInfo.serial_number;
+      }
       Object.entries(params).forEach(([key, value]) => {
         if (value) url.searchParams.set(key, value);
       });

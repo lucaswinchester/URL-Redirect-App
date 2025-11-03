@@ -8,12 +8,27 @@ async function createZohoPaymentLink(planData, agentInfo) {
   const accessToken = await getZohoAccessToken();
 
   console.log('Agent Info:', agentInfo);
+  
+  // Extract serial number from agentInfo
+  const serialNumber = agentInfo.serial_number || '';
+  console.log('Serial Number received:', serialNumber);
 
   // Extract plan and addons from planData
   const { plan_id, addons = [] } = planData;
 
   // Prepare custom fields (for both new and existing customers)
   const customFields = [
+    // Serial number field (from the form)
+    {
+      label: "cf_serial_number",
+      field_name: "cf_serial_number",
+      value: serialNumber || '',
+      is_mandatory: true,
+      required: true,
+      section: "customer_information",
+      section_position: 999
+    },
+    // Agent and dealer information
     agentInfo['Agent ID'] && {
       label: "cf_agent_id",
       value: agentInfo['Agent ID'].toString()
@@ -83,8 +98,19 @@ async function createZohoPaymentLink(planData, agentInfo) {
         {
           label: "Dealer ID#",
           value: agentInfo["Dealer ID"] || agentInfo.dealer_id || ''
+        },
+        {
+          label: "Serial Number",
+          field_name: "cf_serial_number",
+          value: serialNumber,
+          is_mandatory: true,
+          required: true,
+          section: "customer_information",
+          section_position: 999
         }
       ],
+      hostedpage_settings_id: "1826627000284042844",
+      source: "Amazon",
       redirect_url: process.env.SUCCESS_REDIRECT_URL,
     };
 
@@ -150,6 +176,19 @@ async function createZohoPaymentLink(planData, agentInfo) {
     },
     addons: Array.isArray(addons) ? addons : [],
     redirect_url: process.env.SUCCESS_REDIRECT_URL,
+    source: "Amazon",
+    hostedpage_settings_id: "1826627000284042844",
+    custom_fields: [
+      {
+        label: "Serial Number",
+        field_name: "cf_serial_number",
+        value: serialNumber,
+        is_mandatory: true,
+        required: true,
+        section: "customer_information",
+        section_position: 999 // This will place it at the bottom of the customer information section
+      }
+    ]
   };
 
   // Debug logs
@@ -204,10 +243,26 @@ async function makeZohoApiCall(requestBody, accessToken) {
     }
 
     // Instead of returning the URL directly, we'll proxy it through our server
-    const hostedPageUrl = data.hostedpage.url;
+    const hostedPageUrl = new URL(data.hostedpage.url);
+    
+    // Add serial number to the URL parameters if it exists
+    if (requestBody.customer_id) {
+      // For existing customers, get the serial number from custom_fields
+      const serialField = requestBody.custom_fields.find(field => field.field_name === 'cf_serial_number');
+      if (serialField && serialField.value) {
+        hostedPageUrl.searchParams.set('cf_serial_number', serialField.value);
+      }
+    } else if (requestBody.customer) {
+      // For new customers, get the serial number from the request body
+      const serialField = requestBody.custom_fields.find(field => field.field_name === 'cf_serial_number');
+      if (serialField && serialField.value) {
+        hostedPageUrl.searchParams.set('cf_serial_number', serialField.value);
+      }
+    }
+    
     return {
       success: true,
-      hostedPageUrl: hostedPageUrl,
+      hostedPageUrl: hostedPageUrl.toString(),
       message: 'Payment link created successfully'
     };
   } catch (error) {

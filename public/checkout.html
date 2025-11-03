@@ -6,266 +6,20 @@
 		<title>Order Form</title>
 		<link rel="icon" type="image/svg+xml" href="favicon.svg" />
 		<link rel="apple-touch-icon" href="favicon.svg" />
-		<link rel="stylesheet" href="style.css" />
+		<link rel="stylesheet" href="/style.css" />
 		<style>
-			:root {
-				--primary-color: #c90917;
-				--primary-hover: #a30713;
-				--bg-dark: #1a1a2e;
-				--bg-darker: #16213e;
-				--text-light: #f8f9fa;
-				--text-muted: #a8a8b3;
-				--border-color: #2a2a42;
-				--container-outline: #5a7a9c;
-				--border-radius: 12px;
-				--box-shadow: 0 0 30px rgba(201, 9, 23, 0.3);
-			}
-			body {
-				padding: 2rem 1rem;
-				margin: 0;
-				display: flex;
-				justify-content: center;
-				min-height: 100vh;
-				align-items: center;
-				box-sizing: border-box;
-				background-color: #0a0a1a;
-				color: var(--text-light);
-				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-					Roboto, Oxygen, Ubuntu, sans-serif;
-				line-height: 1.5;
-			}
-			.form-container {
-				width: 100%;
-				max-width: 800px;
-				margin: 2rem auto;
-				padding: 2.5rem;
-				background: var(--bg-dark);
-				border: 1px solid var(--container-outline);
-				border-radius: var(--border-radius);
-				box-shadow: var(--box-shadow);
-				position: relative;
-				color: var(--text-light);
-			}
-			h1 {
-				color: var(--text-dark);
-				font-size: 1.875rem;
-				margin-bottom: 1.5rem;
-				font-weight: 700;
-			}
-			h3 {
-				color: var(--primary-color);
-				font-size: 1.25rem;
-				margin: 1.5rem 0 1rem;
-				font-weight: 600;
-			}
-			.form-section {
-				margin-bottom: 2rem;
-				padding: 1.5rem;
-				background: var(--bg-darker);
-				border-radius: var(--border-radius);
-				border: 1px solid var(--border-color);
-			}
-			.form-group {
-				margin-bottom: 1.25rem;
-			}
-			.form-group label {
-				display: block;
-				margin-bottom: 0.5rem;
-				font-weight: 500;
-				color: var(--text-muted);
-				font-size: 0.9rem;
-			}
-			.form-group input,
-			.form-group select,
-			.form-group textarea {
-				width: 100%;
-				padding: 0.5rem 0.75rem;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid var(--border-color);
-				border-radius: 6px;
-				color: var(--text-light);
-				font-size: 0.9rem;
-				height: 40px;
-				box-sizing: border-box;
-				transition: all 0.2s ease;
-			}
-			.form-group input:focus,
-			.form-group select:focus,
-			.form-group textarea:focus {
-				outline: none;
-				border-color: var(--primary-color);
-				box-shadow: 0 0 0 2px rgba(201, 9, 23, 0.3);
-				background: rgba(0, 0, 0, 0.2);
-			}
-			.form-group textarea {
-				min-height: 80px;
-				resize: vertical;
-			}
-			.form-row {
-				display: flex;
-				gap: 1rem;
-				margin-bottom: 1rem;
-			}
-			.form-group-half {
-				flex: 1;
-				min-width: 0;
-				width: 100%;
-			}
-			.radio-group {
-				display: flex;
-				gap: 1.5rem;
-				margin: 1rem 0;
-			}
-			.radio-group label {
-				display: inline-flex;
-				align-items: center;
-				cursor: pointer;
-				font-weight: normal;
-				margin-right: 1.5rem;
-				color: var(--text-dark);
-			}
-			.radio-group input[type='radio'] {
-				margin-right: 0.35rem;
-			}
-			button {
-				background-color: var(--primary-color);
-				color: white;
-				border: none;
-				border-radius: 6px;
-				padding: 0.6rem 1.2rem;
-				font-size: 0.9rem;
-				font-weight: 500;
-				cursor: pointer;
-				transition: background-color 0.2s;
-			}
-			button:hover {
-				background-color: var(--primary-hover);
-			}
-			.button-group {
-				display: flex;
-				gap: 1rem;
-				margin-top: 1.5rem;
-			}
-			.btn {
-				padding: 0.5rem 1.25rem;
-				font-size: 0.9rem;
-			}
-			.btn.secondary {
-				background: none;
-				color: var(--primary-color);
-				border: 1px solid var(--primary-color);
-			}
-			.btn.secondary:hover {
-				background: rgba(201, 9, 23, 0.1);
-			}
-			.hidden {
+			.invalid-feedback {
+				color: #dc3545;
+				font-weight: bold;
 				display: none;
-			}
-			/* Address Card Styles (NEW) */
-			.address-card {
-				background: var(--bg-dark);
-				border: 1px solid var(--border-color);
-				border-radius: var(--border-radius);
-				padding: 1rem 1.5rem 1rem 1rem;
-				margin-bottom: 1.5rem;
-				position: relative;
-				min-height: 120px;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-			}
-			.address-card .edit-btn {
-				position: absolute;
-				top: 1rem;
-				right: 1rem;
-				background: none;
-				border: none;
-				color: var(--primary-color);
-				cursor: pointer;
-				font-size: 1.2rem;
-				padding: 0.2rem;
-				border-radius: 50%;
-				transition: background 0.2s;
-			}
-			.address-card .edit-btn:hover {
-				background: rgba(201, 9, 23, 0.1);
-			}
-			.address-form {
-				display: flex;
-				flex-direction: column;
-				gap: 0.75rem;
-				margin-top: 0.5rem;
-			}
-			.address-form .form-row {
-				display: flex;
-				gap: 1rem;
-			}
-			.address-form .form-group {
-				flex: 1;
-				min-width: 0;
-			}
-			.address-form label {
-				color: var(--text-muted);
-				font-size: 0.9rem;
-				margin-bottom: 0.2rem;
-				display: block;
-			}
-			.address-form input,
-			.address-form select {
-				width: 100%;
-				padding: 0.5rem 0.75rem;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid var(--border-color);
-				border-radius: 6px;
-				color: var(--text-light);
-				font-size: 0.9rem;
-				height: 40px;
-				box-sizing: border-box;
-				transition: all 0.2s ease;
-			}
-			.address-form input:focus,
-			.address-form select:focus {
-				outline: none;
-				border-color: var(--primary-color);
-				box-shadow: 0 0 0 2px rgba(201, 9, 23, 0.3);
-				background: rgba(0, 0, 0, 0.2);
-			}
-			.address-actions {
-				display: flex;
-				gap: 1rem;
-				margin-top: 0.5rem;
-			}
-			.address-label {
-				font-weight: 600;
-				color: var(--primary-color);
-				margin-bottom: 0.5rem;
-			}
-			.address-empty {
-				color: var(--text-muted);
-				font-style: italic;
-				margin-bottom: 0.5rem;
-			}
-			@media (max-width: 640px) {
-				.form-container {
-					padding: 1.5rem;
-				}
-				.form-section {
-					padding: 1rem;
-				}
-				.radio-group {
-					flex-direction: column;
-					gap: 0.5rem;
-				}
-				.address-card {
-					padding: 1rem 0.5rem 1rem 1rem;
-				}
+				margin-top: 0.25rem;
 			}
 		</style>
 	</head>
-	<body>
+	<body class="dark-theme">
 		<div class="form-container">
 			<h1>Order Information</h1>
-			<div class="form-section">
+			<!-- <div class="form-section">
 				<h3>Customer Type</h3>
 				<div class="radio-group">
 					<label>
@@ -277,9 +31,9 @@
 						Existing Customer
 					</label>
 				</div>
-			</div>
+			</div> -->
 			<div id="newCustomerForm" class="form-section">
-				<h3>New Customer Information</h3>
+				<h3>Customer Information</h3>
 				<div class="form-row">
 					<div class="form-group form-group-half">
 						<label for="firstName">First Name *</label>
@@ -339,7 +93,7 @@
 					</div>
 				</div>
 				<div class="form-section">
-					<div class="form-group">
+					<div class="form-group checkbox-group">
 						<label>
 							<input
 								type="checkbox"
@@ -413,8 +167,7 @@
 					</div>
 					<div
 						id="customerSearchStatus"
-						class="hidden"
-						style="margin-top: 0.5rem; font-size: 0.9rem; display: none"
+						style="margin-top: 0.5rem; font-size: 0.9rem"
 					></div>
 				</div>
 				<div id="customerResults" style="margin-top: 1rem; display: none">
@@ -444,6 +197,17 @@
 					<strong>Selected Customer:</strong>
 					<div id="customerDetails" style="margin-top: 0.5rem"></div>
 					<div id="addressCards" style="margin-top: 1.5rem"></div>
+				</div>
+			</div>
+			<div id="serialNumberSection" class="form-section">
+				<h3>Serial Number</h3>
+				<div class="form-group">
+					<label for="serialNumber">Serial Number *</label>
+					<input type="text" id="serialNumber" required class="form-control" />
+					<small class="form-text">Please enter the device serial number</small>
+					<div class="invalid-feedback">
+						Please provide a valid serial number
+					</div>
 				</div>
 			</div>
 			<div class="form-section">
@@ -680,28 +444,28 @@
 					padding: 0.75rem;
 					border: 1px solid var(--border-color);
 					border-radius: var(--radius);
-					background: rgba(201, 9, 23, 0.05);
+					background: var(--bg-light);
 					cursor: pointer;
 					transition: all 0.2s;
-					box-shadow: 0 0 0 1px rgba(24, 144, 255, 0.2);
+					box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 				`;
 				const displayName =
 					customer.display_name ||
 					`${customer.first_name || ''} ${customer.last_name || ''}`.trim() ||
 					'No name available';
 				button.innerHTML = `
-					<div style="font-weight: 600;">${displayName}</div>
-					<div style="font-size: 0.9em; color: #666;">${customer.email}</div>
+					<div style="font-weight: 600; color: var(--text-dark);">${displayName}</div>
+					<div style="font-size: 0.9em; color: var(--text-muted);">${customer.email}</div>
 				`;
 				button.addEventListener('click', () => {
 					document.querySelectorAll('.customer-btn').forEach((btn) => {
 						btn.style.borderColor = 'var(--border-color)';
-						btn.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
-						btn.style.boxShadow = '0 0 0 1px rgba(24, 144, 255, 0.2)';
+						btn.style.backgroundColor = 'var(--bg-light)';
+						btn.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.05)';
 					});
-					button.style.borderColor = '#c90917';
-					button.style.backgroundColor = 'rgba(201, 9, 23, 0.05)';
-					button.style.boxShadow = '0 0 0 1px rgba(201, 9, 23, 0.5)';
+					button.style.borderColor = 'var(--primary-color)';
+					button.style.backgroundColor = 'rgba(0, 86, 179, 0.05)';
+					button.style.boxShadow = '0 0 0 1px var(--primary-color)';
 					selectCustomer(customer);
 				});
 				return button;
@@ -832,15 +596,35 @@
 					'input[name="customerType"]:checked'
 				)?.value;
 				const submitBtn = document.getElementById('submitBtn');
+
+				// Validate serial number (alphanumeric, minimum 14 characters, or specific format like MR40-A1-00003316)
+				const serialNumberInput = document.getElementById('serialNumber');
+				const serialNumber = serialNumberInput?.value.trim();
+				const isSerialValid =
+					serialNumber &&
+					(/^[a-zA-Z0-9]{14,}$/.test(serialNumber) ||
+						/^[A-Z0-9]{2,}-[A-Z0-9]{2,}-[A-Z0-9]{10,}$/.test(serialNumber));
+
+				// Toggle invalid feedback
+				if (serialNumberInput) {
+					if (serialNumber && !isSerialValid) {
+						serialNumberInput.classList.add('is-invalid');
+						document.querySelector('.invalid-feedback').style.display = 'block';
+					} else {
+						serialNumberInput.classList.remove('is-invalid');
+						document.querySelector('.invalid-feedback').style.display = 'none';
+					}
+				}
+
 				if (customerType === 'existing') {
 					const isCustomerSelected = !!window.selectedCustomerId;
-					submitBtn.disabled = !isCustomerSelected;
-					submitBtn.style.opacity = isCustomerSelected ? '1' : '0.7';
-					submitBtn.style.cursor = isCustomerSelected
-						? 'pointer'
-						: 'not-allowed';
+					const isValid = isCustomerSelected && isSerialValid;
+					submitBtn.disabled = !isValid;
+					submitBtn.style.opacity = isValid ? '1' : '0.7';
+					submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
 					return;
 				}
+
 				const requiredFields = [
 					'firstName',
 					'lastName',
@@ -851,10 +635,13 @@
 					'newBillingZip',
 					'newBillingCountry',
 				];
-				const isFormValid = requiredFields.every((fieldId) => {
-					const element = document.getElementById(fieldId);
-					return element && element.value.trim() !== '';
-				});
+
+				const isFormValid =
+					requiredFields.every((fieldId) => {
+						const element = document.getElementById(fieldId);
+						return element && element.value.trim() !== '';
+					}) && isSerialValid; // Include serial number validation
+
 				if (!document.getElementById('sameAsBilling').checked) {
 					const shippingFields = [
 						'newShippingStreet',
@@ -867,17 +654,17 @@
 						const element = document.getElementById(fieldId);
 						return element && element.value.trim() !== '';
 					});
-					submitBtn.disabled = !(isFormValid && isShippingValid);
-					submitBtn.style.opacity =
-						isFormValid && isShippingValid ? '1' : '0.7';
-					submitBtn.style.cursor =
-						isFormValid && isShippingValid ? 'pointer' : 'not-allowed';
+					const isValid = isFormValid && isShippingValid && isSerialValid;
+					submitBtn.disabled = !isValid;
+					submitBtn.style.opacity = isValid ? '1' : '0.7';
+					submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
 				} else {
 					submitBtn.disabled = !isFormValid;
 					submitBtn.style.opacity = isFormValid ? '1' : '0.7';
 					submitBtn.style.cursor = isFormValid ? 'pointer' : 'not-allowed';
 				}
 			}
+			// Add event listeners for form validation
 			[
 				'firstName',
 				'lastName',
@@ -893,6 +680,7 @@
 				'newShippingState',
 				'newShippingZip',
 				'newShippingCountry',
+				'serialNumber',
 			].forEach((fieldId) => {
 				const element = document.getElementById(fieldId);
 				if (element) element.addEventListener('input', validateForm);
@@ -906,12 +694,37 @@
 			document
 				.getElementById('submitBtn')
 				.addEventListener('click', async (e) => {
+					e.preventDefault();
+
+					// Validate serial number before submission (alphanumeric, minimum 14 characters, or specific format)
+					const serialNumber = document
+						.getElementById('serialNumber')
+						?.value.trim();
+					const isValidFormat =
+						serialNumber &&
+						(/^[a-zA-Z0-9]{14,}$/.test(serialNumber) ||
+							/^[A-Z0-9]{2,}-[A-Z0-9]{2,}-[A-Z0-9]{10,}$/.test(serialNumber));
+					if (!isValidFormat) {
+						document.getElementById('serialNumber').classList.add('is-invalid');
+						document.querySelector('.invalid-feedback').style.display = 'block';
+						window.scrollTo({
+							top: document.getElementById('serialNumber').offsetTop - 20,
+							behavior: 'smooth',
+						});
+						return;
+					}
+
 					try {
-						e.preventDefault();
-						const customerType = document.querySelector(
-							'input[name="customerType"]:checked'
-						).value;
-						let payload = {};
+						// Default to 'new' customer type since existing customer feature is not yet implemented
+						const customerType = 'new';
+						// Create payload with serial number and debug logging
+						let payload = {
+							serial_number: serialNumber,
+						};
+						console.log(
+							'Payload being sent:',
+							JSON.stringify(payload, null, 2)
+						);
 						if (customerType === 'new') {
 							const billingAddress = {
 								attention: document.getElementById('newBillingAttention').value,
@@ -939,7 +752,7 @@
 								first_name: document.getElementById('firstName').value,
 								last_name: document.getElementById('lastName').value,
 								email: document.getElementById('email').value,
-								company_name: document.getElementById('companyName').value,
+								company_name: document.getElementById('companyName').value || '',
 								display_name: `${document.getElementById('firstName').value} ${
 									document.getElementById('lastName').value
 								}`.trim(),

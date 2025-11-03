@@ -1,18 +1,82 @@
 /* ========== VARIABLES ========== */
 :root {
-    --bg-dark: #0f172a;
-    --bg-light: #f1f5f9;
-    --accent-red: #c90917;
-    --text-light: #f1f5f9;
-    --text-dark: #0f172a;
-    --text-muted: #94a3b8;
-    --border-color: #334155;
-    --radius: 12px;
-    --font-main: 'Inter', sans-serif;
+    /* Background Colors */
+    --bg-dark: #f8fafc;        /* Light gray for backgrounds */
+    --bg-darker: #e6f0f8;      /* Very light blue for section backgrounds */
+    --bg-light: #ffffff;       /* White for cards and containers */
+    
+    /* Primary Colors - Blue Theme */
+    --primary-color: #0056b3;  /* Darker blue for primary actions */
+    --primary-hover: #003d82;  /* Even darker blue for hover states */
+    --accent-red: #e63946;     /* Red for errors/important actions */
+    
+    /* Text Colors */
+    --text-light: #ffffff;     /* White text for dark backgrounds */
+    --text-dark: #1a1a1a;      /* Dark text for light backgrounds */
+    --text-muted: #4a5568;     /* Muted text color */
+    
+    /* UI Colors */
+    --border-color: #cbd5e0;   /* Light gray for borders */
+    --container-outline: #a0aec0;
+    --radius: 8px;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    
+    /* Font */
+    --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   }
 
   .hidden {
     display: none !important;
+  }
+  
+  /* Address Card Styles */
+  .address-card {
+    background: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem 1rem 1rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .address-card .edit-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.2rem;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  
+  .address-card .edit-btn:hover {
+    background: rgba(201, 9, 23, 0.1);
+  }
+  
+  .address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .address-form .form-row {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .search-container {
+    display: flex;
+    gap: 0.5rem;
   }  
   
   /* ========== RESET ========== */
@@ -25,51 +89,95 @@
   /* ========== GLOBAL ========== */
   body {
     margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: #0f172a;
-    color: #fff;
+    padding: 2rem 1rem;
+    font-family: var(--font-main);
+    background: var(--bg-dark);
+    color: var(--text-dark);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    text-align: center;
-}
+    min-height: 100vh;
+    box-sizing: border-box;
+    line-height: 1.5;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPgogIDxkZWZzPgogICAgPHBhdHRlcm4gaWQ9InBhdHRlcm4iIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+CiAgICAgIDxwYXRoIGQ9Ik0gMTAgMTAgTCAzMCAxMCBMIDMwIDMwIEwgMTAgMzAgeiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDAwLCA4NiwgMTUzLCAwLjA1KSIgc3Ryb2tlLXdpZHRoPSIxIi8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjcGF0dGVybikiLz4KPC9zdmc+');
+    background-attachment: fixed;
+    background-size: cover;
+  }
+  
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: -1;
+  }
   
   /* ========== HEADINGS ========== */
   h1, h2, h3 {
-    color: var(--text-light);
+    color: var(--text-dark);
     margin-bottom: 1rem;
   }
   
   h1 {
-    font-size: 2rem;
+    color: var(--text-dark);
+    font-size: 1.875rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
   }
   
   h2 {
     font-size: 1.5rem;
   }
   
+  h3 {
+    color: var(--primary-color);
+    font-size: 1.25rem;
+    margin: 1.5rem 0 1rem;
+    font-weight: 600;
+  }
+  
   /* ========== BUTTONS ========== */
   button {
     margin-top: 1rem;
     padding: 0.6rem 1.2rem;
-    background-color: #c90917;
+    background-color: var(--primary-color);
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     color: white;
     cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
 }
 
 button:hover {
-    background-color: #a30713;
+    background-color: var(--primary-hover);
+}
+
+.btn {
+    padding: 0.5rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.btn.secondary {
+    background: none;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.btn.secondary:hover {
+    background: rgba(201, 9, 23, 0.1);
 }
 
 .button-group {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
-  justify-content: center;
+  margin-top: 1.5rem;
+  justify-content: flex-start;
 }
   
   /* ========== CONTAINERS ========== */
@@ -77,6 +185,122 @@ button:hover {
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+  }
+
+  .form-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid var(--container-outline);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    color: var(--text-dark);
+    backdrop-filter: blur(5px);
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: var(--bg-darker);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: #15233D;
+    font-size: 0.9rem;
+    height: 40px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: none;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+  }
+
+  .form-group.checkbox-group {
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .form-group.checkbox-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  .form-group.checkbox-group input[type="checkbox"] {
+    width: auto;
+    height: auto;
+    margin: 0;
+    transform: scale(0.9);
+  }
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .form-group-half {
+    flex: 1;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .radio-group {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .radio-group label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    margin-right: 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .radio-group input[type='radio'] {
+    margin-right: 0.35rem;
   }
   
   .card {
